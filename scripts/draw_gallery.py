@@ -62,6 +62,20 @@ def thumbnail(crop: np.ndarray, height: int, max_width: int) -> np.ndarray:
     return cv2.resize(crop, (max(int(crop.shape[1] * scale), 1), max(int(crop.shape[0] * scale), 1)), interpolation=cv2.INTER_AREA)
 
 
+def save_crops(best: pd.DataFrame, crops: dict, tracks_dir: Path) -> None:
+    """Снимки для досье в интерфейсе: по одному на треклет."""
+    out = tracks_dir / "crops"
+    out.mkdir(exist_ok=True)
+    index = {}
+    for row in best.itertuples():
+        crop = crops.get((row.camera, int(row.frame), int(row.raw_track)))
+        if crop is not None:
+            name = f"tracklet_{int(row.tracklet)}.jpg"
+            cv2.imwrite(str(out / name), crop, [cv2.IMWRITE_JPEG_QUALITY, 90])
+            index[int(row.tracklet)] = {"file": name, "camera": row.camera, "t_s": round(float(row.t_s), 2)}
+    (out / "index.json").write_text(json.dumps(index))
+
+
 def track_pages(result: dict, best: pd.DataFrame, crops: dict, out: Path, stamps: Stamps) -> int:
     rows_by_tracklet = {int(row.tracklet): row for row in best.itertuples()}
     pages = 0
@@ -191,6 +205,7 @@ def main() -> None:
                        ignore_index=True).drop_duplicates(["camera", "frame", "raw_track"])
     crops = grab_crops(args.videos, wanted)
 
+    save_crops(best, crops, args.tracks)
     stamps = Stamps()
     print("страниц треков:", track_pages(result, best, crops, out, stamps), " страниц отброшенного:", rejected_pages(rejected, crops, out, stamps),
           " подсказок:", hints_page(result, best, crops, out, stamps))

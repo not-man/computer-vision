@@ -6,6 +6,12 @@
       "runtimeExecutable": ".venv/bin/streamlit",
       "runtimeArgs": ["run", "scripts/check_streamlit.py", "--server.port", "8501", "--server.headless", "true", "--browser.gatherUsageStats", "false", "--", "render/full/chunks"],
       "port": 8501
+    },
+    {
+      "name": "demo",
+      "runtimeExecutable": ".venv/bin/streamlit",
+      "runtimeArgs": ["run", "app/demo.py", "--server.port", "8502", "--server.headless", "true"],
+      "port": 8502
     }
   ]
 }

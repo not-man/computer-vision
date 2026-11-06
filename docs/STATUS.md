@@ -15,6 +15,7 @@
 .venv/bin/python scripts/draw_gallery.py artifacts/perception artifacts/tracks
 .venv/bin/python scripts/check_robustness.py artifacts/perception
 uv run --extra cpu pytest -q
+.venv/bin/streamlit run app/demo.py
 ```
 Склейка занимает секунды, рендер меньше 5 минут, галерея около 2–3 минут. Детекцию и ReID запускать только в Colab: `colab/run_perception.ipynb`, архив кода собирает `scripts/make_colab_bundle.py`.
 
