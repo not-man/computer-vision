@@ -40,6 +40,7 @@ class TrinityConfig:
     # Пороги сходства после вычитания среднего вектора камеры, измерены на записи: scripts/measure_reid.py
     r_veto: float = 0.05  # проходит 98% своих: ниже почти никогда не бывает один человек на двух камерах
     r_gap: float = 0.2  # проходит 84% своих и 6% чужих
+    gap_veto: float = 0.15  # на разрыве нет общего времени, поэтому запрет строже: все явные ошибки на снимках были при R ниже
     r_hint: float = 0.6  # уровень целых треков: проходит 40% своих и 3% чужих
     hint_margin: float = 0.1
     min_track_s: float = 2.0
@@ -543,7 +544,7 @@ class _Linker:
         if policy.reid == "required" and not adjacent and (r is None or r < cfg.r_gap):
             self._record(last.id, first.id, "gap", False, "внешность", r=r, overlap=-gap)
             return None
-        if (policy.reid == "no_conflict" or adjacent) and r is not None and r < cfg.r_veto:
+        if (policy.reid == "no_conflict" or adjacent) and r is not None and r < cfg.gap_veto:
             self._record(last.id, first.id, "gap", False, "внешность", r=r, overlap=-gap)
             return None
 

@@ -149,6 +149,16 @@ def test_door_within_buffer_needs_matching_appearance() -> None:
     assert groups(run([a, no_look], zones)) == {frozenset({1}), frozenset({2})}
 
 
+def test_gap_needs_more_appearance_than_simultaneous_view() -> None:
+    weak = look(84.0)  # сходство 0.10: выше запрета при одновременной видимости, ниже запрета на разрыве
+    a = walker(1, "cam_1", 0.0, 10.0, (3.0, 5.0), embedding=look(0))
+    after_gap = walker(2, "cam_1", 11.0, 20.0, (18.4, 5.0), embedding=weak)
+    seen_together = walker(2, "cam_2", 8.0, 20.0, (14.2, 5.0), embedding=weak)
+    rival = walker(3, "cam_2", 8.0, 20.0, (14.2, 5.3), embedding=CLEARLY_OTHER)
+    assert groups(run([a, after_gap])) == {frozenset({1}), frozenset({2})}
+    assert frozenset({1, 2}) in groups(run([a, seen_together, rival]))
+
+
 def test_far_fragment_with_huge_error_cannot_jump_by_many_meters() -> None:
     # Обломок вдали: погрешность 4 м не должна разрешать скачок на 8 м за секунду
     a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), sigma=4.0, embedding=look(0))
