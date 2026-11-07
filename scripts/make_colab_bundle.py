@@ -4,7 +4,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CODE = ["pyproject.toml", "README.md", "configs", "scripts", "src", "evaluation"]
+CODE = ["pyproject.toml", "README.md", "configs", "scripts", "src", "evaluation", "artifacts/adapt"]
 
 
 def main() -> None:

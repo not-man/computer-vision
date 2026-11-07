@@ -6,6 +6,7 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")  # матрицы мелки�
 import argparse
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -38,6 +39,13 @@ def plan_path(track_tracklets: list[Tracklet], start: float, end: float) -> list
             mean = np.average(positions, axis=0, weights=weights)
             path.append([round(float(mean[0]), 2), round(float(mean[1]), 2), int(round(t * 1000))])
     return path
+
+
+def track_table(result: LinkResult) -> pd.DataFrame:
+    return pd.DataFrame([
+        {"track_id": t.track_id, "start": clock_text(t.t_start), "end": clock_text(t.t_end), "cameras": ", ".join(t.cameras)}
+        for t in result.tracks
+    ])
 
 
 def measured_quality(result: LinkResult, assigned: pd.DataFrame) -> dict:
@@ -109,7 +117,9 @@ def main() -> None:
 
     zones_config = yaml.safe_load(Path("configs/zones.yaml").read_text(encoding="utf-8")) or {}
     extra = [Zone(**zone) for zone in zones_config.get("zones") or []]
-    zones = ZoneMap(plan.door_zones() + extra, strict_blind=bool(zones_config.get("strict_blind", False)))
+    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))
+    recording_end = {name: clock["clock_at_frame_0"] + clock["frames"] / clock["fps"] for name, clock in clocks.items()}
+    zones = ZoneMap(plan.door_zones() + extra, strict_blind=bool(zones_config.get("strict_blind", False)), recording_end=recording_end)
     config = TrinityConfig()
     result = link_tracklets(tracklets, config, zones)
     problems = check_invariants(result, tracklets, config)
@@ -120,13 +130,13 @@ def main() -> None:
         digest.update(path.read_bytes().replace(b"\r\n", b"\n"))
     summaries = sorted(args.perception.glob("*_summary.json"))
     embedder = json.loads(summaries[0].read_text(encoding="utf-8")).get("embedder", "") if summaries else ""
+    # Запасной перечень: если каждое полное исчезновение считать концом трека, без возвратов по внешности
+    without_returns = link_tracklets(tracklets, replace(config, r_return=float("inf")), zones)
+    track_table(without_returns).to_csv(args.out / "tracks_without_returns.csv", index=False)
     document = to_json(result, tracklets, digest.hexdigest(), embedder)
-    document["quality"] = measured_quality(result, assigned)
+    document["quality"] = {**measured_quality(result, assigned), "tracks_without_returns": len(without_returns.tracks)}
     (args.out / "tracks.json").write_text(json.dumps(document, ensure_ascii=False, indent=1), encoding="utf-8")
-    pd.DataFrame([
-        {"track_id": t.track_id, "start": clock_text(t.t_start), "end": clock_text(t.t_end), "cameras": ", ".join(t.cameras)}
-        for t in result.tracks
-    ]).to_csv(args.out / "tracks.csv", index=False)
+    track_table(result).to_csv(args.out / "tracks.csv", index=False)
     pd.DataFrame(result.checks).to_parquet(args.out / "links.parquet", index=False)
     dropped.to_csv(args.out / "dropped.csv", index=False)
     assigned.drop(columns=["cov_xx", "cov_xy", "cov_yy"]).to_parquet(args.out / "observations.parquet", index=False)

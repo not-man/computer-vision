@@ -30,6 +30,7 @@ tracks:
 	$(PY) scripts/link_tracks.py $(PERCEPTION) --out $(TRACKS)
 	mkdir -p results
 	cp $(TRACKS)/tracks.csv results/tracks.csv
+	cp $(TRACKS)/tracks_without_returns.csv results/tracks_without_returns.csv
 
 render:
 	$(PY) scripts/render_mosaic.py $(PERCEPTION) $(TRACKS) --out $(RENDER)

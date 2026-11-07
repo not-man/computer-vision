@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,8 +17,9 @@ def main():
     if len(list((ROOT / "artifacts/perception").glob("camera_new_?.parquet"))) != 5:
         raise RuntimeError("Five perception files required")
     document = json.loads((ROOT / "artifacts/tracks/tracks.json").read_text(encoding="utf-8"))
-    manifest = {"base_commit": "8afe7d0d4c465dc51ac795c4e418bc598bef1a93", "total_tracks": document["total_tracks"], "files": {}}
-    output = ROOT / "artifacts/mct_demo_build_64.zip"
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
+    manifest = {"base_commit": commit, "total_tracks": document["total_tracks"], "files": {}}
+    output = ROOT / "artifacts/mct_demo_build.zip"
     # Source artifacts are already compressed. STORE keeps local CPU usage low.
     with zipfile.ZipFile(output, "w", zipfile.ZIP_STORED) as archive:
         for p in sorted(set(files)):

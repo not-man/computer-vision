@@ -79,6 +79,34 @@ class BoxmotEmbedder:
         return _normalize(np.vstack([part.numpy() for part in self._encoder.encode(frames, detections)]))
 
 
+class DinoEmbedder:
+    """Универсальная модель без обучения на людях: проверка, не лучше ли она специализированной на этой записи."""
+
+    SIZE = (196, 392)  # ширина и высота, кратные патчу 14
+    BATCH = 48  # камеры считаются одновременно на одной видеокарте
+    MEAN = np.array([0.485, 0.456, 0.406], np.float32)
+    STD = np.array([0.229, 0.224, 0.225], np.float32)
+
+    def __init__(self, model: str = "facebook/dinov2-large", device: str = "cpu") -> None:
+        from transformers import AutoModel
+
+        self._device = f"cuda:{device}" if str(device).isdigit() else device
+        self._model = AutoModel.from_pretrained(model).to(self._device).eval()
+        self.name = f"hf:{model}"
+
+    def embed_crops(self, crops_bgr: list[np.ndarray]) -> np.ndarray:
+        import torch
+
+        parts = []
+        for start in range(0, len(crops_bgr), self.BATCH):
+            images = [cv2.resize(crop, self.SIZE, interpolation=cv2.INTER_AREA if crop.shape[0] > self.SIZE[1] else cv2.INTER_LINEAR)[:, :, ::-1] for crop in crops_bgr[start:start + self.BATCH]]
+            batch = (np.stack(images).astype(np.float32) / 255 - self.MEAN) / self.STD
+            with torch.no_grad():
+                tokens = self._model(pixel_values=torch.from_numpy(batch).permute(0, 3, 1, 2).to(self._device)).last_hidden_state
+            parts.append(torch.cat([tokens[:, 0], tokens[:, 1:].mean(dim=1)], dim=1).cpu().numpy())
+        return _normalize(np.vstack(parts))
+
+
 class UltralyticsEmbedder:
     """Ступень 2: признаки классификатора ImageNet. Слабее, но не требует BoxMOT."""
 
@@ -111,6 +139,11 @@ class HistogramEmbedder:
             hists = [cv2.calcHist([p], [0, 1], None, [16, 8], [0, 180, 0, 256]).ravel() for p in parts]
             vectors.append(np.concatenate(hists))
         return _normalize(np.array(vectors, np.float32).reshape(len(vectors), -1))
+
+
+def crop_embedder(model: str, device: str = "cpu") -> "BoxmotEmbedder | DinoEmbedder":
+    """Кодировщик готовых вырезок по имени модели: с косой чертой значит Hugging Face."""
+    return DinoEmbedder(model, device) if "/" in model else BoxmotEmbedder(model, device=device)
 
 
 def create_embedder(device: str = "cpu", model: str = "osnet_ain_x1_0_msmt17") -> Embedder:

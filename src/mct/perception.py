@@ -30,6 +30,15 @@ def touches_edge(box: np.ndarray, size: tuple[int, int]) -> bool:
     return x1 < EDGE_MARGIN_PX or y1 < EDGE_MARGIN_PX or x2 > width - EDGE_MARGIN_PX or y2 > height - EDGE_MARGIN_PX
 
 
+def every_frame_tracker(out_dir: Path, camera: str, source_fps: float, fps: float) -> str:
+    """Настройки трекера для всех кадров записи: буфер задан в кадрах, а ждать потерянного человека надо те же секунды."""
+    config = yaml.safe_load(Path(TRACKER).read_text(encoding="utf-8"))
+    config["track_buffer"] = round(config["track_buffer"] * source_fps / fps)
+    path = out_dir / f"{camera}_botsort.yaml"
+    path.write_text(yaml.safe_dump(config), encoding="utf-8")
+    return str(path)
+
+
 def process_camera(
     video: Path,
     out_dir: Path,
@@ -43,10 +52,12 @@ def process_camera(
     start_s: float = 0.0,
     duration_s: float | None = None,
     detect_scale: int = 1,
+    every_frame: bool = False,
 ) -> dict:
     """Пишет <камера>.parquet и <камера>_emb.npz; файл summary появляется последним и означает готовность.
 
     detect_scale: детектор получает кадр во столько раз крупнее PROCESS_SIZE, рамки и маски всё равно пишутся в PROCESS_SIZE.
+    every_frame: трекер видит все кадры записи, а в таблицы идут те же кадры, что при fps, поэтому дальше конвейер не меняется.
     """
     camera = video.stem
     clock = yaml.safe_load((CONFIGS / "clocks.yaml").read_text(encoding="utf-8"))[camera]
@@ -58,15 +69,19 @@ def process_camera(
     started = time.perf_counter()
     frames = 0
     detect_size = (PROCESS_SIZE[0] * detect_scale, PROCESS_SIZE[1] * detect_scale)
-    for index, large in read_frames(video, detect_size, clock["fps"], fps, start_s, duration_s):
+    tracker = every_frame_tracker(out_dir, camera, clock["fps"], fps) if every_frame else TRACKER
+    step = clock["fps"] / fps
+    for index, large in read_frames(video, detect_size, clock["fps"], clock["fps"] if every_frame else fps, start_s, duration_s):
+        result = model.track(
+            large, imgsz=imgsz, conf=conf, classes=[0], persist=True, tracker=tracker,
+            retina_masks=True, device=device, verbose=False,
+        )[0]
+        if every_frame and index % step >= 1:  # то же условие, что в read_frames
+            continue
         t_s = clock["clock_at_frame_0"] + index / clock["fps"]  # общее время всех камер
         frames += 1
         if frames % 1000 == 0:
             print(f"{camera}: {frames} кадров, {time.perf_counter() - started:.0f} с", flush=True)
-        result = model.track(
-            large, imgsz=imgsz, conf=conf, classes=[0], persist=True, tracker=TRACKER,
-            retina_masks=True, device=device, verbose=False,
-        )[0]
         if result.boxes is None or result.boxes.id is None or result.masks is None:
             continue
 
@@ -104,7 +119,7 @@ def process_camera(
         vectors=np.vstack(emb_vectors) if emb_vectors else np.empty((0, 0), np.float32),
     )
     summary = {
-        "camera": camera, "model": model_name, "imgsz": imgsz, "detect_scale": detect_scale, "fps": fps, "conf": conf,
+        "camera": camera, "model": model_name, "imgsz": imgsz, "detect_scale": detect_scale, "every_frame": every_frame, "fps": fps, "conf": conf,
         "embedder": embedder.name, "frames": frames, "observations": len(rows),
         "raw_tracks": int(frame_table["raw_track"].nunique()) if rows else 0,
         "seconds": round(time.perf_counter() - started, 1),

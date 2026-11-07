@@ -11,6 +11,7 @@ from itertools import combinations
 import numpy as np
 
 STEP_S = 0.2  # шаг сравнения траекторий
+RECORDING_END_MARGIN_S = 1.0  # человека видно до самого конца записи: куда он делся дальше, неизвестно
 MAX_SAMPLE_GAP_S = 0.5  # дальше этого от ближайшего наблюдения положение считается неизвестным
 
 
@@ -129,6 +130,7 @@ class GapPolicy:
 class ZoneMap:
     zones: list[Zone] = field(default_factory=list)
     strict_blind: bool = False
+    recording_end: dict[str, float] = field(default_factory=dict)  # когда кончается запись каждой камеры
     door_buffer_s: float = 1.5
     stationary_buffer_s: float = 30.0
     occluder_buffer_s: float = 5.0
@@ -342,6 +344,9 @@ class _Linker:
             middle = np.array([(max(a.start, b.start) + min(a.end, b.end)) / 2])
             if _boxes_apart(a, b, float(middle[0])):
                 return True
+            r = _similarity(a, b)
+            if r is not None and r >= cfg.contact_r:
+                return False  # рамки соприкасаются и внешность та же: это смена номера, а точки на плане расходятся из-за закрытых ног
             xy_a, cov_a, _ = a.at(middle)
             xy_b, cov_b, _ = b.at(middle)
             return float(_mahalanobis(xy_a - xy_b, cov_a + cov_b + self._calibration)[0]) > cfg.k
@@ -748,7 +753,9 @@ class _Linker:
         segments.sort(key=lambda s: (s.t_start, s.t_end))
         last = max(ordered, key=lambda x: (x.end, x.id))
         cameras = sorted({x.camera for x in ordered})
-        return Track(track_id, [x.id for x in ordered], cameras, start, end, links, segments, self.zones.policy(last).kind)
+        recording_ended = last.end >= self.zones.recording_end.get(last.camera, float("inf")) - RECORDING_END_MARGIN_S
+        close_zone = "RECORDING_END" if recording_ended else self.zones.policy(last).kind
+        return Track(track_id, [x.id for x in ordered], cameras, start, end, links, segments, close_zone)
 
 
 def _observed_time(members: list[Tracklet]) -> float:

@@ -170,7 +170,8 @@ def screen_returns() -> None:
 
 def screen_honesty() -> None:
     st.write(HONESTY_NOTE)
-    for column, (label, value) in zip(st.columns(3), quality_tiles(TRACKS_DATA)):
+    quality = quality_tiles(TRACKS_DATA)
+    for column, (label, value) in zip(st.columns(max(len(quality), 1)), quality):
         column.metric(label, value)
     if ROBUSTNESS is None:
         st.info("Проверка ещё не запускалась: scripts/check_robustness.py")

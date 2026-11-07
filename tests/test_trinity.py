@@ -548,3 +548,21 @@ def test_number_switch_with_a_jump_on_the_plan_does_not_block_the_merge() -> Non
     assert not linker._pair_conflict(a, b)
     apart = with_box(walker(2, "cam_1", 6.1, 12.0, (20.0, 5.0)), (400, 100, 450, 250))
     assert _Linker([a, apart], CONFIG, ZoneMap())._pair_conflict(a, apart)
+
+
+def test_track_seen_until_the_end_of_recording_closes_as_end_of_recording() -> None:
+    late = walker(1, "cam_1", 0.0, 10.0, (3.0, 5.0))
+    early = walker(2, "cam_1", 0.0, 5.0, (3.0, 15.0))
+    result = run([late, early], ZoneMap(recording_end={"cam_1": 10.5}))
+    by_id = {track.tracklets[0]: track for track in result.tracks}
+    assert by_id[1].close_zone == "RECORDING_END"
+    assert by_id[2].close_zone != "RECORDING_END"
+
+
+def test_number_switch_with_touching_boxes_and_same_look_is_not_a_conflict_despite_short_overlap() -> None:
+    # Рамки соприкасаются, номера идут вместе доли секунды, внешность та же, а точка на плане прыгнула
+    a = with_box(walker(1, "cam_1", 0.0, 6.0, (0.0, 5.0), embedding=look(0)), (100, 100, 150, 250))
+    b = with_box(walker(2, "cam_1", 5.8, 12.0, (20.0, 5.0), embedding=look(10)), (105, 100, 155, 250))
+    assert not _Linker([a, b], CONFIG, ZoneMap())._pair_conflict(a, b)
+    other = with_box(walker(2, "cam_1", 5.8, 12.0, (20.0, 5.0), embedding=look(80)), (105, 100, 155, 250))
+    assert _Linker([a, other], CONFIG, ZoneMap())._pair_conflict(a, other)

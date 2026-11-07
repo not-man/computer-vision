@@ -47,6 +47,7 @@ def test_measured_quality_is_shown_only_when_present() -> None:
     assert quality_tiles({}) == []
     tiles = quality_tiles({"quality": {"crowd": {"match": 0.926, "purity": 0.955, "people": 7, "tracks": 8}, "pairs": {"right": 25, "total": 28, "errors": {}}}})
     assert ("Пары, проверенные глазами: верно", "25 из 28") in tiles and tiles[0][1] == "0.93"
+    assert len(tiles) == 3
 
 
 def test_rules_are_sorted_from_the_most_harmful() -> None:

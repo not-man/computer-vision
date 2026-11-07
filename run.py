@@ -39,6 +39,7 @@ def main() -> None:
         script("link_tracks", "artifacts/perception", "--out", "artifacts/tracks")
         (ROOT / "results").mkdir(exist_ok=True)
         shutil.copyfile(ROOT / "artifacts/tracks/tracks.csv", ROOT / "results/tracks.csv")
+        shutil.copyfile(ROOT / "artifacts/tracks/tracks_without_returns.csv", ROOT / "results/tracks_without_returns.csv")
 
     def render() -> None:
         script("render_mosaic", "artifacts/perception", "artifacts/tracks", "--out", "render/full")

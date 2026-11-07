@@ -3,7 +3,7 @@
  "config_hash": "sha256:62cb0c75e14c0c401f5ecbc4166fc254437508ccb1d3cc7561497c480b30f869",
  "embedder": "boxmot:osnet_ain_x1_0_msmt17",
  "time_origin": "секунды и миллисекунды от 17:00:00 по часам камер",
- "total_tracks": 64,
+ "total_tracks": 61,
  "tracks": [
   {
    "track_id": 1,
@@ -2239,7 +2239,7 @@
      "camera_b": "camera_new_3",
      "tier": "sustained",
      "t_ms": 2393179,
-     "g_m": 0.38,
+     "g_m": 0.36,
      "contact_s": 30.29,
      "r": 0.45,
      "score": 0.835,
@@ -2438,12 +2438,12 @@
     ],
     [
      21.54,
-     23.68,
+     23.69,
      2406750
     ],
     [
      21.49,
-     23.42,
+     23.43,
      2407250
     ],
     [
@@ -6611,6 +6611,8 @@
     199,
     316,
     29,
+    4,
+    80,
     5,
     437,
     85,
@@ -6660,6 +6662,18 @@
      "camera_id": "camera_new_2",
      "t_start_ms": 2496424,
      "t_end_ms": 2516944
+    },
+    {
+     "kind": "observed",
+     "camera_id": "camera_new_1",
+     "t_start_ms": 2498190,
+     "t_end_ms": 2508510
+    },
+    {
+     "kind": "observed",
+     "camera_id": "camera_new_3",
+     "t_start_ms": 2499459,
+     "t_end_ms": 2499659
     },
     {
      "kind": "observed",
@@ -6762,6 +6776,32 @@
      "contact_s": 2.84,
      "r": 0.51,
      "score": 0.603,
+     "confidence": "green"
+    },
+    {
+     "a": 29,
+     "b": 4,
+     "camera_a": "camera_new_2",
+     "camera_b": "camera_new_1",
+     "tier": "sustained",
+     "t_ms": 2498190,
+     "g_m": 0.46,
+     "contact_s": 10.32,
+     "r": 0.17,
+     "score": 0.636,
+     "confidence": "yellow"
+    },
+    {
+     "a": 4,
+     "b": 80,
+     "camera_a": "camera_new_1",
+     "camera_b": "camera_new_3",
+     "tier": "brief",
+     "t_ms": 2499459,
+     "g_m": 0.73,
+     "contact_s": 0.2,
+     "r": null,
+     "score": 0.29,
      "confidence": "green"
     },
     {
@@ -7075,108 +7115,108 @@
      2497970
     ],
     [
-     18.16,
+     18.32,
      12.15,
      2498470
     ],
     [
-     17.87,
-     11.94,
+     17.91,
+     11.88,
      2498970
     ],
     [
-     18.57,
-     11.37,
+     17.38,
+     11.66,
      2499470
     ],
     [
-     18.4,
-     10.69,
+     17.52,
+     11.16,
      2499970
     ],
     [
-     17.63,
-     10.56,
+     17.06,
+     10.94,
      2500470
     ],
     [
-     16.68,
-     10.59,
+     16.57,
+     10.74,
      2500970
     ],
     [
-     16.11,
+     16.18,
      10.61,
      2501470
     ],
     [
-     15.67,
-     10.59,
+     15.71,
+     10.65,
      2501970
     ],
     [
-     15.31,
-     10.55,
+     15.35,
+     10.66,
      2502470
     ],
     [
-     14.46,
-     11.24,
+     14.81,
+     10.96,
      2502970
     ],
     [
-     14.28,
-     11.24,
+     14.45,
+     11.1,
      2503470
     ],
     [
-     13.92,
-     11.46,
+     14.18,
+     11.27,
      2503970
     ],
     [
-     13.63,
-     11.74,
+     13.78,
+     11.57,
      2504470
     ],
     [
-     13.52,
-     11.95,
+     13.69,
+     11.76,
      2504970
     ],
     [
-     13.42,
-     12.19,
+     13.49,
+     12.08,
      2505470
     ],
     [
-     13.54,
-     12.19,
+     13.52,
+     12.18,
      2505970
     ],
     [
-     13.68,
-     12.23,
+     13.58,
+     12.31,
      2506470
     ],
     [
-     13.75,
-     12.28,
+     13.64,
+     12.36,
      2506970
     ],
     [
-     13.72,
-     12.26,
+     13.64,
+     12.33,
      2507470
     ],
     [
-     13.75,
-     12.13,
+     13.63,
+     12.21,
      2507970
     ],
     [
-     13.87,
-     11.9,
+     13.69,
+     12.03,
      2508470
     ],
     [
@@ -7416,7 +7456,7 @@
     ],
     [
      20.71,
-     23.94,
+     23.96,
      2532470
     ],
     [
@@ -10079,161 +10119,6 @@
   },
   {
    "track_id": 16,
-   "t_start_ms": 2498190,
-   "t_end_ms": 2508510,
-   "start": "17:41:38.1",
-   "end": "17:41:48.5",
-   "cameras": [
-    "camera_new_1",
-    "camera_new_3"
-   ],
-   "close_zone": "STATIONARY",
-   "tracklets": [
-    4,
-    80
-   ],
-   "segments": [
-    {
-     "kind": "observed",
-     "camera_id": "camera_new_1",
-     "t_start_ms": 2498190,
-     "t_end_ms": 2508510
-    },
-    {
-     "kind": "observed",
-     "camera_id": "camera_new_3",
-     "t_start_ms": 2499459,
-     "t_end_ms": 2499659
-    }
-   ],
-   "links": [
-    {
-     "a": 4,
-     "b": 80,
-     "camera_a": "camera_new_1",
-     "camera_b": "camera_new_3",
-     "tier": "brief",
-     "t_ms": 2499459,
-     "g_m": 0.73,
-     "contact_s": 0.2,
-     "r": null,
-     "score": 0.29,
-     "confidence": "green"
-    }
-   ],
-   "plan_path": [
-    [
-     18.79,
-     12.36,
-     2498190
-    ],
-    [
-     18.33,
-     12.04,
-     2498690
-    ],
-    [
-     17.87,
-     11.74,
-     2499190
-    ],
-    [
-     17.48,
-     11.24,
-     2499690
-    ],
-    [
-     17.18,
-     11.02,
-     2500190
-    ],
-    [
-     16.77,
-     10.82,
-     2500690
-    ],
-    [
-     16.37,
-     10.72,
-     2501190
-    ],
-    [
-     16.07,
-     10.57,
-     2501690
-    ],
-    [
-     15.6,
-     10.67,
-     2502190
-    ],
-    [
-     15.08,
-     10.82,
-     2502690
-    ],
-    [
-     14.98,
-     10.78,
-     2503190
-    ],
-    [
-     14.47,
-     11.05,
-     2503690
-    ],
-    [
-     14.29,
-     11.15,
-     2504190
-    ],
-    [
-     13.95,
-     11.38,
-     2504690
-    ],
-    [
-     13.79,
-     11.64,
-     2505190
-    ],
-    [
-     13.63,
-     11.91,
-     2505690
-    ],
-    [
-     13.33,
-     12.34,
-     2506190
-    ],
-    [
-     13.29,
-     12.61,
-     2506690
-    ],
-    [
-     13.43,
-     12.53,
-     2507190
-    ],
-    [
-     13.41,
-     12.44,
-     2507690
-    ],
-    [
-     13.33,
-     12.35,
-     2508190
-    ]
-   ],
-   "best_crop": null,
-   "clip": null,
-   "possibly_same_person_as": []
-  },
-  {
-   "track_id": 17,
    "t_start_ms": 2539150,
    "t_end_ms": 2541950,
    "start": "17:42:19.1",
@@ -10291,7 +10176,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 18,
+   "track_id": 17,
    "t_start_ms": 2550670,
    "t_end_ms": 2564424,
    "start": "17:42:30.6",
@@ -10524,7 +10409,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 19,
+   "track_id": 18,
    "t_start_ms": 2613070,
    "t_end_ms": 2627859,
    "start": "17:43:33.0",
@@ -10771,7 +10656,7 @@
    ]
   },
   {
-   "track_id": 20,
+   "track_id": 19,
    "t_start_ms": 2616750,
    "t_end_ms": 2630366,
    "start": "17:43:36.7",
@@ -10833,7 +10718,7 @@
      "contact_s": 5.29,
      "r": 0.47,
      "score": 0.835,
-     "confidence": "green"
+     "confidence": "yellow"
     },
     {
      "a": 340,
@@ -10842,10 +10727,10 @@
      "camera_b": "camera_new_3",
      "tier": "sustained",
      "t_ms": 2621859,
-     "g_m": 3.91,
+     "g_m": 0.76,
      "contact_s": 1.52,
      "r": 0.38,
-     "score": 0.266,
+     "score": 0.593,
      "confidence": "yellow"
     },
     {
@@ -10932,18 +10817,18 @@
      2621750
     ],
     [
-     20.68,
-     27.31,
+     20.69,
+     26.86,
      2622250
     ],
     [
      20.59,
-     25.84,
+     25.81,
      2622750
     ],
     [
      20.31,
-     25.3,
+     25.29,
      2623250
     ],
     [
@@ -11022,7 +10907,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 21,
+   "track_id": 20,
    "t_start_ms": 2625270,
    "t_end_ms": 2629070,
    "start": "17:43:45.2",
@@ -11089,14 +10974,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 17,
+     "track_id": 16,
      "r": 0.78,
      "absent_s": 83.3
     }
    ]
   },
   {
-   "track_id": 22,
+   "track_id": 21,
    "t_start_ms": 2626150,
    "t_end_ms": 2653150,
    "start": "17:43:46.1",
@@ -11522,7 +11407,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 23,
+   "track_id": 22,
    "t_start_ms": 2630470,
    "t_end_ms": 2780470,
    "start": "17:43:50.4",
@@ -12493,7 +12378,7 @@
    ]
   },
   {
-   "track_id": 24,
+   "track_id": 23,
    "t_start_ms": 2639466,
    "t_end_ms": 2779350,
    "start": "17:43:59.4",
@@ -13387,7 +13272,7 @@
    ]
   },
   {
-   "track_id": 25,
+   "track_id": 24,
    "t_start_ms": 2695950,
    "t_end_ms": 2709966,
    "start": "17:44:55.9",
@@ -13603,7 +13488,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 26,
+   "track_id": 25,
    "t_start_ms": 2699670,
    "t_end_ms": 2741059,
    "start": "17:44:59.6",
@@ -14076,7 +13961,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 27,
+   "track_id": 26,
    "t_start_ms": 2702224,
    "t_end_ms": 2765470,
    "start": "17:45:02.2",
@@ -14620,7 +14505,7 @@
    ]
   },
   {
-   "track_id": 28,
+   "track_id": 27,
    "t_start_ms": 2702470,
    "t_end_ms": 2709270,
    "start": "17:45:02.4",
@@ -14739,7 +14624,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 29,
+   "track_id": 28,
    "t_start_ms": 2703470,
    "t_end_ms": 2774550,
    "start": "17:45:03.4",
@@ -14950,7 +14835,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 30,
+   "track_id": 29,
    "t_start_ms": 2708659,
    "t_end_ms": 2749150,
    "start": "17:45:08.6",
@@ -15437,7 +15322,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 31,
+   "track_id": 30,
    "t_start_ms": 2714750,
    "t_end_ms": 2753270,
    "start": "17:45:14.7",
@@ -15954,13 +15839,13 @@
    "possibly_same_person_as": [
     {
      "track_id": 11,
-     "r": 0.75,
+     "r": 0.74,
      "absent_s": 171.0
     }
    ]
   },
   {
-   "track_id": 32,
+   "track_id": 31,
    "t_start_ms": 2715950,
    "t_end_ms": 2752150,
    "start": "17:45:15.9",
@@ -16438,7 +16323,7 @@
    ]
   },
   {
-   "track_id": 33,
+   "track_id": 32,
    "t_start_ms": 2733379,
    "t_end_ms": 2756824,
    "start": "17:45:33.3",
@@ -16786,7 +16671,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 34,
+   "track_id": 33,
    "t_start_ms": 2742350,
    "t_end_ms": 2748150,
    "start": "17:45:42.3",
@@ -16896,7 +16781,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 35,
+   "track_id": 34,
    "t_start_ms": 2789066,
    "t_end_ms": 2803350,
    "start": "17:46:29.0",
@@ -17111,14 +16996,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 25,
+     "track_id": 24,
      "r": 0.89,
      "absent_s": 79.1
     }
    ]
   },
   {
-   "track_id": 36,
+   "track_id": 35,
    "t_start_ms": 2820779,
    "t_end_ms": 2824870,
    "start": "17:47:00.7",
@@ -17213,7 +17098,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 37,
+   "track_id": 36,
    "t_start_ms": 2830459,
    "t_end_ms": 3150766,
    "start": "17:47:10.4",
@@ -20615,7 +20500,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 38,
+   "track_id": 37,
    "t_start_ms": 2855024,
    "t_end_ms": 2864624,
    "start": "17:47:35.0",
@@ -20805,14 +20690,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 18,
+     "track_id": 17,
      "r": 0.84,
      "absent_s": 290.6
     }
    ]
   },
   {
-   "track_id": 39,
+   "track_id": 38,
    "t_start_ms": 2910059,
    "t_end_ms": 3153766,
    "start": "17:48:30.0",
@@ -23355,7 +23240,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 40,
+   "track_id": 39,
    "t_start_ms": 2910470,
    "t_end_ms": 2924666,
    "start": "17:48:30.4",
@@ -23399,10 +23284,10 @@
      "camera_b": "camera_new_3",
      "tier": "sustained",
      "t_ms": 2911059,
-     "g_m": 1.13,
+     "g_m": 1.12,
      "contact_s": 7.6,
      "r": 0.58,
-     "score": 0.78,
+     "score": 0.79,
      "confidence": "green"
     },
     {
@@ -23492,7 +23377,7 @@
     ],
     [
      20.49,
-     23.57,
+     23.58,
      2917470
     ],
     [
@@ -23570,14 +23455,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 36,
+     "track_id": 35,
      "r": 0.81,
      "absent_s": 85.6
     }
    ]
   },
   {
-   "track_id": 41,
+   "track_id": 40,
    "t_start_ms": 2924750,
    "t_end_ms": 2928550,
    "start": "17:48:44.7",
@@ -23666,14 +23551,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 26,
+     "track_id": 25,
      "r": 0.83,
      "absent_s": 183.7
     }
    ]
   },
   {
-   "track_id": 42,
+   "track_id": 41,
    "t_start_ms": 2926750,
    "t_end_ms": 2941966,
    "start": "17:48:46.7",
@@ -23919,7 +23804,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 43,
+   "track_id": 42,
    "t_start_ms": 2932344,
    "t_end_ms": 2957470,
    "start": "17:48:52.3",
@@ -24307,7 +24192,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 44,
+   "track_id": 43,
    "t_start_ms": 2937424,
    "t_end_ms": 2944150,
    "start": "17:48:57.4",
@@ -24448,7 +24333,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 45,
+   "track_id": 44,
    "t_start_ms": 2991670,
    "t_end_ms": 3010979,
    "start": "17:49:51.6",
@@ -24754,7 +24639,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 46,
+   "track_id": 45,
    "t_start_ms": 3033059,
    "t_end_ms": 3035779,
    "start": "17:50:33.0",
@@ -24812,7 +24697,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 47,
+   "track_id": 46,
    "t_start_ms": 3099179,
    "t_end_ms": 3147766,
    "start": "17:51:39.1",
@@ -25464,14 +25349,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 45,
+     "track_id": 44,
      "r": 0.89,
      "absent_s": 88.2
     }
    ]
   },
   {
-   "track_id": 48,
+   "track_id": 47,
    "t_start_ms": 3102566,
    "t_end_ms": 3226670,
    "start": "17:51:42.5",
@@ -25486,6 +25371,7 @@
     265,
     171,
     411,
+    172,
     412,
     173,
     275,
@@ -25511,6 +25397,12 @@
      "camera_id": "camera_new_5",
      "t_start_ms": 3107670,
      "t_end_ms": 3114150
+    },
+    {
+     "kind": "observed",
+     "camera_id": "camera_new_3",
+     "t_start_ms": 3110259,
+     "t_end_ms": 3113259
     },
     {
      "kind": "blind_inferred",
@@ -25590,6 +25482,19 @@
     },
     {
      "a": 411,
+     "b": 172,
+     "camera_a": "camera_new_5",
+     "camera_b": "camera_new_3",
+     "tier": "sustained",
+     "t_ms": 3110259,
+     "g_m": 2.08,
+     "contact_s": 3.0,
+     "r": 0.3,
+     "score": 0.572,
+     "confidence": "yellow"
+    },
+    {
+     "a": 411,
      "b": 412,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
@@ -25597,8 +25502,8 @@
      "t_ms": 3114150,
      "g_m": 0.52,
      "contact_s": -33.0,
-     "r": 0.84,
-     "score": 0.668,
+     "r": 0.83,
+     "score": 0.666,
      "confidence": "green"
     },
     {
@@ -25750,32 +25655,32 @@
     ],
     [
      21.03,
-     29.04,
+     29.1,
      3110566
     ],
     [
      21.07,
-     29.69,
+     29.74,
      3111066
     ],
     [
      21.07,
-     30.51,
+     30.67,
      3111566
     ],
     [
      21.13,
-     31.03,
+     31.06,
      3112066
     ],
     [
      21.23,
-     31.78,
+     31.8,
      3112566
     ],
     [
      21.52,
-     32.27,
+     32.28,
      3113066
     ],
     [
@@ -26093,77 +25998,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 20,
+     "track_id": 19,
      "r": 0.85,
      "absent_s": 472.2
     }
    ]
   },
   {
-   "track_id": 49,
-   "t_start_ms": 3110259,
-   "t_end_ms": 3113259,
-   "start": "17:51:50.2",
-   "end": "17:51:53.2",
-   "cameras": [
-    "camera_new_3"
-   ],
-   "close_zone": "OPEN",
-   "tracklets": [
-    172
-   ],
-   "segments": [
-    {
-     "kind": "observed",
-     "camera_id": "camera_new_3",
-     "t_start_ms": 3110259,
-     "t_end_ms": 3113259
-    }
-   ],
-   "links": [],
-   "plan_path": [
-    [
-     21.07,
-     34.93,
-     3110259
-    ],
-    [
-     21.13,
-     35.5,
-     3110759
-    ],
-    [
-     21.11,
-     36.36,
-     3111259
-    ],
-    [
-     21.15,
-     36.26,
-     3111759
-    ],
-    [
-     21.22,
-     35.42,
-     3112259
-    ],
-    [
-     21.4,
-     33.19,
-     3112759
-    ],
-    [
-     21.61,
-     32.49,
-     3113259
-    ]
-   ],
-   "best_crop": null,
-   "clip": null,
-   "possibly_same_person_as": []
-  },
-  {
-   "track_id": 50,
+   "track_id": 48,
    "t_start_ms": 3114366,
    "t_end_ms": 3157366,
    "start": "17:51:54.3",
@@ -26646,14 +26488,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 40,
+     "track_id": 39,
      "r": 0.81,
      "absent_s": 189.7
     }
    ]
   },
   {
-   "track_id": 51,
+   "track_id": 49,
    "t_start_ms": 3184059,
    "t_end_ms": 3213866,
    "start": "17:53:04.0",
@@ -26991,7 +26833,7 @@
    ]
   },
   {
-   "track_id": 52,
+   "track_id": 50,
    "t_start_ms": 3192550,
    "t_end_ms": 3225824,
    "start": "17:53:12.5",
@@ -27485,7 +27327,7 @@
    ]
   },
   {
-   "track_id": 53,
+   "track_id": 51,
    "t_start_ms": 3263266,
    "t_end_ms": 3278750,
    "start": "17:54:23.2",
@@ -27711,7 +27553,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 54,
+   "track_id": 52,
    "t_start_ms": 3275950,
    "t_end_ms": 3280750,
    "start": "17:54:35.9",
@@ -27811,7 +27653,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 55,
+   "track_id": 53,
    "t_start_ms": 3282190,
    "t_end_ms": 3304866,
    "start": "17:54:42.1",
@@ -27829,6 +27671,7 @@
     53,
     180,
     421,
+    423,
     286
    ],
    "segments": [
@@ -27855,6 +27698,12 @@
      "camera_id": "camera_new_5",
      "t_start_ms": 3294350,
      "t_end_ms": 3295870
+    },
+    {
+     "kind": "observed",
+     "camera_id": "camera_new_5",
+     "t_start_ms": 3296070,
+     "t_end_ms": 3299550
     },
     {
      "kind": "observed",
@@ -27902,6 +27751,19 @@
      "r": 0.12,
      "score": 0.568,
      "confidence": "green"
+    },
+    {
+     "a": 180,
+     "b": 423,
+     "camera_a": "camera_new_3",
+     "camera_b": "camera_new_5",
+     "tier": "sustained",
+     "t_ms": 3296070,
+     "g_m": 4.33,
+     "contact_s": 3.39,
+     "r": 0.07,
+     "score": 0.251,
+     "confidence": "yellow"
     },
     {
      "a": 180,
@@ -28060,27 +27922,27 @@
     ],
     [
      20.43,
-     19.84,
+     19.67,
      3296190
     ],
     [
-     20.27,
-     21.11,
+     20.26,
+     20.77,
      3296690
     ],
     [
-     20.3,
-     21.83,
+     20.29,
+     21.81,
      3297190
     ],
     [
      20.51,
-     22.49,
+     22.46,
      3297690
     ],
     [
      20.6,
-     23.09,
+     23.07,
      3298190
     ],
     [
@@ -28090,7 +27952,7 @@
     ],
     [
      20.58,
-     24.19,
+     24.18,
      3299190
     ],
     [
@@ -28154,7 +28016,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 56,
+   "track_id": 54,
    "t_start_ms": 3289566,
    "t_end_ms": 3301670,
    "start": "17:54:49.5",
@@ -28198,10 +28060,10 @@
      "camera_b": "camera_new_3",
      "tier": "sustained",
      "t_ms": 3294459,
-     "g_m": 0.18,
+     "g_m": 0.51,
      "contact_s": 2.41,
      "r": 0.69,
-     "score": 0.725,
+     "score": 0.635,
      "confidence": "green"
     },
     {
@@ -28214,7 +28076,7 @@
      "g_m": 0.31,
      "contact_s": 5.63,
      "r": 0.26,
-     "score": 0.805,
+     "score": 0.803,
      "confidence": "green"
     }
    ],
@@ -28335,13 +28197,13 @@
      3300566
     ],
     [
-     20.56,
-     16.0,
+     20.57,
+     16.15,
      3301066
     ],
     [
-     20.22,
-     17.04,
+     20.23,
+     17.6,
      3301566
     ]
    ],
@@ -28349,77 +28211,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 39,
+     "track_id": 38,
      "r": 0.77,
      "absent_s": 135.8
     }
    ]
   },
   {
-   "track_id": 57,
-   "t_start_ms": 3296070,
-   "t_end_ms": 3299550,
-   "start": "17:54:56.0",
-   "end": "17:54:59.5",
-   "cameras": [
-    "camera_new_5"
-   ],
-   "close_zone": "OPEN",
-   "tracklets": [
-    423
-   ],
-   "segments": [
-    {
-     "kind": "observed",
-     "camera_id": "camera_new_5",
-     "t_start_ms": 3296070,
-     "t_end_ms": 3299550
-    }
-   ],
-   "links": [],
-   "plan_path": [
-    [
-     20.34,
-     16.77,
-     3296070
-    ],
-    [
-     20.22,
-     16.77,
-     3296570
-    ],
-    [
-     20.17,
-     16.78,
-     3297070
-    ],
-    [
-     20.18,
-     16.99,
-     3297570
-    ],
-    [
-     20.31,
-     16.94,
-     3298070
-    ],
-    [
-     20.34,
-     17.03,
-     3298570
-    ],
-    [
-     20.26,
-     20.67,
-     3299070
-    ]
-   ],
-   "best_crop": null,
-   "clip": null,
-   "possibly_same_person_as": []
-  },
-  {
-   "track_id": 58,
+   "track_id": 55,
    "t_start_ms": 3331466,
    "t_end_ms": 3417779,
    "start": "17:55:31.4",
@@ -28886,14 +28685,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 37,
+     "track_id": 36,
      "r": 0.87,
      "absent_s": 180.7
     }
    ]
   },
   {
-   "track_id": 59,
+   "track_id": 56,
    "t_start_ms": 3346366,
    "t_end_ms": 3398670,
    "start": "17:55:46.3",
@@ -29530,7 +29329,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 60,
+   "track_id": 57,
    "t_start_ms": 3348950,
    "t_end_ms": 3370366,
    "start": "17:55:48.9",
@@ -29902,7 +29701,7 @@
    ]
   },
   {
-   "track_id": 61,
+   "track_id": 58,
    "t_start_ms": 3358059,
    "t_end_ms": 3370390,
    "start": "17:55:58.0",
@@ -30119,7 +29918,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 62,
+   "track_id": 59,
    "t_start_ms": 3379766,
    "t_end_ms": 3397379,
    "start": "17:56:19.7",
@@ -30389,14 +30188,14 @@
    "clip": null,
    "possibly_same_person_as": [
     {
-     "track_id": 55,
-     "r": 0.69,
+     "track_id": 53,
+     "r": 0.72,
      "absent_s": 74.9
     }
    ]
   },
   {
-   "track_id": 63,
+   "track_id": 60,
    "t_start_ms": 3507259,
    "t_end_ms": 3523579,
    "start": "17:58:27.2",
@@ -30405,7 +30204,7 @@
     "camera_new_3",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "RECORDING_END",
    "tracklets": [
     189,
     435
@@ -30611,7 +30410,7 @@
    "possibly_same_person_as": []
   },
   {
-   "track_id": 64,
+   "track_id": 61,
    "t_start_ms": 3519070,
    "t_end_ms": 3523579,
    "start": "17:58:39.0",
@@ -30620,7 +30419,7 @@
     "camera_new_3",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "RECORDING_END",
    "tracklets": [
     436,
     191
@@ -30719,16 +30518,16 @@
    "tracks": 8
   },
   "pairs": {
-   "right": 25,
+   "right": 26,
    "total": 28,
    "errors": {
     "должны быть вместе, но врозь": [
      "женщина в полосатом",
-     "мужчина в синем пиджаке",
      "мужчина в чёрной футболке рядом с белой"
     ],
     "должны быть врозь, но вместе": []
    }
-  }
+  },
+  "tracks_without_returns": 91
  }
 }
