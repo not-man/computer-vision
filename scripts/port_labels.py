@@ -1,6 +1,6 @@
 """Переносит ручную разметку на новый прогон детектора: номера трекера меняются, а рамки тех же людей остаются на месте.
 
-Строка разметки и точка проверки ищут в том же кадре рамку нового прогона с наибольшим совпадением. С --write заменяет таблицы в mct/fragment_truth.py.
+Строка разметки и точка проверки ищут в том же кадре рамку нового прогона с наибольшим совпадением. С --write заменяет таблицы в evaluation/fragment_truth.py.
 """
 import argparse
 from pathlib import Path
@@ -8,12 +8,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from mct.fragment_truth import DIFFERENT_PEOPLE, LABELS, SAME_PERSON, TIME_TOLERANCE_S
+from evaluation.fragment_truth import DIFFERENT_PEOPLE, LABELS, SAME_PERSON, TIME_TOLERANCE_S
 
 BOX = ["x1", "y1", "x2", "y2"]
 MATCH_IOU = 0.5
 NEAR_S = (2.0, 5.0, 10.0)  # точка проверки может попасть в кадр без рамки: ищем всё дальше по времени
-TRUTH = Path(__file__).resolve().parents[1] / "src" / "mct" / "fragment_truth.py"
+TRUTH = Path(__file__).resolve().parents[1] / "evaluation" / "fragment_truth.py"
 
 
 def box_iou(a: np.ndarray, b: np.ndarray) -> np.ndarray:

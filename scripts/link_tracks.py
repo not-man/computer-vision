@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
-from mct.fragment_truth import DIFFERENT_PEOPLE, SAME_PERSON, check_pairs, score
+from evaluation.fragment_truth import DIFFERENT_PEOPLE, SAME_PERSON, check_pairs, score
 from mct.geometry import load_cameras
 from mct.plan import Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception

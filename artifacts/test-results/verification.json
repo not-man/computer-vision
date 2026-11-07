@@ -1,0 +1,19 @@
+{
+  "base_commit": "8afe7d0d4c465dc51ac795c4e418bc598bef1a93",
+  "full_rebuild": "interrupted_by_request_to_reduce_cpu",
+  "neural_inference_run": false,
+  "tracks.csv": {
+    "same_lf": true
+  },
+  "tracks.json": {
+    "same_semantics": true,
+    "changed_fields": []
+  },
+  "tests": {
+    "tests": "174",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "7",
+    "time": "46.489"
+  }
+}

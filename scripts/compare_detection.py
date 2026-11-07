@@ -11,7 +11,7 @@ import pandas as pd
 import yaml
 
 from mct import trinity as tr
-from mct.fragment_truth import label_rows, score
+from evaluation.fragment_truth import label_rows, score
 from mct.geometry import load_cameras
 from mct.plan import Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception

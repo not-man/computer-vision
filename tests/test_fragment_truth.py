@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from mct.embedder import without_background
-from mct.fragment_truth import DIFFERENT_PEOPLE, LABELS, SAME_PERSON, check_pairs, label_rows, score
+from evaluation.fragment_truth import DIFFERENT_PEOPLE, LABELS, SAME_PERSON, check_pairs, label_rows, score
 
 
 def rows_for_labels() -> pd.DataFrame:

@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 artifacts/mct_colab.zip
 artifacts/trial/
+artifacts/mct_demo_build_64.zip
