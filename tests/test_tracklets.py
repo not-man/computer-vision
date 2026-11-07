@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from mct.tracklets import FilterConfig, _set_embeddings, build_tracklets
+from mct.tracklets import FilterConfig, _set_embeddings, build_tracklets, find_identity_jumps, find_tail_swaps
 from mct.trinity import Tracklet
 
 
@@ -144,3 +144,94 @@ def test_reflection_inside_marked_mirror_is_dropped_but_person_passing_by_is_not
     tracklets, _, dropped = build_tracklets(pd.concat([reflection, passing, other_camera]), {}, cfg)
     assert sorted(x.camera for x in tracklets) == ["a", "b"]
     assert "зеркало" in dropped.reason.iloc[0]
+
+
+PERSON_1, PERSON_2 = np.array([1.0, 0.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0, 0.0])
+
+
+def walking(id_: int, camera: str, start: float, end: float, embedding: np.ndarray | None, y: float = 0.0) -> Tracklet:
+    t = np.arange(start, end + 1e-9, 0.2)
+    return Tracklet(id_, camera, t, np.column_stack([t, np.full(len(t), y)]), np.tile(np.eye(2) * 0.01, (len(t), 1, 1)), embedding)
+
+
+def jump_seconds(x: Tracklet) -> dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]]:
+    # До 5 с на куске один человек, после 5 с другой
+    times = np.arange(x.start, x.end, 1.0)
+    vectors = np.array([PERSON_1 if t < 5 else PERSON_2 for t in times])
+    return {x.id: ((times * 10).astype(int), times, vectors)}
+
+
+def test_jump_is_found_when_each_half_has_its_own_person_nearby() -> None:
+    x = walking(1, "a", 0.0, 10.0, (PERSON_1 + PERSON_2) / np.sqrt(2))
+    first, second = walking(2, "b", 0.0, 10.0, PERSON_1), walking(3, "b", 0.0, 10.0, PERSON_2, y=0.5)
+    assert find_identity_jumps([x, first, second], jump_seconds(x), FilterConfig()) == {1: 5}
+
+
+def test_change_of_look_without_other_people_is_not_a_jump() -> None:
+    # Человек повернулся, и внешность изменилась: рядом нет двух разных людей, значит, резать нельзя
+    x = walking(1, "a", 0.0, 10.0, (PERSON_1 + PERSON_2) / np.sqrt(2))
+    assert find_identity_jumps([x], jump_seconds(x), FilterConfig()) == {}
+
+
+def test_two_views_of_one_person_are_not_two_people() -> None:
+    # Другие камеры видят того же человека спереди и сзади: они рядом друг с другом, поэтому доказательства нет
+    x = walking(1, "a", 0.0, 10.0, (PERSON_1 + PERSON_2) / np.sqrt(2))
+    front, back = walking(2, "b", 0.0, 10.0, PERSON_1), walking(3, "c", 0.0, 10.0, PERSON_2, y=0.2)
+    assert find_identity_jumps([x, front, back], jump_seconds(x), FilterConfig()) == {}
+
+
+def test_jump_needs_clearly_different_halves() -> None:
+    x = walking(1, "a", 0.0, 10.0, PERSON_1)
+    times = np.arange(0.0, 10.0, 1.0)
+    same = {1: ((times * 10).astype(int), times, np.tile(PERSON_1, (len(times), 1)))}
+    assert find_identity_jumps([x, walking(2, "b", 0.0, 10.0, PERSON_1), walking(3, "b", 0.0, 10.0, PERSON_2, y=0.5)], same, FilterConfig()) == {}
+
+
+def with_boxes(x: Tracklet, box: tuple[float, float, float, float]) -> Tracklet:
+    x.boxes = np.tile(box, (len(x.t), 1))
+    return x
+
+
+def swap_seconds(*ids: int) -> dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]]:
+    times = np.arange(0.0, 10.0, 1.0)
+    one = np.array([PERSON_1 if t < 5 else PERSON_2 for t in times])
+    other = np.array([PERSON_2 if t < 5 else PERSON_1 for t in times])
+    return {ids[0]: ((times * 10).astype(int), times, one), ids[1]: ((times * 10).astype(int), times, other)}
+
+
+def test_two_people_exchanging_numbers_are_cut_at_the_same_moment() -> None:
+    a = with_boxes(walking(1, "a", 0.0, 10.0, PERSON_1), (0.0, 0.0, 40.0, 90.0))
+    b = with_boxes(walking(2, "a", 0.0, 10.0, PERSON_2), (30.0, 0.0, 70.0, 90.0))
+    assert find_tail_swaps([a, b], swap_seconds(1, 2), FilterConfig()) == {1: 5, 2: 5}
+
+
+def test_exchange_needs_touching_boxes() -> None:
+    a = with_boxes(walking(1, "a", 0.0, 10.0, PERSON_1), (0.0, 0.0, 40.0, 90.0))
+    b = with_boxes(walking(2, "a", 0.0, 10.0, PERSON_2), (300.0, 0.0, 340.0, 90.0))
+    assert find_tail_swaps([a, b], swap_seconds(1, 2), FilterConfig()) == {}
+
+
+def test_exchange_needs_both_sides_to_change() -> None:
+    a = with_boxes(walking(1, "a", 0.0, 10.0, PERSON_1), (0.0, 0.0, 40.0, 90.0))
+    b = with_boxes(walking(2, "a", 0.0, 10.0, PERSON_2), (30.0, 0.0, 70.0, 90.0))
+    times = np.arange(0.0, 10.0, 1.0)
+    only_one_changes = {
+        1: ((times * 10).astype(int), times, np.array([PERSON_1 if t < 5 else PERSON_2 for t in times])),
+        2: ((times * 10).astype(int), times, np.tile(PERSON_2, (len(times), 1))),
+    }
+    assert find_tail_swaps([a, b], only_one_changes, FilterConfig()) == {}
+
+
+def test_exchange_needs_high_cross_similarity() -> None:
+    # Половины разные, а перекрёстное сходство только 0.45: так выглядит общий переход в другой свет
+    a = with_boxes(walking(1, "a", 0.0, 10.0, PERSON_1), (0.0, 0.0, 40.0, 90.0))
+    b = with_boxes(walking(2, "a", 0.0, 10.0, PERSON_2), (30.0, 0.0, 70.0, 90.0))
+    rest = float(np.sqrt(1 - 0.2**2 - 0.45**2))
+    tail_a, tail_b = np.array([-0.2, 0.45, rest, 0.0]), np.array([0.45, -0.2, 0.0, rest])
+    times = np.arange(0.0, 10.0, 1.0)
+    weak = {
+        1: ((times * 10).astype(int), times, np.array([PERSON_1 if t < 5 else tail_a for t in times])),
+        2: ((times * 10).astype(int), times, np.array([PERSON_2 if t < 5 else tail_b for t in times])),
+    }
+    assert find_tail_swaps([a, b], weak, FilterConfig()) == {}
+    assert set(find_tail_swaps([a, b], weak, FilterConfig(swap_min_match=0.3))) == {1, 2}

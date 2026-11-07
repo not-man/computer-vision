@@ -6,6 +6,7 @@
 """
 from collections.abc import Iterable
 from dataclasses import dataclass, field
+from itertools import combinations
 
 import numpy as np
 
@@ -44,6 +45,15 @@ class TrinityConfig:
     r_hint: float = 0.6  # уровень целых треков: проходит 40% своих и 3% чужих
     hint_margin: float = 0.1
     min_track_s: float = 2.0
+    contact_r: float = 0.7  # один объект на той же камере: рамки пересекаются и внешность совпадает, разворот ему не запрещён
+    contact_gap_s: float = 0.5
+    edge_override_r: float = 0.6  # короткий контакт не у края кадра допустим при таком сходстве
+    share_override_r: float = 0.55  # меньшая доля совпавших точек допустима при таком сходстве
+    share_override_min: float = 0.5
+    door_gap_veto: float = 0.2  # стык у двери на одной камере: один вышел, другой вошёл, а трекер уже дал новый номер
+    return_window_s: float = 60.0  # организаторы: длительное отсутствие, это больше минуты без человека на всех камерах
+    r_return: float = 0.6  # вернувшегося можно узнать только по внешности: на снимках от этого порога пары верные
+    return_margin: float = 0.1  # заведомо другой человек похож почти так же: это не решаем
     weight_g: float = 0.5
     weight_t: float = 0.3
     weight_r: float = 0.2
@@ -59,6 +69,7 @@ class Tracklet:
     embedding: np.ndarray | None = None
     starts_at_edge: bool = False
     ends_at_edge: bool = False
+    boxes: np.ndarray | None = None  # N×4, рамки на кадре в порядке t
 
     @property
     def start(self) -> float:
@@ -163,7 +174,7 @@ class ZoneMap:
 class Link:
     a: int
     b: int
-    tier: str  # sustained, brief или gap
+    tier: str  # sustained, brief, gap или return
     t: float
     g_m: float  # расстояние между траекториями в метрах
     contact_s: float  # общее время; отрицательное значение: длина разрыва
@@ -218,6 +229,25 @@ def _similarity(a: Tracklet | None, b: Tracklet | None) -> float | None:
     if a is None or b is None or a.embedding is None or b.embedding is None:
         return None
     return float(a.embedding @ b.embedding)
+
+
+def _disjoint(a: np.ndarray, b: np.ndarray) -> bool:
+    return bool(a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1])
+
+
+def _boxes_apart(a: Tracklet, b: Tracklet, time: float) -> bool:
+    """Рамки одного кадра без общей площади: это два объекта, как бы близко ни легли точки на плане."""
+    if a.boxes is None or b.boxes is None:
+        return False
+    return _disjoint(a.boxes[int(np.abs(a.t - time).argmin())], b.boxes[int(np.abs(b.t - time).argmin())])
+
+
+def _same_object(cfg: TrinityConfig, last: Tracklet, first: Tracklet, gap: float) -> bool:
+    """Трекер сменил номер у того же объекта: та же камера, почти без паузы, рамки пересекаются, внешность совпадает."""
+    if last.camera != first.camera or gap > cfg.contact_gap_s or last.boxes is None or first.boxes is None:
+        return False
+    r = _similarity(last, first)
+    return r is not None and r >= cfg.contact_r and not _disjoint(last.boxes[-1], first.boxes[0])
 
 
 def _score(cfg: TrinityConfig, g: float, t: float, r: float | None) -> float:
@@ -282,6 +312,8 @@ class _Linker:
             if overlap > cfg.same_camera_overlap_s:
                 return True
             middle = np.array([(max(a.start, b.start) + min(a.end, b.end)) / 2])
+            if _boxes_apart(a, b, float(middle[0])):
+                return True
             xy_a, cov_a, _ = a.at(middle)
             xy_b, cov_b, _ = b.at(middle)
             return float(_mahalanobis(xy_a - xy_b, cov_a + cov_b + self._calibration)[0]) > cfg.k
@@ -337,8 +369,9 @@ class _Linker:
                 if metrics is None:
                     continue
                 median_d, share, median_m = metrics
-                ok = median_d <= cfg.k and share >= cfg.min_inlier_share
                 r = _similarity(a, b)
+                enough = share >= cfg.min_inlier_share or (r is not None and r >= cfg.share_override_r and share >= cfg.share_override_min)
+                ok = median_d <= cfg.k and enough
                 self._record(a.id, b.id, "sustained", ok, "" if ok else "геометрия", d=median_d, overlap=overlap, r=r, g_m=median_m)
                 if ok:
                     g = max(0.0, 1 - median_d / cfg.k)
@@ -446,7 +479,8 @@ class _Linker:
         # потому что сравнивать можно наблюдаемые положения, а не продлённые
         if second.end <= first.end:
             return self._check_fragment(first, second)
-        if not (first.ends_at_edge or second.starts_at_edge):
+        similar = _similarity(first, second)
+        if not (first.ends_at_edge or second.starts_at_edge or (similar is not None and similar >= cfg.edge_override_r)):
             self._record(first.id, second.id, "brief", False, "край", overlap=overlap)
             return None
 
@@ -475,6 +509,102 @@ class _Linker:
                     _score(cfg, g, t, r), pause="blind_inferred" if overlap < 0 else None)
 
     # Уровень C: разрывы между группами
+
+    # Тот же объект на одной камере: сравниваются сами куски, а не концы всего трека
+
+    def contacts(self) -> None:
+        cfg = self.cfg
+        links: list[Link] = []
+        items = self.tracklets
+        for index, last in enumerate(items):
+            for first in items[index + 1:]:
+                if first.start > last.end + cfg.contact_gap_s:
+                    break
+                if first.camera != last.camera or first.end <= last.end or self.group_of[first.id] == self.group_of[last.id]:
+                    continue
+                gap = max(first.start - last.end, 0.0)
+                if _same_object(cfg, last, first, gap):
+                    r = _similarity(last, first)
+                    distance = float(np.hypot(*(first.state_near(first.start)[0] - last.state_near(last.end)[0])))
+                    links.append(Link(last.id, first.id, "gap", last.end, distance, -gap, r, _score(cfg, 1.0, 0.2, r), pause=self.zones.policy(last).pause))
+        for link in sorted(links, key=lambda x: (-x.score, x.a, x.b)):
+            if self._can_merge(link.a, link.b):
+                self._record(link.a, link.b, "gap", True, "", r=link.r, g_m=link.g_m, overlap=link.contact_s)
+                self._merge(link)
+
+    # Возврат: человека нет ни на одной камере меньше минуты
+
+    def returns(self) -> None:
+        while not self.zones.strict_blind and self._return_round():
+            pass
+
+    def _return_round(self) -> bool:
+        cfg = self.cfg
+        vectors = {}
+        for group, members in self.members.items():
+            vector = _members_embedding(members)
+            if vector is not None and _observed_time(members) >= cfg.min_track_s:
+                vectors[group] = vector
+        possible: dict[frozenset, Link] = {}
+        for g1, g2 in combinations(vectors, 2):
+            link = self._return_link(self.members[g1], self.members[g2])
+            if link is not None and self._can_merge(link.a, link.b):
+                possible[frozenset((g1, g2))] = link
+
+        def similarity(pair: frozenset) -> float:
+            first, second = tuple(pair)
+            return float(vectors[first] @ vectors[second])
+
+        def overlaps(g1: int, g2: int) -> bool:
+            return any(a.start < b.end and b.start < a.end for a in self.members[g1] for b in self.members[g2])
+
+        def has_rival(group: int, partner: int, r: float) -> bool:
+            # Группа похожа на другого человека почти так же, а он был виден одновременно с партнёром
+            return any(
+                other != partner and other in vectors and frozenset((group, other)) in possible
+                and overlaps(other, partner) and float(vectors[group] @ vectors[other]) >= r - cfg.return_margin
+                for other in vectors if other != group
+            )
+
+        for pair in sorted(possible, key=lambda p: (-similarity(p), min(p), max(p))):
+            r = similarity(pair)
+            if r < cfg.r_return:
+                return False
+            g1, g2 = tuple(pair)
+            if has_rival(g1, g2, r) or has_rival(g2, g1, r):
+                self._record(possible[pair].a, possible[pair].b, "return", False, "неоднозначно", r=r)
+                continue
+            link = possible[pair]
+            link.r = r
+            link.score = _score(cfg, 1.0, 0.0, r)
+            self._record(link.a, link.b, "return", True, "", r=r, g_m=link.g_m, overlap=link.contact_s)
+            self._merge(link)
+            return True
+        return False
+
+    def _return_link(self, first_group: list[Tracklet], second_group: list[Tracklet]) -> Link | None:
+        """Связь через паузу, если группы ни разу не видны одновременно и пауза не дольше минуты."""
+        cfg = self.cfg
+        items = sorted([(x.start, x.id, x, 0) for x in first_group] + [(x.start, x.id, x, 1) for x in second_group], key=lambda item: item[:2])
+        latest: list[Tracklet | None] = [None, None]
+        link = None
+        for _, _, x, side in items:
+            other = latest[1 - side]
+            if other is not None:
+                pause = x.start - other.end
+                if pause <= 0:
+                    return None
+                own = latest[side]
+                if (own is None or own.end < other.end) and link is None:
+                    distance = float(np.hypot(*(x.xy[0] - other.xy[-1])))
+                    if pause > cfg.return_window_s or distance > cfg.v_max * pause:
+                        return None
+                    link = Link(other.id, x.id, "return", other.end, distance, -pause, None, 0.0, pause="blind_inferred")
+                elif (own is None or own.end < other.end) and (pause > cfg.return_window_s or float(np.hypot(*(x.xy[0] - other.xy[-1]))) > cfg.v_max * pause):
+                    return None
+            if latest[side] is None or x.end > latest[side].end:
+                latest[side] = x
+        return link
 
     def gaps(self) -> None:
         for _ in range(20):
@@ -544,7 +674,8 @@ class _Linker:
         if policy.reid == "required" and not adjacent and (r is None or r < cfg.r_gap):
             self._record(last.id, first.id, "gap", False, "внешность", r=r, overlap=-gap)
             return None
-        if (policy.reid == "no_conflict" or adjacent) and r is not None and r < cfg.gap_veto:
+        veto = cfg.door_gap_veto if policy.kind == "DOOR" and last.camera == first.camera else cfg.gap_veto
+        if (policy.reid == "no_conflict" or adjacent) and r is not None and r < veto:
             self._record(last.id, first.id, "gap", False, "внешность", r=r, overlap=-gap)
             return None
 
@@ -597,12 +728,16 @@ def _observed_time(members: list[Tracklet]) -> float:
     return total + current_end - current_start
 
 
-def _track_embedding(track: Track, by_id: dict[int, Tracklet]) -> np.ndarray | None:
-    vectors = [by_id[i].embedding for i in track.tracklets if by_id[i].embedding is not None]
+def _members_embedding(members: Iterable[Tracklet]) -> np.ndarray | None:
+    vectors = [x.embedding for x in members if x.embedding is not None]
     if not vectors:
         return None
     mean = np.mean(vectors, axis=0)
     return mean / max(np.linalg.norm(mean), 1e-12)
+
+
+def _track_embedding(track: Track, by_id: dict[int, Tracklet]) -> np.ndarray | None:
+    return _members_embedding(by_id[i] for i in track.tracklets)
 
 
 def _could_return(old: Track, new: Track, by_id: dict[int, Tracklet], cfg: TrinityConfig) -> bool:
@@ -641,7 +776,9 @@ def link_tracklets(tracklets: Iterable[Tracklet], cfg: TrinityConfig = TrinityCo
     linker = _Linker(tracklets, cfg, zones or ZoneMap())
     linker.sustained()
     linker.brief()
+    linker.contacts()
     linker.gaps()
+    linker.returns()
     return linker.finish()
 
 
@@ -653,11 +790,14 @@ def check_invariants(result: LinkResult, tracklets: Iterable[Tracklet], cfg: Tri
         members = sorted((by_id[i] for i in track.tracklets), key=lambda x: x.start)
         for index, a in enumerate(members):
             for b in members[index + 1:]:
-                if a.camera == b.camera and min(a.end, b.end) - max(a.start, b.start) > cfg.same_camera_overlap_s:
+                overlap = min(a.end, b.end) - max(a.start, b.start)
+                if a.camera == b.camera and overlap > cfg.same_camera_overlap_s:
                     problems.append(f"трек {track.track_id}: треклеты {a.id} и {b.id} одной камеры пересекаются")
+                elif a.camera == b.camera and overlap >= 0 and _boxes_apart(a, b, b.start + overlap / 2):
+                    problems.append(f"трек {track.track_id}: треклеты {a.id} и {b.id} в разных рамках одного кадра")
         for segment in track.segments:
             if segment.kind != "observed" and not any(
-                link.tier in ("gap", "brief") and link.contact_s <= 0 for link in track.links
+                link.tier in ("gap", "brief", "return") and link.contact_s <= 0 for link in track.links
             ):
                 problems.append(f"трек {track.track_id}: пауза без правила")
         tolerance = 3 * cfg.calibration_sigma

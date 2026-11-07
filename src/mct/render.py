@@ -262,6 +262,9 @@ def build_events(result: dict, recording_end_s: float | None = None) -> list[Eve
             elif link["tier"] == "brief":
                 contact = f"контакт {link['contact_s']:.1f} с" if link["contact_s"] >= 0 else f"разрыв {-link['contact_s']:.1f} с"
                 events.append(Event(t, "fast", f"#{track_id}  {route}  быстрый переход  {contact}  G {link['g_m']:.1f} м{r}", BLUE, track_id))
+            elif link["tier"] == "return":
+                absent = int(round(-link["contact_s"]))
+                events.append(Event(t - link["contact_s"], "resume", f"#{track_id}  вернулся через {absent // 60}:{absent % 60:02d}, номер сохранён{r}", GHOST, track_id))
             elif -link["contact_s"] < ADJACENT_GAP_S:
                 events.append(Event(t, "handoff", f"#{track_id}  {route}  передача встык  G {link['g_m']:.1f} м{r}", color, track_id))
             else:

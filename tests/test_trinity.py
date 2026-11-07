@@ -112,14 +112,38 @@ def test_person_behind_column_for_3s_is_one_track() -> None:
 
 def test_left_through_door_and_back_after_a_minute_is_new_id_with_hint() -> None:
     a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
-    b = walker(2, "cam_1", 70.0, 80.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=SAME)
+    b = walker(2, "cam_1", 71.0, 81.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=SAME)
     zones = ZoneMap([Zone("DOOR", 14.0, 5.0, 1.0)])
     result = run([a, b], zones)
     assert groups(result) == {frozenset({1}), frozenset({2})}
     first, second = result.tracks
     assert first.close_zone == "DOOR"
     assert second.hints[0].track_id == first.track_id
-    assert second.hints[0].absent_s == pytest.approx(60.0)
+    assert second.hints[0].absent_s == pytest.approx(61.0)
+
+
+def test_return_within_a_minute_keeps_the_number_when_appearance_is_sure() -> None:
+    a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
+    b = walker(2, "cam_1", 50.0, 60.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=SAME)
+    zones = ZoneMap([Zone("DOOR", 14.0, 5.0, 1.0)])
+    result = run([a, b], zones)
+    assert groups(result) == {frozenset({1, 2})}
+    assert [s.kind for s in result.tracks[0].segments] == ["observed", "blind_inferred", "observed"]
+    assert result.tracks[0].links[0].tier == "return"
+
+
+def test_return_within_a_minute_needs_strong_appearance() -> None:
+    a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
+    b = walker(2, "cam_1", 50.0, 60.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=look(60.0))
+    assert groups(run([a, b], ZoneMap([Zone("DOOR", 14.0, 5.0, 1.0)]))) == {frozenset({1}), frozenset({2})}
+
+
+def test_return_is_not_decided_between_two_different_people() -> None:
+    # Двое одновременно ушли, один вернулся и похож на обоих: это не решаем
+    a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
+    c = walker(3, "cam_2", 0.0, 10.0, (0.0, 15.0), embedding=look(10.0))
+    b = walker(2, "cam_1", 50.0, 60.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=look(5.0))
+    assert groups(run([a, b, c], ZoneMap([Zone("DOOR", 14.0, 5.0, 1.0)]))) == {frozenset({1}), frozenset({2}), frozenset({3})}
 
 
 # Правила буфера
@@ -128,7 +152,7 @@ def test_left_through_door_and_back_after_a_minute_is_new_id_with_hint() -> None
 def test_missing_column_marking_splits_after_open_buffer() -> None:
     # Единственный пропуск зоны с заметным вредом: без разметки разрыв 3 с длиннее буфера OPEN
     a = walker(1, "cam_1", 0.0, 10.0, (3.0, 5.0), velocity=(0.7, 0.0), embedding=look(0))
-    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=SAME)
+    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=look(60.0))
     assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
 
 
@@ -175,7 +199,7 @@ def test_brief_contact_with_huge_error_needs_small_distance() -> None:
 def test_almost_adjacent_at_door_needs_only_no_conflict_in_appearance() -> None:
     # Человек стоит у двери, пропал на 1.2 с и появился там же. Снимков мало, поэтому сходство низкое
     a = walker(1, "cam_1", 0.0, 10.0, (14.0, 5.0), velocity=(0.0, 0.0), embedding=look(0))
-    weak = walker(2, "cam_1", 11.2, 20.0, (14.1, 5.0), velocity=(0.0, 0.0), embedding=look(80.0))
+    weak = walker(2, "cam_1", 11.2, 20.0, (14.1, 5.0), velocity=(0.0, 0.0), embedding=look(75.0))
     other = walker(2, "cam_1", 11.2, 20.0, (14.1, 5.0), velocity=(0.0, 0.0), embedding=CLEARLY_OTHER)
     farther = walker(2, "cam_1", 11.2, 20.0, (15.2, 5.0), velocity=(0.0, 0.0), embedding=look(80.0))
     zones = ZoneMap([Zone("DOOR", 14.0, 5.0, 1.5)])
@@ -186,8 +210,8 @@ def test_almost_adjacent_at_door_needs_only_no_conflict_in_appearance() -> None:
 
 def test_standing_person_may_return_after_20s_in_place() -> None:
     a = walker(1, "cam_1", 0.0, 10.0, (5.0, 5.0), velocity=(0.0, 0.0), embedding=look(0))
-    b = walker(2, "cam_1", 30.0, 40.0, (5.1, 5.0), velocity=(0.0, 0.0), embedding=SAME)
-    far = walker(2, "cam_1", 30.0, 40.0, (9.0, 5.0), velocity=(0.0, 0.0), embedding=SAME)
+    b = walker(2, "cam_1", 30.0, 40.0, (5.1, 5.0), velocity=(0.0, 0.0), embedding=look(60.0))
+    far = walker(2, "cam_1", 30.0, 40.0, (9.0, 5.0), velocity=(0.0, 0.0), embedding=look(60.0))
     assert groups(run([a, b])) == {frozenset({1, 2})}
     assert groups(run([a, far])) == {frozenset({1}), frozenset({2})}
 
@@ -353,6 +377,81 @@ def test_short_overlap_of_two_distant_people_on_one_camera_stays_apart() -> None
     a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0))
     b = walker(2, "cam_1", 9.8, 20.0, (13.72, 9.0))
     assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
+
+
+def boxed(tracklet: Tracklet, box: tuple[float, float, float, float]) -> Tracklet:
+    tracklet.boxes = np.tile(box, (len(tracklet.t), 1))
+    return tracklet
+
+
+def test_two_separate_boxes_in_one_frame_are_different_objects() -> None:
+    a = boxed(walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0)), (10.0, 10.0, 50.0, 90.0))
+    b = boxed(walker(2, "cam_1", 9.8, 20.0, (13.72, 5.0)), (200.0, 10.0, 240.0, 90.0))
+    assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
+
+
+def test_handover_with_overlapping_boxes_stays_one_person() -> None:
+    a = boxed(walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0)), (10.0, 10.0, 50.0, 90.0))
+    b = boxed(walker(2, "cam_1", 9.8, 20.0, (13.72, 5.0)), (40.0, 10.0, 80.0, 90.0))
+    assert groups(run([a, b])) == {frozenset({1, 2})}
+
+
+def test_door_on_one_camera_asks_more_of_appearance_than_door_between_cameras() -> None:
+    # Один вышел в дверь, другой почти сразу вошёл: на одной камере трекер уже дал новый номер, поэтому запрет строже
+    a = walker(1, "cam_1", 0.0, 10.0, (14.0, 5.0), velocity=(0.0, 0.0), embedding=look(0))
+    same_camera = walker(2, "cam_1", 11.2, 20.0, (14.1, 5.0), velocity=(0.0, 0.0), embedding=look(80.0))
+    other_camera = walker(2, "cam_2", 11.2, 20.0, (14.1, 5.0), velocity=(0.0, 0.0), embedding=look(80.0))
+    zones = ZoneMap([Zone("DOOR", 14.0, 5.0, 1.5)])
+    assert groups(run([a, same_camera], zones)) == {frozenset({1}), frozenset({2})}
+    assert groups(run([a, other_camera], zones)) == {frozenset({1, 2})}
+
+
+def same_object_pair(angle: float, second_box: tuple[float, float, float, float]) -> list[Tracklet]:
+    # Человек развернулся, а трекер в этот момент сменил номер: на кадре это тот же объект
+    a = boxed(walker(1, "cam_1", 0.0, 5.0, (0.0, 5.0), embedding=look(0)), (10.0, 10.0, 50.0, 90.0))
+    b = boxed(walker(2, "cam_1", 5.3, 10.0, (7.0, 5.0), velocity=(-1.4, 0.0), embedding=look(angle)), second_box)
+    return [a, b]
+
+
+def test_same_object_on_one_camera_may_turn_around() -> None:
+    assert groups(run(same_object_pair(20.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1, 2})}
+
+
+def test_same_object_needs_strong_appearance_and_touching_boxes() -> None:
+    assert groups(run(same_object_pair(60.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1}), frozenset({2})}
+
+
+def contact_away_from_edge(angle: float) -> list[Tracklet]:
+    a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
+    b = walker(2, "cam_2", 9.4, 20.0, (13.16, 5.0), embedding=look(angle))
+    return [a, b]
+
+
+def test_short_contact_away_from_edge_needs_strong_appearance() -> None:
+    assert groups(run(contact_away_from_edge(30.0))) == {frozenset({1, 2})}
+    assert all(not (c.get("tier") == "brief" and c.get("passed")) for c in run(contact_away_from_edge(75.0)).checks)
+
+
+def noisy_overlap(angle: float) -> list[Tracklet]:
+    # Половина общего времени точки на плане расходятся: так бывает, когда человек закрыт другим
+    a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
+    b = walker(2, "cam_2", 0.0, 10.0, (0.0, 5.0), embedding=look(angle))
+    b.xy[::5, 1] += 3.0
+    b.xy[1::5, 1] += 3.0
+    return [a, b]
+
+
+def test_fewer_matching_points_are_enough_only_with_strong_appearance() -> None:
+    assert groups(run(noisy_overlap(30.0))) == {frozenset({1, 2})}
+    assert groups(run(noisy_overlap(75.0))) == {frozenset({1}), frozenset({2})}
+
+
+def test_invariants_catch_two_separate_boxes_in_one_track() -> None:
+    a = boxed(walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0)), (10.0, 10.0, 50.0, 90.0))
+    b = boxed(walker(2, "cam_1", 9.8, 20.0, (13.72, 5.0)), (200.0, 10.0, 240.0, 90.0))
+    result = run([a, b])
+    result.tracks[0].tracklets = [1, 2]
+    assert any("разных рамках" in problem for problem in check_invariants(result, [a, b], CONFIG))
 
 
 def test_handover_on_one_camera_does_not_block_link_with_other_camera() -> None:

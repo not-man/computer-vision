@@ -30,7 +30,7 @@ SCALED_TRINITY = (
     "extrapolation_s", "extrapolation_sigma", "calibration_sigma", "v_max", "a_max", "direction_min_speed", "direction_min_cos",
     "score_margin", "gap_tolerance_cap_m", "reach_speed", "brief_max_m", "adjacent_gap_s", "adjacent_distance_m",
     "yellow_d_margin", "yellow_r_margin", "r_gap", "gap_veto", "r_hint", "hint_margin", "min_track_s",
-    "weight_g", "weight_t", "weight_r",
+    "weight_g", "weight_t", "weight_r", "contact_r", "contact_gap_s", "edge_override_r", "share_override_r", "share_override_min", "door_gap_veto", "return_window_s", "r_return", "return_margin",
 )
 SCALED_ZONES = (
     "door_buffer_s", "stationary_buffer_s", "occluder_buffer_s", "edge_out_buffer_s", "open_buffer_s",
@@ -40,6 +40,7 @@ SCALED_FILTER = (
     "out_of_floor_m", "floor_sigmas", "low_height_m", "low_margin_m", "static_spread_m", "static_min_s",
     "edge_share_for_cut_person", "min_peak_conf", "static_box_share", "repeat_min_s", "repeat_max_s", "repeat_max_conf",
     "repeat_iou", "repeat_gap_s", "weak_median_conf", "weak_peak_conf", "weak_box_share", "weak_iou", "mirror_inside_share",
+    "jump_max_cross", "jump_min_match", "jump_min_lead", "jump_near_m", "jump_near_s", "jump_apart_m", "swap_min_gain", "swap_min_match", "swap_touch_s",
 )
 CAMERAS = ("camera_new_1", "camera_new_2", "camera_new_3", "camera_new_4", "camera_new_5")
 R_VETO_CURVE = (-0.2, -0.1, -0.05, 0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.2, 0.3)
@@ -85,6 +86,13 @@ def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) ->
         Case("слабая уверенность", "откл", filter={"min_peak_conf": 0.0}),
         Case("все фильтры ложных", "откл", filter=all_filters_off),
         Case("почти стык", "откл", trinity={"adjacent_gap_s": -1.0}),
+        Case("разрез при перескоке трекера", "откл", filter={"jump_max_cross": -OFF}),
+        Case("разрез при обмене номерами", "откл", filter={"swap_min_gain": OFF}),
+        Case("один объект на камере", "откл", trinity={"contact_r": OFF}),
+        Case("короткий контакт без края", "откл", trinity={"edge_override_r": OFF}),
+        Case("доля точек при сходстве", "откл", trinity={"share_override_r": OFF}),
+        Case("строже у двери", "откл", trinity={"door_gap_veto": 0.15}),
+        Case("возврат до минуты", "откл", trinity={"r_return": OFF}),
         Case("предел допуска на разрыве", "откл", trinity={"gap_tolerance_cap_m": OFF}),
         Case("предел при контакте", "откл", trinity={"brief_max_m": OFF}),
         Case("смена номера на камере", "откл", trinity={"same_camera_overlap_s": -1.0}),

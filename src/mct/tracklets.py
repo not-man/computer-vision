@@ -1,6 +1,6 @@
 """Из наблюдений детектора в треклеты на плане: положение, погрешность, резка и фильтр ложных детекций."""
 from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
@@ -64,6 +64,19 @@ class FilterConfig:
     # Известные зеркала: области на кадре. Отражение лежит внутри целиком, а человек рядом выходит за край
     mirrors: tuple[tuple[str, tuple[float, float, float, float]], ...] = ()
     mirror_inside_share: float = 0.8
+    # Трекер перескочил на другого человека. Смена ракурса тоже меняет внешность, поэтому нужны доказательства с двух сторон
+    jump_max_cross: float = 0.4  # половины куска настолько непохожи
+    jump_min_side: int = 2  # посекундных снимков с каждой стороны
+    jump_window: int = 5  # сколько снимков у точки разреза сравнивать
+    jump_min_match: float = 0.3  # половина похожа на кусок рядом
+    jump_min_lead: float = 0.35  # и заметно сильнее, чем другая половина
+    jump_near_m: float = 1.5
+    jump_near_s: float = 1.5
+    jump_apart_m: float = 1.5  # одновременно настолько далеко: это заведомо два человека
+    swap_min_gain: float = 0.8  # двое обменялись номерами: начало одного похоже на конец другого сильнее, чем на свой конец
+    swap_min_match: float = 0.5  # оба перекрёстных сравнения высокие: общий переход в другой свет даёт их ниже
+    swap_touch_s: float = 1.0  # и рамки в этот момент соприкасались
+    jump_passes: int = 2
 
 
 def _near_frame_edge(point: np.ndarray) -> bool:
@@ -220,6 +233,7 @@ def build_tracklets(
     """Возвращает треклеты, наблюдения с номером треклета и таблицу отброшенного с причинами."""
     tracklets, assigned, dropped = [], [], []
     appearance: dict[int, np.ndarray] = {}
+    snapshots: dict[int, tuple[np.ndarray, np.ndarray]] = {}
     next_id = 1
     observations = observations.sort_values(["camera", "raw_track", "t_s"])
     pieces = []
@@ -248,11 +262,13 @@ def build_tracklets(
                 chosen = (keys[:, 1] == raw_track) & np.isin(keys[:, 0], piece.frame.to_numpy())
                 if chosen.any():
                     appearance[next_id] = vectors[chosen]
+                    snapshots[next_id] = keys[chosen, 0], np.interp(keys[chosen, 0], piece.frame.to_numpy(), piece.t_s.to_numpy())
         first, last = piece.t_s.iloc[0], piece.t_s.iloc[-1]
         around = everything[(everything.t_s >= first - UNRELIABLE_NEIGHBOUR_S) & (everything.t_s <= last + UNRELIABLE_NEIGHBOUR_S)]
         near_start = around[around.t_s <= first + 0.2].touches_edge.any()
         near_end = around[around.t_s >= last - 0.2].touches_edge.any()
-        tracklets.append(Tracklet(next_id, camera, piece.t_s.to_numpy(), xy, cov, None, bool(near_start), bool(near_end)))
+        boxes = piece[["x1", "y1", "x2", "y2"]].to_numpy(float)
+        tracklets.append(Tracklet(next_id, camera, piece.t_s.to_numpy(), xy, cov, None, bool(near_start), bool(near_end), boxes))
         piece["X"], piece["Y"] = xy[:, 0], xy[:, 1]
         unknown = around[around.source == "unreliable"].copy()
         members = pd.concat([piece, unknown], ignore_index=True) if len(unknown) else piece
@@ -261,6 +277,7 @@ def build_tracklets(
         next_id += 1
     _set_embeddings(tracklets, appearance)
     table = pd.concat(assigned, ignore_index=True) if assigned else pd.DataFrame()
+    tracklets, table = _split_identity_jumps(tracklets, table, appearance, snapshots, cfg)
     return tracklets, table, pd.DataFrame(dropped)
 
 
@@ -281,6 +298,169 @@ def _set_embeddings(tracklets: list[Tracklet], appearance: dict[int, np.ndarray]
             centered /= np.maximum(np.linalg.norm(centered, axis=1, keepdims=True), 1e-12)
             mean = centered.mean(axis=0)
             tracklet.embedding = mean / max(float(np.linalg.norm(mean)), 1e-12)
+
+
+def _unit(vectors: np.ndarray) -> np.ndarray:
+    mean = vectors.mean(axis=0)
+    return mean / max(float(np.linalg.norm(mean)), 1e-12)
+
+
+def _plan_distance(x: Tracklet, start: float, end: float, y: Tracklet, near_s: float) -> float | None:
+    """Наименьшее расстояние на плане от участка куска до другого куска; None, если они далеко по времени."""
+    low, high = max(start, y.start), min(end, y.end)
+    if high >= low:
+        times = np.linspace(low, high, max(int((high - low) / 0.2) + 1, 2))
+        return float(np.min(np.hypot(*(x.at(times)[0] - y.at(times)[0]).T)))
+    if 0 < start - y.end <= near_s:
+        return float(np.hypot(*(x.at(np.array([start]))[0][0] - y.at(np.array([y.end]))[0][0])))
+    if 0 < y.start - end <= near_s:
+        return float(np.hypot(*(x.at(np.array([end]))[0][0] - y.at(np.array([y.start]))[0][0])))
+    return None
+
+
+def _surely_different(a: Tracklet, b: Tracklet, apart_m: float) -> bool:
+    """Заведомо два человека: одновременно на одной камере или одновременно далеко друг от друга."""
+    low, high = max(a.start, b.start), min(a.end, b.end)
+    if high - low < 0.4:
+        return False
+    if a.camera == b.camera:
+        return True
+    times = np.linspace(low, high, max(int((high - low) / 0.2) + 1, 2))
+    return float(np.median(np.hypot(*(a.at(times)[0] - b.at(times)[0]).T))) > apart_m
+
+
+def _jump_strength(x: Tracklet, k: int, times: np.ndarray, vectors: np.ndarray, others: list[Tracklet], cfg: FilterConfig) -> float | None:
+    """Насколько точка k похожа на перескок: у половин разная внешность и у каждой свой продолжатель рядом."""
+    before, after = vectors[max(0, k - cfg.jump_window):k], vectors[k:k + cfg.jump_window]
+    left, right = _unit(before), _unit(after)
+    cross = float(left @ right)
+    if cross > cfg.jump_max_cross:
+        return None
+    split = float(times[k])
+    start, end = max(x.start, float(times[max(0, k - cfg.jump_window)])), min(x.end, float(times[min(len(times) - 1, k + cfg.jump_window - 1)]))
+    for_left, for_right = [], []
+    for y in others:
+        if y is x or y.embedding is None or y.end < x.start - cfg.jump_near_s or y.start > x.end + cfg.jump_near_s:
+            continue
+        to_left, to_right = float(left @ y.embedding), float(right @ y.embedding)
+        lead = to_left - to_right
+        if to_left >= cfg.jump_min_match and lead >= cfg.jump_min_lead:
+            distance = _plan_distance(x, start, split, y, cfg.jump_near_s)
+            if distance is not None and distance <= cfg.jump_near_m:
+                for_left.append((y, lead))
+        if to_right >= cfg.jump_min_match and -lead >= cfg.jump_min_lead:
+            distance = _plan_distance(x, split, end, y, cfg.jump_near_s)
+            if distance is not None and distance <= cfg.jump_near_m:
+                for_right.append((y, -lead))
+    leads = [a[1] + b[1] for a in for_left for b in for_right if a[0] is not b[0] and _surely_different(a[0], b[0], cfg.jump_apart_m)]
+    return max(leads) - cross if leads else None
+
+
+def find_identity_jumps(tracklets: list[Tracklet], seconds: dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]], cfg: FilterConfig) -> dict[int, int]:
+    """Кусок и номер посекундного снимка, с которого на нём уже другой человек."""
+    jumps = {}
+    for x in tracklets:
+        if x.id not in seconds or x.embedding is None:
+            continue
+        _, times, vectors = seconds[x.id]
+        scored = [(_jump_strength(x, k, times, vectors, tracklets, cfg), k) for k in range(cfg.jump_min_side, len(vectors) - cfg.jump_min_side + 1)]
+        scored = [(strength, k) for strength, k in scored if strength is not None]
+        if scored:
+            jumps[x.id] = max(scored)[1]
+    return jumps
+
+
+def _boxes_touch(a: Tracklet, b: Tracklet, time: float, within_s: float) -> bool:
+    """Рамки двух кусков одной камеры пересекаются хотя бы раз рядом с этим моментом."""
+    if a.boxes is None or b.boxes is None:
+        return False
+    for t in np.arange(time - within_s, time + within_s + 1e-9, 0.2):
+        if a.start <= t <= a.end and b.start <= t <= b.end:
+            p, q = a.boxes[int(np.abs(a.t - t).argmin())], b.boxes[int(np.abs(b.t - t).argmin())]
+            if p[0] < q[2] and q[0] < p[2] and p[1] < q[3] and q[1] < p[3]:
+                return True
+    return False
+
+
+def find_tail_swaps(tracklets: list[Tracklet], seconds: dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]], cfg: FilterConfig) -> dict[int, int]:
+    """Двое обменялись номерами в трекере одной камеры: кусок и снимок, с которого на нём другой человек.
+
+    Смаз и свет портят одно сравнение, но не все четыре сразу, поэтому такой обмен почти не бывает ложным.
+    """
+    swaps: dict[int, int] = {}
+    best: dict[int, float] = {}
+    ready = [x for x in tracklets if x.id in seconds]
+    for index, a in enumerate(ready):
+        for b in ready[index + 1:]:
+            if a.camera != b.camera or min(a.end, b.end) - max(a.start, b.start) < 2.0:
+                continue
+            times_a, vectors_a = seconds[a.id][1:]
+            times_b, vectors_b = seconds[b.id][1:]
+            low, high = max(a.start, b.start), min(a.end, b.end)
+            found = None
+            for t in np.unique(np.concatenate([times_a[(times_a > low) & (times_a < high)], times_b[(times_b > low) & (times_b < high)]])):
+                k_a, k_b = int(np.searchsorted(times_a, t)), int(np.searchsorted(times_b, t))
+                sides = vectors_a[max(0, k_a - cfg.jump_window):k_a], vectors_a[k_a:k_a + cfg.jump_window], vectors_b[max(0, k_b - cfg.jump_window):k_b], vectors_b[k_b:k_b + cfg.jump_window]
+                if min(len(side) for side in sides) < cfg.jump_min_side:
+                    continue
+                left_a, right_a, left_b, right_b = [_unit(side) for side in sides]
+                cross_a, cross_b = float(left_a @ right_b), float(left_b @ right_a)
+                gain = cross_a + cross_b - float(left_a @ right_a) - float(left_b @ right_b)
+                if gain >= cfg.swap_min_gain and min(cross_a, cross_b) >= cfg.swap_min_match and (found is None or gain > found[0]):
+                    found = gain, k_a, k_b, float(t)
+            if found is None or not _boxes_touch(a, b, found[3], cfg.swap_touch_s):
+                continue
+            for x, k in ((a, found[1]), (b, found[2])):
+                if found[0] > best.get(x.id, 0.0):
+                    best[x.id], swaps[x.id] = found[0], k
+    return swaps
+
+
+def _split_identity_jumps(
+    tracklets: list[Tracklet],
+    table: pd.DataFrame,
+    appearance: dict[int, np.ndarray],
+    snapshots: dict[int, tuple[np.ndarray, np.ndarray]],
+    cfg: FilterConfig,
+) -> tuple[list[Tracklet], pd.DataFrame]:
+    """Режет куски там, где трекер перескочил на другого человека: дальше половины склеиваются обычными правилами."""
+    if not appearance:
+        return tracklets, table
+    means: dict[str, np.ndarray] = {}
+    for camera in {x.camera for x in tracklets if x.id in appearance}:
+        means[camera] = np.vstack([appearance[x.id] for x in tracklets if x.camera == camera and x.id in appearance]).mean(axis=0)
+    seconds = {}
+    for x in tracklets:
+        if x.id in appearance:
+            frames, times = snapshots[x.id]
+            order = np.argsort(frames)
+            centered = appearance[x.id][order] - means[x.camera]
+            seconds[x.id] = frames[order], times[order], centered / np.maximum(np.linalg.norm(centered, axis=1, keepdims=True), 1e-12)
+    table = table.copy()
+    next_id = max(x.id for x in tracklets) + 1
+    for _ in range(cfg.jump_passes):  # чистые половины становятся доказательством для кусков, которые перескочили вместе с ними
+        jumps = {**find_identity_jumps(tracklets, seconds, cfg), **find_tail_swaps(tracklets, seconds, cfg)}
+        result = []
+        changed = False
+        for x in tracklets:
+            frames, times, vectors = seconds.get(x.id, (None, None, None))
+            cut = int(np.searchsorted(x.t, times[jumps[x.id]])) if x.id in jumps else 0
+            if not 0 < cut < len(x.t):
+                result.append(x)
+                continue
+            k = jumps[x.id]
+            boxes_left = None if x.boxes is None else x.boxes[:cut]
+            boxes_right = None if x.boxes is None else x.boxes[cut:]
+            result.append(replace(x, t=x.t[:cut], xy=x.xy[:cut], cov=x.cov[:cut], boxes=boxes_left, embedding=_unit(vectors[:k]), ends_at_edge=False))
+            result.append(replace(x, id=next_id, t=x.t[cut:], xy=x.xy[cut:], cov=x.cov[cut:], boxes=boxes_right, embedding=_unit(vectors[k:]), starts_at_edge=False))
+            table.loc[(table.tracklet == x.id) & (table.frame >= frames[k]), "tracklet"] = next_id
+            seconds[x.id], seconds[next_id] = (frames[:k], times[:k], vectors[:k]), (frames[k:], times[k:], vectors[k:])
+            next_id += 1
+            changed = True
+        tracklets = result
+        if not changed:
+            break
+    return tracklets, table
 
 
 def _dropped_row(camera: str, raw_track: int, piece: pd.DataFrame, reason: str) -> dict:
