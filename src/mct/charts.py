@@ -1,6 +1,7 @@
 """Графики для интерфейса и офлайн-отчёта: один источник, чтобы они показывали одно и то же."""
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import yaml
@@ -21,6 +22,7 @@ CAMERA_COLORS = {
 }
 PLAN_VIEW = (280.0, 700.0, 1135.0, 230.0)  # пиксели размеченного плана: x слева, x справа, y снизу, y сверху
 TIMELINE_HEIGHT = 440
+CLICK_STEP_S = 4.0
 
 
 def camera_label(name: str) -> str:
@@ -39,8 +41,10 @@ def timeline_figure(tracks: list[dict], selected: int | None = None, height: int
     order = {track["track_id"]: index for index, track in enumerate(tracks)}
     by_id = {track["track_id"]: track for track in tracks}
     figure = go.Figure()
+    clickable: list[tuple] = []
     for camera, color in CAMERA_COLORS.items():
-        xs, ys, hover = [], [], []
+        xs, ys = [], []
+        click_xs, click_ys, click_hover, click_ids = [], [], [], []
         for track in tracks:
             for segment in track["segments"]:
                 if segment["kind"] != "observed" or segment["camera_id"] != camera:
@@ -49,9 +53,19 @@ def timeline_figure(tracks: list[dict], selected: int | None = None, height: int
                 text = f"#{track['track_id']} · {camera_label(camera)} · {clock_text(start)[:8]}–{clock_text(end)[:8]}"
                 xs += [start, end, None]
                 ys += [order[track["track_id"]]] * 2 + [None]
-                hover += [text, text, None]
-        figure.add_scatter(x=xs, y=ys, mode="lines", name=camera_label(camera), line={"color": color, "width": 2},
-                           hovertext=hover, hoverinfo="text")
+                moments = [*np.arange(start, end, CLICK_STEP_S).tolist(), end]
+                click_xs += moments
+                click_ys += [order[track["track_id"]]] * len(moments)
+                click_hover += [text] * len(moments)
+                click_ids += [track["track_id"]] * len(moments)
+        figure.add_scatter(x=xs, y=ys, mode="lines", name=camera_label(camera), line={"color": color, "width": 2}, hoverinfo="skip")
+        clickable += list(zip(click_xs, click_ys, click_hover, click_ids))
+
+    # Линии в Plotly не нажимаются: вдоль треков идут почти невидимые точки, на них подсказка и выбор трека
+    if clickable:
+        xs, ys, hover, ids = zip(*clickable)
+        figure.add_scatter(x=xs, y=ys, mode="markers", marker={"size": 10, "color": TEXT, "opacity": 0.01}, hovertext=hover, hoverinfo="text",
+                           customdata=ids, showlegend=False)
 
     xs, ys, hover = [], [], []
     for track in tracks:

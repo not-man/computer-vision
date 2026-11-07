@@ -51,3 +51,13 @@ def test_curve_marks_the_current_value() -> None:
     figure = curve_figure(pd.Series([1.0, 2.0, 3.0]), pd.Series([116, 108, 102]), "заголовок", "порог", 2.0)
     assert "108" in figure.layout.annotations[0].text
     assert figure.data[0].showlegend is False
+
+
+def test_timeline_points_carry_the_track_number_for_clicks() -> None:
+    track = {
+        "track_id": 7, "t_start_ms": 100_000, "t_end_ms": 110_000, "possibly_same_person_as": [],
+        "segments": [{"kind": "observed", "camera_id": "camera_new_1", "t_start_ms": 100_000, "t_end_ms": 110_000}],
+    }
+    clickable = [trace for trace in timeline_figure([track]).data if trace.mode == "markers"]
+    assert len(clickable) == 1
+    assert set(clickable[0].customdata) == {7} and clickable[0].x[0] == 100.0 and clickable[0].x[-1] == 110.0

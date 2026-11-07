@@ -128,17 +128,33 @@ def show_dossier(track: dict) -> None:
         st.plotly_chart(plan_figure(track, PLAN_IMAGE, ROOT / "configs"), config=CHART_CONFIG, width="stretch", key=f"plan_{track['track_id']}")
 
 
+def chosen_track(table: pd.DataFrame) -> int | None:
+    """Трек выбирают строкой таблицы или точкой на таймлайне: действует то, что менялось последним."""
+    rows = st.session_state.get("track_table", {}).get("selection", {}).get("rows", [])
+    points = st.session_state.get("track_timeline", {}).get("selection", {}).get("points", [])
+    from_table = int(table["Трек"].iloc[rows[0]]) if rows else None
+    from_chart = int(points[0]["customdata"]) if points else None
+    if from_chart != st.session_state.get("chart_choice"):
+        st.session_state["chart_choice"] = from_chart
+        if from_chart is not None:
+            st.session_state["track"] = from_chart
+    if from_table != st.session_state.get("table_choice"):
+        st.session_state["table_choice"] = from_table
+        if from_table is not None:
+            st.session_state["track"] = from_table
+    return st.session_state.get("track")
+
+
 @st.fragment
 def screen_tracks() -> None:
     table = pd.DataFrame(track_rows(ALL_TRACKS))
+    selected = chosen_track(table)
     left, right = st.columns([5, 6])
-    selection = left.dataframe(table, hide_index=True, width="stretch", height=TIMELINE_HEIGHT, column_config=TABLE_COLUMNS,
-                               on_select="rerun", selection_mode="single-row", key="track_table")
-    rows = selection.selection.rows
-    selected = int(table["Трек"].iloc[rows[0]]) if rows else None
-    right.plotly_chart(timeline_figure(ALL_TRACKS, selected), config=CHART_CONFIG, width="stretch")
+    left.dataframe(table, hide_index=True, width="stretch", height=TIMELINE_HEIGHT, column_config=TABLE_COLUMNS,
+                   on_select="rerun", selection_mode="single-row", key="track_table")
+    right.plotly_chart(timeline_figure(ALL_TRACKS, selected), config=CHART_CONFIG, width="stretch", on_select="rerun", selection_mode="points", key="track_timeline")
     if selected is None:
-        st.info("Выберите строку в таблице, чтобы открыть досье трека.")
+        st.info("Выберите строку в таблице или нажмите на линию таймлайна, чтобы открыть досье трека.")
     else:
         show_dossier(BY_ID[selected])
 

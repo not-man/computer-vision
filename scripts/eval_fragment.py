@@ -1,4 +1,5 @@
 """Качество на размеченном вручную фрагменте: соответствие человек-трек, чистота и полнота. Разметка в mct.fragment_truth."""
+import argparse
 from pathlib import Path
 
 import yaml
@@ -11,8 +12,11 @@ from mct.tracklets import build_tracklets, filter_config, load_perception
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--perception", type=Path, default=Path("artifacts/perception"))
+    args = parser.parse_args()
     plan = Plan.load()
-    observations, embeddings = load_perception(Path("artifacts/perception"), load_cameras(), plan)
+    observations, embeddings = load_perception(args.perception, load_cameras(), plan)
     extra = [tr.Zone(**zone) for zone in (yaml.safe_load(Path("configs/zones.yaml").read_text(encoding="utf-8")) or {}).get("zones") or []]
     zones = tr.ZoneMap(plan.door_zones() + extra, strict_blind=False)
     tracklets, assigned, _ = build_tracklets(observations, embeddings, filter_config())
