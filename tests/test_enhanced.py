@@ -27,11 +27,26 @@ def test_duplicate_from_full_frame_and_roi_is_removed():
 
 
 def test_close_people_in_same_pass_are_preserved():
-    assert len(deduplicate([detection([10, 10, 40, 90], "full"), detection([11, 10, 41, 90], "full")])) == 2
+    assert len(deduplicate([detection([10, 10, 40, 90], "full"), detection([30, 10, 60, 90], "full")])) == 2
 
 
-def test_small_person_inside_merged_mask_is_not_suppressed():
-    assert len(deduplicate([detection([10, 10, 90, 90], "full"), detection([20, 20, 40, 80], "roi")])) == 2
+def test_two_separate_people_replace_merged_mask():
+    assert len(deduplicate([detection([10, 10, 90, 90], "full"), detection([10, 10, 45, 90], "roi"),
+                            detection([55, 10, 90, 90], "roi")])) == 2
+
+
+def test_head_or_torso_fragment_does_not_create_second_id():
+    for origin in ("roi", "full"):
+        assert len(deduplicate([detection([10, 10, 40, 90], "full"), detection([15, 10, 35, 30], origin)])) == 1
+
+
+def test_crop_edge_fragment_is_not_sent_to_tracker():
+    assert deduplicate([detection([10, 10, 40, 90], "roi", clipped=True)]) == []
+
+
+def test_head_and_body_parts_do_not_masquerade_as_two_people():
+    assert len(deduplicate([detection([10, 10, 40, 90], "full"), detection([10, 10, 40, 30], "roi"),
+                            detection([10, 30, 40, 90], "roi")])) == 1
 
 
 def test_complete_mask_preferred_over_clipped_high_score():

@@ -30,16 +30,30 @@ def project_detection(box, score, mask, region, native_size, output_size, origin
 
 
 def deduplicate(items, iou=0.65, containment=0.9):
-    """Only suppress cross-pass duplicates. Preserve overlapping people within one pass."""
+    """Suppress mask duplicates and ROI fragments; preserve supported multi-person splits."""
+    # A crop-edge fragment is not an independent person. Full-frame detections remain available.
+    items = [d for d in items if not d.clipped and d.mask.any()]
+    areas = [int(d.mask.sum()) for d in items]
+    explained = set()
+    for i, parent in enumerate(items):
+        height = max(parent.box[3] - parent.box[1], 1)
+        parts = [j for j, child in enumerate(items) if j != i and areas[j] < .8*areas[i]
+                 and child.box[3] - child.box[1] >= .65*height
+                 and abs(child.box[1] - parent.box[1]) <= .3*height
+                 and np.count_nonzero(parent.mask & child.mask) / areas[j] >= containment]
+        for offset, j in enumerate(parts):
+            for k in parts[offset+1:]:
+                a, b = items[j].mask, items[k].mask
+                if np.count_nonzero(a & b) / min(areas[j], areas[k]) < .2 and np.count_nonzero((a | b) & parent.mask) / areas[i] >= .65:
+                    explained.add(i)
+    items = [d for i, d in enumerate(items) if i not in explained]
     kept = []
-    for item in sorted(items, key=lambda d: (not d.clipped, d.score), reverse=True):
+    for item in sorted(items, key=lambda d: (int(d.mask.sum()), d.score), reverse=True):
         duplicate = False
         area = int(item.mask.sum())
         if not area:
             continue
         for other in kept:
-            if item.origin == other.origin:
-                continue
             a, b = item.box, other.box
             if min(a[2], b[2]) <= max(a[0], b[0]) or min(a[3], b[3]) <= max(a[1], b[1]):
                 continue
@@ -47,9 +61,7 @@ def deduplicate(items, iou=0.65, containment=0.9):
             other_area = int(other.mask.sum())
             overlap = intersection / (area + other_area - intersection)
             inside = intersection / min(area, other_area)
-            # Containment alone would erase a small person inside a merged two-person mask.
-            ratio = min(area, other_area) / max(area, other_area)
-            if overlap >= iou or (inside >= containment and ratio >= 0.6):
+            if overlap >= iou or inside >= containment:
                 duplicate = True
                 break
         if not duplicate:

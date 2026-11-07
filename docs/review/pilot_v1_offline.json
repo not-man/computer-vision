@@ -1,0 +1,17 @@
+{
+  "camera_new_3": {
+    "saved_observations": 1016,
+    "after_offline_dedup": 1001,
+    "removed": 15
+  },
+  "camera_new_4": {
+    "saved_observations": 690,
+    "after_offline_dedup": 687,
+    "removed": 3
+  },
+  "camera_new_5": {
+    "saved_observations": 893,
+    "after_offline_dedup": 818,
+    "removed": 75
+  }
+}

@@ -5,7 +5,8 @@ conf: 0.1
 native_size: [2592, 1944]
 model: yolo11m-seg.pt
 reid_model: osnet_ain_x1_0_msmt17
-cameras: [camera_new_3, camera_new_4, camera_new_5]
+# Pilot v1 took ~295 minutes extrapolated for 3 cameras. Start with the highest-value camera.
+cameras: [camera_new_5]
 dedup: {iou: 0.65, containment: 0.9}
 dense_reid:
   enabled: true
