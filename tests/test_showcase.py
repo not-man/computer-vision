@@ -45,7 +45,7 @@ def test_return_ignores_short_absence_and_takes_the_strongest_hint() -> None:
         track(5, 415.0, 420.0, hints=[{"track_id": 4, "r": 0.99, "absent_s": 5.0}]),
     ]
     back = pick_moments(tracks)[-1]
-    assert back.spans == ((25.0, 31.0), (399.0, 405.0))
+    assert back.spans == ((26.0, 31.0), (399.0, 404.0))
     assert back.card == "прошло 6 мин 10 с"
     assert "#2" in back.note and "#4" in back.note
 
@@ -59,7 +59,7 @@ def test_crowd_does_not_repeat_frames_of_the_other_moments() -> None:
 
 def test_reel_stays_within_the_limit_in_the_worst_case() -> None:
     tracks = [
-        track(1, 0.0, 26.0, ALL_CAMERAS), track(2, 100.0, 126.0, THREE_CAMERAS), track(3, 100.0, 126.0, THREE_CAMERAS),
+        track(1, 0.0, 24.0, ALL_CAMERAS), track(2, 100.0, 124.0, THREE_CAMERAS), track(3, 100.0, 124.0, THREE_CAMERAS),
         track(4, 500.0, 510.0), track(5, 900.0, 910.0, hints=[{"track_id": 4, "r": 0.9, "absent_s": 390.0}]),
     ]
     moments = pick_moments(tracks)
@@ -73,3 +73,15 @@ def test_bar_sits_above_the_untouched_frame_and_keeps_even_size() -> None:
     assert result.shape == (CANVAS[1] + BAR_HEIGHT, CANVAS[0], 3)
     assert result.shape[0] % 2 == 0
     assert np.array_equal(result[BAR_HEIGHT:], frame)
+
+
+def test_short_return_is_shown_and_the_reel_still_fits() -> None:
+    returned = track(6, 300.0, 340.0)
+    returned["links"].append({"confidence": "green", "tier": "return", "t_ms": 310000, "contact_s": -20.0, "r": 0.9})
+    tracks = [
+        track(1, 0.0, 24.0, ALL_CAMERAS), track(2, 100.0, 124.0, THREE_CAMERAS), track(3, 100.0, 124.0, THREE_CAMERAS),
+        track(4, 500.0, 510.0), track(5, 900.0, 910.0, hints=[{"track_id": 4, "r": 0.9, "absent_s": 390.0}]), returned,
+    ]
+    moments = pick_moments(tracks)
+    assert "Вернулся быстрее минуты: номер тот же" in titles(moments)
+    assert reel_seconds(moments) <= 90.0

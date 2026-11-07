@@ -11,14 +11,15 @@ from mct.video import H264Writer, clock_text, read_frames
 
 BAR_HEIGHT = 64
 PAD_S = 1.0
-MAX_WALK_S = 26.0
+MAX_WALK_S = 24.0
 MIN_PAIR_CAMERAS = 3
 MIN_PAIR_SHARE = 0.7
 MAX_PAIR_DISTANCE_M = 2.0
-CROWD_WINDOW_S = 20.0
+CROWD_WINDOW_S = 15.0
 CROWD_STEP_S = 5.0
 LONG_ABSENCE_S = 60.0  # короткий возврат спорен: ТЗ не называет длительность, поэтому показываем явный случай
-RETURN_CLIP_S = 5.0
+RETURN_CLIP_S = 4.0
+SHORT_RETURN_S = (5.0, 30.0)  # пауза, которую зритель успеет заметить
 CARD_S = 1.5
 
 
@@ -119,6 +120,18 @@ def _long_return(tracks: list[dict]) -> Moment | None:
                   ((left - RETURN_CLIP_S, left + PAD_S), (back - PAD_S, back + RETURN_CLIP_S)), f"прошло {absent // 60} мин {absent % 60:02d} с")
 
 
+def _short_return(tracks: list[dict]) -> Moment | None:
+    """Вернулся быстрее минуты: номер тот же. Берём самое уверенное совпадение с заметной паузой."""
+    found = [(link["r"], track, link) for track in tracks for link in track["links"]
+             if link.get("tier") == "return" and SHORT_RETURN_S[0] <= -link["contact_s"] <= SHORT_RETURN_S[1]]
+    if not found:
+        return None
+    r, track, link = max(found, key=lambda item: (item[0], item[1]["track_id"]))
+    left, pause = link["t_ms"] / 1000, -link["contact_s"]
+    return Moment("Вернулся быстрее минуты: номер тот же", f"#{track['track_id']} нет ни на одной камере {pause:.0f} с. Организаторы считают длительным отсутствие дольше минуты; сходство {r:.2f}.",
+                  ((left - RETURN_CLIP_S, left + PAD_S), (left + pause - PAD_S, left + pause + RETURN_CLIP_S)), f"прошло {pause:.0f} с")
+
+
 def _tracks_in_window(tracks: list[dict], start: float, end: float) -> int:
     return sum(any(segment["kind"] == "observed" and segment["t_start_ms"] / 1000 < end and start < segment["t_end_ms"] / 1000
                    for segment in track["segments"]) for track in tracks)
@@ -143,9 +156,9 @@ def _crowd(tracks: list[dict], taken: list[tuple[float, float]]) -> Moment | Non
 
 def pick_moments(tracks: list[dict]) -> list[Moment]:
     """Порядок показа: простой случай, затем сложнее. Людный момент выбирается последним, чтобы кадры не повторялись."""
-    walk, pair, back = _walk(tracks), _pair(tracks), _long_return(tracks)
-    taken = [span for moment in (walk, pair, back) if moment for span in moment.spans]
-    return [moment for moment in (walk, pair, _crowd(tracks, taken), back) if moment]
+    walk, pair, short, back = _walk(tracks), _pair(tracks), _short_return(tracks), _long_return(tracks)
+    taken = [span for moment in (walk, pair, short, back) if moment for span in moment.spans]
+    return [moment for moment in (walk, pair, _crowd(tracks, taken), short, back) if moment]
 
 
 def with_bar(frame: np.ndarray, moment: Moment, index: int, total: int, stamps: Stamps) -> np.ndarray:

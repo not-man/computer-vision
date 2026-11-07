@@ -144,7 +144,7 @@ def screen_tracks() -> None:
 
 
 def screen_returns() -> None:
-    st.write("Слева ушедший трек, справа новый. Подсказка никогда не меняет ID и подсчёт: по ТЗ вернувшийся получает новый номер.")
+    st.write("Отсутствие дольше минуты: слева ушедший трек, справа новый. Подсказка не меняет ID и подсчёт, вернувшийся получает новый номер. Кто вернулся быстрее минуты и уверенно узнан, сохраняет свой номер.")
     sheet = TRACKS / "gallery" / "hints.jpg"
     if sheet.exists():
         st.image(str(sheet))
@@ -181,5 +181,5 @@ SCREENS = {
 if not PLAN_IMAGE.exists():
     shutil.copy(ROOT.parent / "data" / "office.jpg", PLAN_IMAGE)
 st.title("Сквозной трекинг людей по камерам")
-st.caption(f"Сквозных треков: {TRACKS_DATA['total_tracks']}. Один номер, пока человека видит хотя бы одна камера. Ушёл со всех камер: трек закрыт, при возврате новый номер.")
+st.caption(f"Сквозных треков: {TRACKS_DATA['total_tracks']}. Один номер, пока человека видит хотя бы одна камера и пока его нет меньше минуты. Нет дольше минуты: трек закрыт, при возврате новый номер.")
 SCREENS[st.radio("Раздел", list(SCREENS), horizontal=True, label_visibility="collapsed")]()
