@@ -10,7 +10,7 @@ dependencies = [
     "matplotlib",  # только шрифт DejaVu с кириллицей для надписей на видео
     "lap>=0.5.12",  # трекеру Ultralytics; иначе он доустанавливает пакет сам, а без сети падает
     "numpy",
-    "opencv-python-headless",
+    "opencv-python==4.11.0.86",  # эту версию требует boxmot; второй пакет с модулем cv2 ставить нельзя: версия станет случайной
     "pandas",
     "pillow",
     "plotly",
