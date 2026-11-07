@@ -1,10 +1,10 @@
-# Запускать из корня репозитория. Записи и план лежат рядом с ним: ../data
+# Запускать из корня репозитория. Записи и план лежат в data/
 PY := .venv/bin/python
 PERCEPTION := artifacts/perception
 TRACKS := artifacts/tracks
 RENDER := render/full
 
-.PHONY: setup demo check all tracks render robustness package test
+.PHONY: setup demo check all tracks render robustness test
 
 setup:
 	uv sync --extra cpu
@@ -33,10 +33,6 @@ render:
 
 robustness:
 	$(PY) scripts/check_robustness.py $(PERCEPTION)
-
-# Архив для передачи: в git его нет, потому что в нём кадры записи
-package:
-	tar -czf ../mct-demo-kit.tar.gz $(PERCEPTION) $(TRACKS) $(RENDER)
 
 test:
 	uv run --extra cpu pytest -q

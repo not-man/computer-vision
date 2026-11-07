@@ -1,4 +1,5 @@
 """Проверка перед показом: ролики играют в браузере, файлы на месте, числа сходятся, ничего не устарело."""
+import hashlib
 import json
 import re
 import subprocess
@@ -14,7 +15,6 @@ MAX_SHOWCASE_MB = 60.0
 MAX_SHOWCASE_S = 90.0
 MAX_REPORT_MB = 30.0
 CHUNK_JOIN_S = 0.2
-MTIME_TOLERANCE_S = 2.0
 
 
 def moov_before_mdat(path: Path) -> bool:
@@ -94,8 +94,14 @@ def _hint_problems(tracks: list[dict]) -> list[str]:
     return problems
 
 
-def _stale_problems(source: Path, derived: list[Path]) -> list[str]:
-    return [f"{path.name} старше, чем {source.name}: пересоберите" for path in derived if path.stat().st_mtime < source.stat().st_mtime - MTIME_TOLERANCE_S]
+def source_stamp(tracks_dir: Path) -> dict[str, str]:
+    """Контрольные суммы данных, из которых собраны ролики и отчёт. Время файлов git не хранит, поэтому сравниваем содержимое."""
+    return {name: hashlib.sha256((tracks_dir / name).read_bytes()).hexdigest() for name in ("tracks.json", "robustness.csv")}
+
+
+def _stale_problems(tracks_dir: Path, stamp: Path) -> list[str]:
+    built_from = json.loads(stamp.read_text())
+    return [f"{name} изменился после сборки: запустите make all" for name, value in source_stamp(tracks_dir).items() if built_from.get(name) != value]
 
 
 def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[str, list[str]]:
@@ -104,8 +110,8 @@ def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[st
     robustness, crops_index = tracks_dir / "robustness.csv", tracks_dir / "crops" / "index.json"
     hints_sheet = tracks_dir / "gallery" / "hints.jpg"
     manifest_path, showcase = render_dir / "manifest.json", render_dir / "showcase.mp4"
-    report, plan = render_dir / "report.html", render_dir / "plan.jpg"
-    required = [tracks_json, tracks_csv, robustness, crops_index, hints_sheet, manifest_path, showcase, report, plan, results_csv]
+    report, plan, stamp = render_dir / "report.html", render_dir / "plan.jpg", render_dir / "built_from.json"
+    required = [tracks_json, tracks_csv, robustness, crops_index, hints_sheet, manifest_path, showcase, report, plan, stamp, results_csv]
     missing = [f"{path}: нет файла" for path in required if not path.exists()]
     if missing:
         return {"Файлы на месте": missing}
@@ -127,5 +133,5 @@ def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[st
         "Подсказки ссылаются на прошлые треки": _hint_problems(tracks),
         "Снимки для досье на месте": [f"{item['file']}: нет файла" for item in crops.values() if not (tracks_dir / "crops" / item["file"]).exists()],
         "Примеры ошибок ещё верны": check_known_errors(tracks),
-        "Ничего не устарело": _stale_problems(tracks_json, [manifest_path, crops_index, hints_sheet, showcase, report]) + _stale_problems(robustness, [report]),
+        "Ничего не устарело": _stale_problems(tracks_dir, stamp),
     }

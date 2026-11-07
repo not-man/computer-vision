@@ -1,0 +1,6 @@
+track_id,start,end,cameras
+1,17:41:31.9,17:41:51.2,"camera_new_1, camera_new_2, camera_new_3"
+2,17:41:31.9,17:41:51.2,"camera_new_1, camera_new_2, camera_new_3"
+3,17:41:31.9,17:41:34.9,"camera_new_3, camera_new_5"
+4,17:41:36.1,17:41:51.8,"camera_new_3, camera_new_4, camera_new_5"
+5,17:41:37.2,17:41:51.8,"camera_new_3, camera_new_4, camera_new_5"

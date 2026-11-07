@@ -44,7 +44,7 @@ def visible_polyline(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--features", type=Path, default=Path("configs/plan_features.yaml"))
-    parser.add_argument("--plan", type=Path, default=Path("../data/office_camera.png"))
+    parser.add_argument("--plan", type=Path, default=Path("data/office_camera.png"))
     parser.add_argument("--backgrounds", type=Path, default=Path("artifacts/geometry/background"))
     parser.add_argument("--out", type=Path, default=Path("artifacts/geometry/overlay"))
     args = parser.parse_args()

@@ -1,0 +1,2421 @@
+{
+ "fps": 10.0,
+ "size": [
+  1280,
+  720
+ ],
+ "chunk_s": 60,
+ "clock_start_s": 2319.59,
+ "clock_end_s": 3523.6589999999997,
+ "total_tracks": 75,
+ "events": [
+  {
+   "t_s": 2320.42,
+   "kind": "handoff",
+   "text": "#1  cam_1 → cam_2  G 0.3 м  T 2.4 с  R 0.20",
+   "track_id": 1
+  },
+  {
+   "t_s": 2322.55,
+   "kind": "handoff",
+   "text": "#2  cam_3 → cam_5  G 0.4 м  T 8.9 с  R 0.59",
+   "track_id": 2
+  },
+  {
+   "t_s": 2326.02,
+   "kind": "close",
+   "text": "Трек #1 закрыт: ушёл в дверь",
+   "track_id": 1
+  },
+  {
+   "t_s": 2332.15,
+   "kind": "close",
+   "text": "Трек #2 закрыт: ушёл в дверь",
+   "track_id": 2
+  },
+  {
+   "t_s": 2343.86,
+   "kind": "handoff",
+   "text": "#3  cam_4 → cam_3  G 0.2 м  T 1.9 с  R 0.47",
+   "track_id": 3
+  },
+  {
+   "t_s": 2344.75,
+   "kind": "handoff",
+   "text": "#3  cam_3 → cam_5  G 0.2 м  T 7.3 с  R 0.29",
+   "track_id": 3
+  },
+  {
+   "t_s": 2347.06,
+   "kind": "handoff",
+   "text": "#5  cam_5 → cam_3  G 1.0 м  T 6.4 с  R 0.42",
+   "track_id": 5
+  },
+  {
+   "t_s": 2347.86,
+   "kind": "close",
+   "text": "Трек #6 закрыт: потерян на открытом месте",
+   "track_id": 6
+  },
+  {
+   "t_s": 2356.35,
+   "kind": "close",
+   "text": "Трек #5 закрыт: ушёл в дверь",
+   "track_id": 5
+  },
+  {
+   "t_s": 2356.67,
+   "kind": "close",
+   "text": "Трек #3 закрыт: ушёл в дверь",
+   "track_id": 3
+  },
+  {
+   "t_s": 2373.27,
+   "kind": "handoff",
+   "text": "#7  cam_5 → cam_3  передача встык  G 0.2 м  R 0.18",
+   "track_id": 7
+  },
+  {
+   "t_s": 2375.84,
+   "kind": "fast",
+   "text": "#7  cam_3 → cam_2  быстрый переход  контакт 0.4 с  G 0.7 м  R 0.08",
+   "track_id": 7
+  },
+  {
+   "t_s": 2376.94,
+   "kind": "close",
+   "text": "Трек #7 закрыт: потерян на открытом месте",
+   "track_id": 7
+  },
+  {
+   "t_s": 2393.18,
+   "kind": "handoff",
+   "text": "#8  cam_5 → cam_3  G 0.4 м  T 30.3 с  R 0.43",
+   "track_id": 8
+  },
+  {
+   "t_s": 2397.87,
+   "kind": "resume",
+   "text": "#4  вернулся через 0:51, номер сохранён  R 0.80",
+   "track_id": 4
+  },
+  {
+   "t_s": 2402.66,
+   "kind": "handoff",
+   "text": "#9  cam_4 → cam_3  G 0.3 м  T 1.3 с  R 0.58",
+   "track_id": 9
+  },
+  {
+   "t_s": 2403.07,
+   "kind": "handoff",
+   "text": "#9  cam_3 → cam_5  G 0.2 м  T 8.0 с  R 0.62",
+   "track_id": 9
+  },
+  {
+   "t_s": 2405.07,
+   "kind": "handoff",
+   "text": "#8  cam_5 → cam_4  G 0.3 м  T 4.4 с  R 0.02",
+   "track_id": 8
+  },
+  {
+   "t_s": 2405.46,
+   "kind": "handoff",
+   "text": "#4  cam_4 → cam_3  G 0.2 м  T 5.0 с  R 0.62",
+   "track_id": 4
+  },
+  {
+   "t_s": 2405.67,
+   "kind": "handoff",
+   "text": "#4  cam_3 → cam_5  G 0.5 м  T 39.6 с  R 0.23  спорная",
+   "track_id": 4
+  },
+  {
+   "t_s": 2411.75,
+   "kind": "close",
+   "text": "Трек #9 закрыт: ушёл в дверь",
+   "track_id": 9
+  },
+  {
+   "t_s": 2418.46,
+   "kind": "fast",
+   "text": "#4  cam_5 → cam_3  быстрый переход  контакт 0.4 с  G 0.1 м  R 0.11",
+   "track_id": 4
+  },
+  {
+   "t_s": 2446.38,
+   "kind": "handoff",
+   "text": "#4  cam_5 → cam_3  G 0.4 м  T 1.8 с  R 0.16  спорная",
+   "track_id": 4
+  },
+  {
+   "t_s": 2459.47,
+   "kind": "handoff",
+   "text": "#4  cam_3 → cam_5  G 0.7 м  T 21.5 с  R 0.18  спорная",
+   "track_id": 4
+  },
+  {
+   "t_s": 2474.46,
+   "kind": "handoff",
+   "text": "#10  cam_5 → cam_3  G 0.7 м  T 1.2 с  R 0.60",
+   "track_id": 10
+  },
+  {
+   "t_s": 2475.75,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_5  G 0.3 м  T 2.9 с  R 0.39  спорная",
+   "track_id": 10
+  },
+  {
+   "t_s": 2475.98,
+   "kind": "handoff",
+   "text": "#11  cam_5 → cam_3  G 1.5 м  T 6.2 с  R 0.19  спорная",
+   "track_id": 11
+  },
+  {
+   "t_s": 2477.67,
+   "kind": "fast",
+   "text": "#10  cam_3 → cam_5  быстрый переход  контакт 0.4 с  G 0.6 м  R 0.26",
+   "track_id": 10
+  },
+  {
+   "t_s": 2478.78,
+   "kind": "handoff",
+   "text": "#12  cam_5 → cam_3  G 0.2 м  T 6.9 с  R 0.23",
+   "track_id": 12
+  },
+  {
+   "t_s": 2481.02,
+   "kind": "handoff",
+   "text": "#8  cam_3 → cam_2  G 0.5 м  T 4.4 с  R 0.17",
+   "track_id": 8
+  },
+  {
+   "t_s": 2481.95,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_5  G 0.5 м  T 11.6 с  R 0.35  спорная",
+   "track_id": 11
+  },
+  {
+   "t_s": 2482.26,
+   "kind": "close",
+   "text": "Трек #4 закрыт: ушёл в дверь",
+   "track_id": 4
+  },
+  {
+   "t_s": 2482.34,
+   "kind": "fast",
+   "text": "#16  cam_3 → cam_2  быстрый переход  контакт 0.2 с  G 0.6 м",
+   "track_id": 16
+  },
+  {
+   "t_s": 2482.78,
+   "kind": "close",
+   "text": "Трек #13 закрыт: потерян на открытом месте",
+   "track_id": 13
+  },
+  {
+   "t_s": 2483.37,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_4  G 0.1 м  T 2.0 с  R 0.61",
+   "track_id": 10
+  },
+  {
+   "t_s": 2483.47,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_5  G 0.3 м  T 1.9 с  R 0.06  спорная",
+   "track_id": 10
+  },
+  {
+   "t_s": 2483.47,
+   "kind": "handoff",
+   "text": "#16  cam_3 → cam_5  G 2.7 м  T 2.0 с  R 0.20  спорная",
+   "track_id": 16
+  },
+  {
+   "t_s": 2484.46,
+   "kind": "fast",
+   "text": "#8  cam_2 → cam_3  быстрый переход  контакт 0.2 с  G 0.7 м  R 0.42",
+   "track_id": 8
+  },
+  {
+   "t_s": 2484.46,
+   "kind": "handoff",
+   "text": "#14  cam_5 → cam_3  G 0.3 м  T 3.7 с  R 0.57",
+   "track_id": 14
+  },
+  {
+   "t_s": 2484.47,
+   "kind": "handoff",
+   "text": "#14  cam_3 → cam_4  G 0.2 м  T 4.3 с  R 0.09  спорная",
+   "track_id": 14
+  },
+  {
+   "t_s": 2484.97,
+   "kind": "handoff",
+   "text": "#11  cam_5 → cam_4  G 0.2 м  T 2.0 с  R 0.17",
+   "track_id": 11
+  },
+  {
+   "t_s": 2485.87,
+   "kind": "handoff",
+   "text": "#12  cam_5 → cam_4  G 0.4 м  T 1.2 с  R 0.76",
+   "track_id": 12
+  },
+  {
+   "t_s": 2485.95,
+   "kind": "close",
+   "text": "Трек #16 закрыт: ушёл в дверь",
+   "track_id": 16
+  },
+  {
+   "t_s": 2486.38,
+   "kind": "fast",
+   "text": "#12  cam_5 → cam_3  быстрый переход  контакт 0.7 с  G 0.1 м  R 0.27",
+   "track_id": 12
+  },
+  {
+   "t_s": 2487.54,
+   "kind": "close",
+   "text": "Трек #8 закрыт: потерян на открытом месте",
+   "track_id": 8
+  },
+  {
+   "t_s": 2488.15,
+   "kind": "handoff",
+   "text": "#14  cam_3 → cam_5  G 1.4 м  T 6.8 с  R 0.34  спорная",
+   "track_id": 14
+  },
+  {
+   "t_s": 2490.18,
+   "kind": "handoff",
+   "text": "#15  cam_5 → cam_3  G 0.2 м  T 3.4 с  R 0.62",
+   "track_id": 15
+  },
+  {
+   "t_s": 2495.34,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_2  G 0.3 м  T 2.6 с  R 0.39",
+   "track_id": 11
+  },
+  {
+   "t_s": 2496.27,
+   "kind": "resume",
+   "text": "#10  вернулся через 0:06, номер сохранён  R 0.84",
+   "track_id": 10
+  },
+  {
+   "t_s": 2496.42,
+   "kind": "handoff",
+   "text": "#14  cam_3 → cam_2  G 0.4 м  T 2.8 с  R 0.47",
+   "track_id": 14
+  },
+  {
+   "t_s": 2497.47,
+   "kind": "resume",
+   "text": "#12  вернулся через 0:06, номер сохранён  R 0.76",
+   "track_id": 12
+  },
+  {
+   "t_s": 2497.59,
+   "kind": "handoff",
+   "text": "#11  cam_2 → cam_1  G 0.4 м  T 7.0 с  R 0.33",
+   "track_id": 11
+  },
+  {
+   "t_s": 2499.46,
+   "kind": "fast",
+   "text": "#17  cam_1 → cam_3  быстрый переход  контакт 0.2 с  G 0.7 м",
+   "track_id": 17
+  },
+  {
+   "t_s": 2501.06,
+   "kind": "handoff",
+   "text": "#10  cam_4 → cam_3  G 0.1 м  T 2.8 с  R 0.80",
+   "track_id": 10
+  },
+  {
+   "t_s": 2501.27,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_5  G 0.5 м  T 8.0 с  R 0.68",
+   "track_id": 10
+  },
+  {
+   "t_s": 2501.86,
+   "kind": "handoff",
+   "text": "#12  cam_4 → cam_3  G 0.2 м  T 2.7 с  R 0.66",
+   "track_id": 12
+  },
+  {
+   "t_s": 2502.15,
+   "kind": "handoff",
+   "text": "#12  cam_3 → cam_5  G 0.5 м  T 7.0 с  R 0.37",
+   "track_id": 12
+  },
+  {
+   "t_s": 2504.94,
+   "kind": "fast",
+   "text": "#11  cam_1 → cam_2  быстрый переход  контакт 0.7 с  G 0.2 м  R 0.06",
+   "track_id": 11
+  },
+  {
+   "t_s": 2505.54,
+   "kind": "handoff",
+   "text": "#11  cam_1 → cam_2  G 0.4 м  T 12.7 с  R 0.10  спорная",
+   "track_id": 11
+  },
+  {
+   "t_s": 2508.51,
+   "kind": "handoff",
+   "text": "#14  cam_2 → cam_1  G 0.3 м  T 8.4 с  R 0.08  спорная",
+   "track_id": 14
+  },
+  {
+   "t_s": 2508.51,
+   "kind": "close",
+   "text": "Трек #17 закрыт: остался на месте и пропал",
+   "track_id": 17
+  },
+  {
+   "t_s": 2511.54,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_2  G 0.3 м  T 1.7 с  R 0.66",
+   "track_id": 10
+  },
+  {
+   "t_s": 2512.22,
+   "kind": "handoff",
+   "text": "#12  cam_3 → cam_2  G 0.3 м  T 1.6 с  R 0.39",
+   "track_id": 12
+  },
+  {
+   "t_s": 2513.59,
+   "kind": "handoff",
+   "text": "#10  cam_2 → cam_1  G 0.3 м  T 4.8 с  R 0.31",
+   "track_id": 10
+  },
+  {
+   "t_s": 2513.66,
+   "kind": "fast",
+   "text": "#10  cam_1 → cam_3  быстрый переход  контакт 0.1 с  G 0.5 м",
+   "track_id": 10
+  },
+  {
+   "t_s": 2513.91,
+   "kind": "handoff",
+   "text": "#12  cam_2 → cam_1  G 0.4 м  T 5.6 с  R 0.18",
+   "track_id": 12
+  },
+  {
+   "t_s": 2515.86,
+   "kind": "handoff",
+   "text": "#11  cam_2 → cam_3  G 0.5 м  T 6.0 с  R 0.15",
+   "track_id": 11
+  },
+  {
+   "t_s": 2519.58,
+   "kind": "handoff",
+   "text": "#14  cam_1 → cam_3  G 0.3 м  T 1.7 с  R 0.22",
+   "track_id": 14
+  },
+  {
+   "t_s": 2519.58,
+   "kind": "handoff",
+   "text": "#14  cam_2 → cam_3  G 0.5 м  T 3.2 с  R 0.15",
+   "track_id": 14
+  },
+  {
+   "t_s": 2523.55,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_5  G 0.2 м  T 17.9 с  R 0.39",
+   "track_id": 11
+  },
+  {
+   "t_s": 2529.87,
+   "kind": "handoff",
+   "text": "#14  cam_3 → cam_4  G 0.3 м  T 4.6 с  R 0.29",
+   "track_id": 14
+  },
+  {
+   "t_s": 2531.07,
+   "kind": "handoff",
+   "text": "#11  cam_5 → cam_4  G 0.2 м  T 2.5 с  R 0.14",
+   "track_id": 11
+  },
+  {
+   "t_s": 2531.67,
+   "kind": "resume",
+   "text": "#18  скрыт 0.2 с и продолжен на cam_5  G 0.4 м  R 0.57",
+   "track_id": 18
+  },
+  {
+   "t_s": 2531.75,
+   "kind": "handoff",
+   "text": "#14  cam_3 → cam_5  G 0.4 м  T 11.0 с  R 0.61",
+   "track_id": 14
+  },
+  {
+   "t_s": 2532.47,
+   "kind": "close",
+   "text": "Трек #18 закрыт: потерян на открытом месте",
+   "track_id": 18
+  },
+  {
+   "t_s": 2539.82,
+   "kind": "resume",
+   "text": "#12  вернулся через 0:17, номер сохранён  R 0.84",
+   "track_id": 12
+  },
+  {
+   "t_s": 2540.22,
+   "kind": "resume",
+   "text": "#10  вернулся через 0:21, номер сохранён  R 0.87",
+   "track_id": 10
+  },
+  {
+   "t_s": 2540.79,
+   "kind": "handoff",
+   "text": "#10  cam_2 → cam_1  G 0.2 м  T 3.0 с  R 0.41",
+   "track_id": 10
+  },
+  {
+   "t_s": 2541.79,
+   "kind": "handoff",
+   "text": "#12  cam_2 → cam_1  G 0.3 м  T 4.6 с  R 0.19",
+   "track_id": 12
+  },
+  {
+   "t_s": 2541.95,
+   "kind": "close",
+   "text": "Трек #19 закрыт: ушёл в дверь",
+   "track_id": 19
+  },
+  {
+   "t_s": 2543.75,
+   "kind": "close",
+   "text": "Трек #14 закрыт: ушёл в дверь",
+   "track_id": 14
+  },
+  {
+   "t_s": 2544.54,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_2  G 0.5 м  T 1.9 с  R 0.30",
+   "track_id": 10
+  },
+  {
+   "t_s": 2544.67,
+   "kind": "fast",
+   "text": "#10  cam_1 → cam_2  быстрый переход  контакт 0.2 с  G 0.4 м  R 0.16",
+   "track_id": 10
+  },
+  {
+   "t_s": 2545.46,
+   "kind": "handoff",
+   "text": "#12  cam_2 → cam_3  G 0.4 м  T 1.9 с  R 0.36",
+   "track_id": 12
+  },
+  {
+   "t_s": 2547.75,
+   "kind": "handoff",
+   "text": "#10  cam_3 → cam_5  G 0.7 м  T 3.3 с  R 0.46  спорная",
+   "track_id": 10
+  },
+  {
+   "t_s": 2551.55,
+   "kind": "resume",
+   "text": "#11  вернулся через 0:09, номер сохранён  R 0.70",
+   "track_id": 11
+  },
+  {
+   "t_s": 2552.35,
+   "kind": "resume",
+   "text": "#15  вернулся через 0:58, номер сохранён  R 0.87",
+   "track_id": 15
+  },
+  {
+   "t_s": 2552.46,
+   "kind": "handoff",
+   "text": "#10  cam_5 → cam_3  G 0.3 м  T 12.2 с  R 0.72",
+   "track_id": 10
+  },
+  {
+   "t_s": 2552.55,
+   "kind": "handoff",
+   "text": "#12  cam_3 → cam_5  G 0.3 м  T 13.5 с  R 0.51",
+   "track_id": 12
+  },
+  {
+   "t_s": 2553.47,
+   "kind": "resume",
+   "text": "#11  скрыт 0.2 с и продолжен на cam_5  G 0.3 м  R 0.61",
+   "track_id": 11
+  },
+  {
+   "t_s": 2553.77,
+   "kind": "handoff",
+   "text": "#10  cam_5 → cam_4  G 0.2 м  T 3.3 с  R 0.27",
+   "track_id": 10
+  },
+  {
+   "t_s": 2553.86,
+   "kind": "handoff",
+   "text": "#15  cam_5 → cam_3  G 1.7 м  T 2.8 с  R 0.22",
+   "track_id": 15
+  },
+  {
+   "t_s": 2554.62,
+   "kind": "handoff",
+   "text": "#20  cam_3 → cam_2  G 0.3 м  T 2.2 с  R 0.48",
+   "track_id": 20
+  },
+  {
+   "t_s": 2555.17,
+   "kind": "handoff",
+   "text": "#12  cam_3 → cam_4  G 0.2 м  T 3.4 с  R 0.36",
+   "track_id": 12
+  },
+  {
+   "t_s": 2555.47,
+   "kind": "resume",
+   "text": "#11  скрыт 0.5 с и продолжен на cam_5  G 0.9 м  R 0.21",
+   "track_id": 11
+  },
+  {
+   "t_s": 2556.59,
+   "kind": "handoff",
+   "text": "#20  cam_2 → cam_1  G 0.3 м  T 5.1 с  R 0.38",
+   "track_id": 20
+  },
+  {
+   "t_s": 2563.75,
+   "kind": "resume",
+   "text": "#15  вернулся через 0:06, номер сохранён  R 0.80",
+   "track_id": 15
+  },
+  {
+   "t_s": 2564.42,
+   "kind": "close",
+   "text": "Трек #20 закрыт: ушёл в дверь",
+   "track_id": 20
+  },
+  {
+   "t_s": 2564.66,
+   "kind": "handoff",
+   "text": "#15  cam_5 → cam_3  G 1.4 м  T 3.5 с  R 0.41",
+   "track_id": 15
+  },
+  {
+   "t_s": 2564.67,
+   "kind": "resume",
+   "text": "#11  вернулся через 0:22, номер сохранён  R 0.89",
+   "track_id": 11
+  },
+  {
+   "t_s": 2565.58,
+   "kind": "handoff",
+   "text": "#11  cam_5 → cam_3  G 0.3 м  T 14.6 с  R 0.29",
+   "track_id": 11
+  },
+  {
+   "t_s": 2567.35,
+   "kind": "close",
+   "text": "Трек #12 закрыт: ушёл в дверь",
+   "track_id": 12
+  },
+  {
+   "t_s": 2568.27,
+   "kind": "close",
+   "text": "Трек #10 закрыт: ушёл в дверь",
+   "track_id": 10
+  },
+  {
+   "t_s": 2570.57,
+   "kind": "handoff",
+   "text": "#15  cam_3 → cam_4  G 0.2 м  T 5.0 с  R 0.30",
+   "track_id": 15
+  },
+  {
+   "t_s": 2571.67,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_4  G 0.3 м  T 2.9 с  R 0.12",
+   "track_id": 11
+  },
+  {
+   "t_s": 2580.67,
+   "kind": "close",
+   "text": "Трек #21 закрыт: скрылся за препятствием",
+   "track_id": 21
+  },
+  {
+   "t_s": 2582.22,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_2  G 0.4 м  T 3.1 с  R 0.32",
+   "track_id": 11
+  },
+  {
+   "t_s": 2583.43,
+   "kind": "resume",
+   "text": "#15  вернулся через 0:03, номер сохранён  R 0.80",
+   "track_id": 15
+  },
+  {
+   "t_s": 2584.79,
+   "kind": "handoff",
+   "text": "#11  cam_2 → cam_1  G 0.4 м  T 12.8 с  R 0.32",
+   "track_id": 11
+  },
+  {
+   "t_s": 2585.71,
+   "kind": "handoff",
+   "text": "#15  cam_2 → cam_1  G 0.4 м  T 10.5 с  R 0.33",
+   "track_id": 15
+  },
+  {
+   "t_s": 2586.06,
+   "kind": "close",
+   "text": "Трек #22 закрыт: вышел из кадра",
+   "track_id": 22
+  },
+  {
+   "t_s": 2596.26,
+   "kind": "handoff",
+   "text": "#15  cam_2 → cam_3  G 0.5 м  T 2.7 с  R 0.27",
+   "track_id": 15
+  },
+  {
+   "t_s": 2597.32,
+   "kind": "fast",
+   "text": "#11  cam_1 → cam_3  быстрый переход  контакт 0.5 с  G 0.4 м  R 0.10",
+   "track_id": 11
+  },
+  {
+   "t_s": 2601.35,
+   "kind": "handoff",
+   "text": "#15  cam_3 → cam_5  G 0.3 м  T 8.8 с  R 0.50",
+   "track_id": 15
+  },
+  {
+   "t_s": 2601.47,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_5  G 1.6 м  T 8.8 с  R 0.06  спорная",
+   "track_id": 11
+  },
+  {
+   "t_s": 2606.87,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_4  G 0.2 м  T 3.4 с  R 0.53",
+   "track_id": 11
+  },
+  {
+   "t_s": 2608.17,
+   "kind": "handoff",
+   "text": "#15  cam_3 → cam_4  G 0.4 м  T 2.9 с  R 0.75",
+   "track_id": 15
+  },
+  {
+   "t_s": 2613.07,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #23 · Вероятно, вернулся #9 · отсутствовал 3:21 · сходство 0.80 · не склеено по правилу ТЗ",
+   "track_id": 23
+  },
+  {
+   "t_s": 2613.66,
+   "kind": "handoff",
+   "text": "#23  cam_5 → cam_3  G 0.4 м  T 8.5 с  R 0.63",
+   "track_id": 23
+  },
+  {
+   "t_s": 2618.18,
+   "kind": "handoff",
+   "text": "#24  cam_5 → cam_3  G 0.3 м  T 5.3 с  R 0.39",
+   "track_id": 24
+  },
+  {
+   "t_s": 2619.47,
+   "kind": "handoff",
+   "text": "#23  cam_5 → cam_4  G 0.8 м  T 2.6 с  R 0.35",
+   "track_id": 23
+  },
+  {
+   "t_s": 2621.57,
+   "kind": "resume",
+   "text": "#15  вернулся через 0:41, номер сохранён  R 0.84",
+   "track_id": 15
+  },
+  {
+   "t_s": 2621.97,
+   "kind": "fast",
+   "text": "#24  cam_3 → cam_4  быстрый переход  контакт 0.2 с  G 0.5 м",
+   "track_id": 24
+  },
+  {
+   "t_s": 2622.35,
+   "kind": "handoff",
+   "text": "#23  cam_3 → cam_5  G 0.7 м  T 3.8 с  R 0.49  спорная",
+   "track_id": 23
+  },
+  {
+   "t_s": 2622.37,
+   "kind": "handoff",
+   "text": "#24  cam_5 → cam_4  G 0.4 м  T 1.1 с  R 0.82",
+   "track_id": 24
+  },
+  {
+   "t_s": 2622.57,
+   "kind": "resume",
+   "text": "#11  вернулся через 0:07, номер сохранён  R 0.79",
+   "track_id": 11
+  },
+  {
+   "t_s": 2627.86,
+   "kind": "close",
+   "text": "Трек #23 закрыт: вышел из кадра",
+   "track_id": 23
+  },
+  {
+   "t_s": 2628.06,
+   "kind": "handoff",
+   "text": "#26  cam_5 → cam_3  G 0.2 м  T 1.6 с  R 0.12  спорная",
+   "track_id": 26
+  },
+  {
+   "t_s": 2628.66,
+   "kind": "handoff",
+   "text": "#15  cam_4 → cam_3  G 0.3 м  T 2.5 с  R 0.64",
+   "track_id": 15
+  },
+  {
+   "t_s": 2629.06,
+   "kind": "handoff",
+   "text": "#11  cam_4 → cam_3  G 0.2 м  T 2.5 с  R 0.18  спорная",
+   "track_id": 11
+  },
+  {
+   "t_s": 2629.07,
+   "kind": "close",
+   "text": "Трек #25 закрыт: ушёл в дверь",
+   "track_id": 25
+  },
+  {
+   "t_s": 2629.55,
+   "kind": "handoff",
+   "text": "#15  cam_3 → cam_5  G 0.4 м  T 11.9 с  R 0.62",
+   "track_id": 15
+  },
+  {
+   "t_s": 2630.37,
+   "kind": "close",
+   "text": "Трек #24 закрыт: ушёл в дверь",
+   "track_id": 24
+  },
+  {
+   "t_s": 2630.47,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #28 · Вероятно, вернулся #10 · отсутствовал 1:02 · сходство 0.92 · не склеено по правилу ТЗ",
+   "track_id": 28
+  },
+  {
+   "t_s": 2631.66,
+   "kind": "handoff",
+   "text": "#26  cam_5 → cam_3  G 0.7 м  T 3.8 с  R 0.13  спорная",
+   "track_id": 26
+  },
+  {
+   "t_s": 2633.46,
+   "kind": "fast",
+   "text": "#28  cam_5 → cam_3  быстрый переход  контакт 0.5 с  G 0.2 м  R 0.25",
+   "track_id": 28
+  },
+  {
+   "t_s": 2634.95,
+   "kind": "close",
+   "text": "Трек #27 закрыт: потерян на открытом месте",
+   "track_id": 27
+  },
+  {
+   "t_s": 2635.06,
+   "kind": "handoff",
+   "text": "#28  cam_5 → cam_3  G 0.3 м  T 2.6 с  R 0.80  спорная",
+   "track_id": 28
+  },
+  {
+   "t_s": 2635.27,
+   "kind": "handoff",
+   "text": "#26  cam_3 → cam_4  G 0.2 м  T 1.6 с  R 0.12  спорная",
+   "track_id": 26
+  },
+  {
+   "t_s": 2636.35,
+   "kind": "fast",
+   "text": "#26  cam_3 → cam_5  быстрый переход  контакт 0.4 с  G 1.4 м  R 0.09",
+   "track_id": 26
+  },
+  {
+   "t_s": 2637.75,
+   "kind": "handoff",
+   "text": "#11  cam_3 → cam_5  G 0.2 м  T 2.7 с  R 0.14",
+   "track_id": 11
+  },
+  {
+   "t_s": 2637.95,
+   "kind": "handoff",
+   "text": "#28  cam_3 → cam_5  G 0.2 м  T 6.0 с  R 0.78  спорная",
+   "track_id": 28
+  },
+  {
+   "t_s": 2639.47,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #29 · Вероятно, вернулся #12 · отсутствовал 1:12 · сходство 0.90 · не склеено по правилу ТЗ",
+   "track_id": 29
+  },
+  {
+   "t_s": 2640.37,
+   "kind": "handoff",
+   "text": "#28  cam_3 → cam_4  G 0.1 м  T 5.1 с  R 0.37",
+   "track_id": 28
+  },
+  {
+   "t_s": 2641.35,
+   "kind": "close",
+   "text": "Трек #11 закрыт: ушёл в дверь",
+   "track_id": 11
+  },
+  {
+   "t_s": 2642.46,
+   "kind": "handoff",
+   "text": "#26  cam_4 → cam_3  G 0.2 м  T 1.1 с  R 0.13  спорная",
+   "track_id": 26
+  },
+  {
+   "t_s": 2642.47,
+   "kind": "close",
+   "text": "Трек #15 закрыт: ушёл в дверь",
+   "track_id": 15
+  },
+  {
+   "t_s": 2642.55,
+   "kind": "handoff",
+   "text": "#26  cam_3 → cam_5  G 1.1 м  T 9.1 с  R 0.25",
+   "track_id": 26
+  },
+  {
+   "t_s": 2642.78,
+   "kind": "handoff",
+   "text": "#29  cam_4 → cam_3  G 0.1 м  T 1.1 с  R 0.50",
+   "track_id": 29
+  },
+  {
+   "t_s": 2642.95,
+   "kind": "handoff",
+   "text": "#29  cam_3 → cam_5  G 0.4 м  T 3.7 с  R 0.29  спорная",
+   "track_id": 29
+  },
+  {
+   "t_s": 2644.95,
+   "kind": "handoff",
+   "text": "#28  cam_3 → cam_5  G 0.2 м  T 9.6 с  R 0.71  спорная",
+   "track_id": 28
+  },
+  {
+   "t_s": 2647.47,
+   "kind": "handoff",
+   "text": "#29  cam_3 → cam_5  G 0.5 м  T 1.1 с  R 0.25  спорная",
+   "track_id": 29
+  },
+  {
+   "t_s": 2649.07,
+   "kind": "handoff",
+   "text": "#29  cam_3 → cam_5  G 0.6 м  T 4.4 с  R 0.54",
+   "track_id": 29
+  },
+  {
+   "t_s": 2653.15,
+   "kind": "close",
+   "text": "Трек #26 закрыт: ушёл в дверь",
+   "track_id": 26
+  },
+  {
+   "t_s": 2696.66,
+   "kind": "handoff",
+   "text": "#30  cam_5 → cam_3  G 0.3 м  T 9.0 с  R 0.54",
+   "track_id": 30
+  },
+  {
+   "t_s": 2700.98,
+   "kind": "handoff",
+   "text": "#31  cam_5 → cam_3  G 0.2 м  T 8.5 с  R 0.49",
+   "track_id": 31
+  },
+  {
+   "t_s": 2702.22,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #32 · Вероятно, вернулся #8 · отсутствовал 3:35 · сходство 0.74 · не склеено по правилу ТЗ",
+   "track_id": 32
+  },
+  {
+   "t_s": 2703.86,
+   "kind": "handoff",
+   "text": "#32  cam_2 → cam_3  G 1.2 м  T 1.9 с  R 0.02",
+   "track_id": 32
+  },
+  {
+   "t_s": 2704.47,
+   "kind": "handoff",
+   "text": "#30  cam_3 → cam_4  G 0.2 м  T 1.4 с  R 0.60",
+   "track_id": 30
+  },
+  {
+   "t_s": 2705.06,
+   "kind": "handoff",
+   "text": "#34  cam_5 → cam_3  G 0.4 м  T 4.2 с  R 0.20",
+   "track_id": 34
+  },
+  {
+   "t_s": 2705.26,
+   "kind": "fast",
+   "text": "#32  cam_2 → cam_3  быстрый переход  контакт 0.3 с  G 0.8 м  R 0.38",
+   "track_id": 32
+  },
+  {
+   "t_s": 2706.67,
+   "kind": "handoff",
+   "text": "#33  cam_5 → cam_5  передача встык  G 0.3 м  R 0.78",
+   "track_id": 33
+  },
+  {
+   "t_s": 2708.67,
+   "kind": "handoff",
+   "text": "#31  cam_3 → cam_4  G 0.1 м  T 1.2 с  R 0.40",
+   "track_id": 31
+  },
+  {
+   "t_s": 2709.27,
+   "kind": "close",
+   "text": "Трек #33 закрыт: ушёл в дверь",
+   "track_id": 33
+  },
+  {
+   "t_s": 2709.95,
+   "kind": "handoff",
+   "text": "#35  cam_3 → cam_5  G 1.7 м  T 2.9 с  R 0.10  спорная",
+   "track_id": 35
+  },
+  {
+   "t_s": 2709.97,
+   "kind": "close",
+   "text": "Трек #30 закрыт: ушёл в дверь",
+   "track_id": 30
+  },
+  {
+   "t_s": 2711.15,
+   "kind": "resume",
+   "text": "#28  вернулся через 0:56, номер сохранён  R 0.91",
+   "track_id": 28
+  },
+  {
+   "t_s": 2711.86,
+   "kind": "handoff",
+   "text": "#28  cam_5 → cam_3  G 0.3 м  T 2.4 с  R 0.58",
+   "track_id": 28
+  },
+  {
+   "t_s": 2712.07,
+   "kind": "resume",
+   "text": "#29  вернулся через 0:58, номер сохранён  R 0.82",
+   "track_id": 29
+  },
+  {
+   "t_s": 2712.27,
+   "kind": "handoff",
+   "text": "#32  cam_3 → cam_5  G 2.1 м  T 3.8 с  R 0.28",
+   "track_id": 32
+  },
+  {
+   "t_s": 2712.95,
+   "kind": "handoff",
+   "text": "#35  cam_3 → cam_5  G 0.2 м  T 2.9 с  R 0.59",
+   "track_id": 35
+  },
+  {
+   "t_s": 2713.87,
+   "kind": "handoff",
+   "text": "#32  cam_3 → cam_4  G 0.1 м  T 3.9 с  R 0.73",
+   "track_id": 32
+  },
+  {
+   "t_s": 2714.57,
+   "kind": "handoff",
+   "text": "#35  cam_3 → cam_4  G 0.3 м  T 1.3 с  R 0.73",
+   "track_id": 35
+  },
+  {
+   "t_s": 2714.75,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #37 · Вероятно, вернулся #14 · отсутствовал 2:51 · сходство 0.72 · не склеено по правилу ТЗ",
+   "track_id": 37
+  },
+  {
+   "t_s": 2715.46,
+   "kind": "close",
+   "text": "Трек #36 закрыт: потерян на открытом месте",
+   "track_id": 36
+  },
+  {
+   "t_s": 2715.86,
+   "kind": "handoff",
+   "text": "#37  cam_5 → cam_3  G 0.3 м  T 9.8 с  R 0.48",
+   "track_id": 37
+  },
+  {
+   "t_s": 2715.95,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #38 · Вероятно, вернулся #11 · отсутствовал 1:15 · сходство 0.84 · не склеено по правилу ТЗ",
+   "track_id": 38
+  },
+  {
+   "t_s": 2716.66,
+   "kind": "handoff",
+   "text": "#38  cam_5 → cam_3  G 0.7 м  T 7.6 с  R 0.23",
+   "track_id": 38
+  },
+  {
+   "t_s": 2723.57,
+   "kind": "handoff",
+   "text": "#38  cam_3 → cam_4  G 0.3 м  T 1.9 с  R 0.21  спорная",
+   "track_id": 38
+  },
+  {
+   "t_s": 2723.87,
+   "kind": "fast",
+   "text": "#37  cam_5 → cam_4  быстрый переход  контакт 0.2 с  G 0.3 м",
+   "track_id": 37
+  },
+  {
+   "t_s": 2724.27,
+   "kind": "handoff",
+   "text": "#37  cam_5 → cam_4  G 0.3 м  T 1.4 с  R 0.81",
+   "track_id": 37
+  },
+  {
+   "t_s": 2724.27,
+   "kind": "handoff",
+   "text": "#38  cam_3 → cam_5  G 0.9 м  T 1.0 с  R 0.08  спорная",
+   "track_id": 38
+  },
+  {
+   "t_s": 2725.07,
+   "kind": "resume",
+   "text": "#31  вернулся через 0:11, номер сохранён  R 0.87",
+   "track_id": 31
+  },
+  {
+   "t_s": 2727.27,
+   "kind": "resume",
+   "text": "#31  скрыт 0.3 с и продолжен на cam_4  G 1.2 м  R 0.81",
+   "track_id": 31
+  },
+  {
+   "t_s": 2728.77,
+   "kind": "resume",
+   "text": "#35  вернулся через 0:09, номер сохранён  R 0.75",
+   "track_id": 35
+  },
+  {
+   "t_s": 2731.67,
+   "kind": "resume",
+   "text": "#28  вернулся через 0:16, номер сохранён  R 0.85",
+   "track_id": 28
+  },
+  {
+   "t_s": 2732.46,
+   "kind": "handoff",
+   "text": "#28  cam_5 → cam_3  G 0.3 м  T 1.6 с  R 0.59",
+   "track_id": 28
+  },
+  {
+   "t_s": 2732.47,
+   "kind": "resume",
+   "text": "#29  вернулся через 0:16, номер сохранён  R 0.77",
+   "track_id": 29
+  },
+  {
+   "t_s": 2732.98,
+   "kind": "handoff",
+   "text": "#31  cam_4 → cam_3  G 0.1 м  T 3.3 с  R 0.44",
+   "track_id": 31
+  },
+  {
+   "t_s": 2733.46,
+   "kind": "handoff",
+   "text": "#35  cam_4 → cam_3  G 0.1 м  T 2.3 с  R 0.62",
+   "track_id": 35
+  },
+  {
+   "t_s": 2733.67,
+   "kind": "handoff",
+   "text": "#35  cam_3 → cam_5  G 0.1 м  T 5.5 с  R 0.69",
+   "track_id": 35
+  },
+  {
+   "t_s": 2733.87,
+   "kind": "handoff",
+   "text": "#31  cam_4 → cam_5  G 1.4 м  T 2.4 с  R 0.14",
+   "track_id": 31
+  },
+  {
+   "t_s": 2733.95,
+   "kind": "handoff",
+   "text": "#39  cam_3 → cam_5  G 1.1 м  T 8.9 с  R 0.44",
+   "track_id": 39
+  },
+  {
+   "t_s": 2734.95,
+   "kind": "resume",
+   "text": "#29  скрыт 0.3 с и продолжен на cam_5  G 0.6 м  R 0.51",
+   "track_id": 29
+  },
+  {
+   "t_s": 2736.26,
+   "kind": "fast",
+   "text": "#28  cam_5 → cam_3  быстрый переход  контакт 1.0 с  G 0.7 м  R 0.69",
+   "track_id": 28
+  },
+  {
+   "t_s": 2736.57,
+   "kind": "resume",
+   "text": "#38  вернулся через 0:05, номер сохранён  R 0.68",
+   "track_id": 38
+  },
+  {
+   "t_s": 2737.35,
+   "kind": "resume",
+   "text": "#29  скрыт 0.6 с и продолжен на cam_5  G 1.3 м  R 0.30",
+   "track_id": 29
+  },
+  {
+   "t_s": 2737.55,
+   "kind": "fast",
+   "text": "#28  cam_3 → cam_5  быстрый переход  контакт 0.4 с  G 0.1 м  R 0.33",
+   "track_id": 28
+  },
+  {
+   "t_s": 2738.07,
+   "kind": "handoff",
+   "text": "#28  cam_3 → cam_4  G 0.2 м  T 2.6 с  R 0.54",
+   "track_id": 28
+  },
+  {
+   "t_s": 2738.55,
+   "kind": "resume",
+   "text": "#29  скрыт 0.5 с и продолжен cam_5 → cam_4  G 0.8 м  R 0.27",
+   "track_id": 29
+  },
+  {
+   "t_s": 2738.95,
+   "kind": "handoff",
+   "text": "#38  cam_4 → cam_5  G 1.1 м  T 2.8 с  R 0.61",
+   "track_id": 38
+  },
+  {
+   "t_s": 2739.87,
+   "kind": "handoff",
+   "text": "#39  cam_3 → cam_4  G 0.3 м  T 3.3 с  R 0.12",
+   "track_id": 39
+  },
+  {
+   "t_s": 2739.98,
+   "kind": "handoff",
+   "text": "#35  cam_5 → cam_3  G 0.3 м  T 2.3 с  R 0.31  спорная",
+   "track_id": 35
+  },
+  {
+   "t_s": 2740.78,
+   "kind": "handoff",
+   "text": "#29  cam_4 → cam_3  G 0.2 м  T 1.2 с  R 0.42",
+   "track_id": 29
+  },
+  {
+   "t_s": 2741.06,
+   "kind": "close",
+   "text": "Трек #31 закрыт: потерян на открытом месте",
+   "track_id": 31
+  },
+  {
+   "t_s": 2741.18,
+   "kind": "handoff",
+   "text": "#40  cam_4 → cam_3  G 0.3 м  T 1.5 с  R 0.20",
+   "track_id": 40
+  },
+  {
+   "t_s": 2741.98,
+   "kind": "handoff",
+   "text": "#38  cam_5 → cam_3  G 0.5 м  T 9.5 с  R 0.32",
+   "track_id": 38
+  },
+  {
+   "t_s": 2742.66,
+   "kind": "resume",
+   "text": "#37  вернулся через 0:12, номер сохранён  R 0.87",
+   "track_id": 37
+  },
+  {
+   "t_s": 2742.86,
+   "kind": "close",
+   "text": "Трек #40 закрыт: потерян на открытом месте",
+   "track_id": 40
+  },
+  {
+   "t_s": 2742.95,
+   "kind": "handoff",
+   "text": "#37  cam_3 → cam_5  G 0.4 м  T 9.4 с  R 0.48",
+   "track_id": 37
+  },
+  {
+   "t_s": 2743.86,
+   "kind": "fast",
+   "text": "#41  cam_5 → cam_3  быстрый переход  контакт 0.2 с  G 1.0 м  R 0.20",
+   "track_id": 41
+  },
+  {
+   "t_s": 2745.17,
+   "kind": "resume",
+   "text": "#28  скрыт 0.5 с и продолжен на cam_4  G 0.6 м  R 0.51",
+   "track_id": 28
+  },
+  {
+   "t_s": 2745.77,
+   "kind": "handoff",
+   "text": "#28  cam_4 → cam_4  передача встык  G 0.7 м  R 0.58",
+   "track_id": 28
+  },
+  {
+   "t_s": 2748.15,
+   "kind": "close",
+   "text": "Трек #41 закрыт: ушёл в дверь",
+   "track_id": 41
+  },
+  {
+   "t_s": 2749.15,
+   "kind": "close",
+   "text": "Трек #35 закрыт: ушёл в дверь",
+   "track_id": 35
+  },
+  {
+   "t_s": 2749.22,
+   "kind": "handoff",
+   "text": "#39  cam_3 → cam_2  G 0.3 м  T 1.4 с  R 0.39",
+   "track_id": 39
+  },
+  {
+   "t_s": 2750.39,
+   "kind": "handoff",
+   "text": "#39  cam_2 → cam_1  G 0.4 м  T 4.5 с  R 0.21",
+   "track_id": 39
+  },
+  {
+   "t_s": 2750.87,
+   "kind": "resume",
+   "text": "#32  вернулся через 0:27, номер сохранён  R 0.62",
+   "track_id": 32
+  },
+  {
+   "t_s": 2752.15,
+   "kind": "close",
+   "text": "Трек #38 закрыт: ушёл в дверь",
+   "track_id": 38
+  },
+  {
+   "t_s": 2753.27,
+   "kind": "close",
+   "text": "Трек #37 закрыт: ушёл в дверь",
+   "track_id": 37
+  },
+  {
+   "t_s": 2754.86,
+   "kind": "handoff",
+   "text": "#32  cam_4 → cam_3  G 0.1 м  T 1.2 с  R 0.37",
+   "track_id": 32
+  },
+  {
+   "t_s": 2755.47,
+   "kind": "handoff",
+   "text": "#32  cam_3 → cam_5  G 0.2 м  T 9.6 с  R 0.35",
+   "track_id": 32
+  },
+  {
+   "t_s": 2756.82,
+   "kind": "close",
+   "text": "Трек #39 закрыт: ушёл в дверь",
+   "track_id": 39
+  },
+  {
+   "t_s": 2757.47,
+   "kind": "resume",
+   "text": "#29  вернулся через 0:10, номер сохранён  R 0.75",
+   "track_id": 29
+  },
+  {
+   "t_s": 2763.67,
+   "kind": "resume",
+   "text": "#29  вернулся через 0:16, номер сохранён  R 0.78",
+   "track_id": 29
+  },
+  {
+   "t_s": 2765.27,
+   "kind": "resume",
+   "text": "#28  вернулся через 0:50, номер сохранён  R 0.94",
+   "track_id": 28
+  },
+  {
+   "t_s": 2765.47,
+   "kind": "close",
+   "text": "Трек #32 закрыт: ушёл в дверь",
+   "track_id": 32
+  },
+  {
+   "t_s": 2768.86,
+   "kind": "handoff",
+   "text": "#28  cam_4 → cam_3  G 0.2 м  T 1.9 с  R 0.59",
+   "track_id": 28
+  },
+  {
+   "t_s": 2769.66,
+   "kind": "handoff",
+   "text": "#29  cam_5 → cam_3  G 0.2 м  T 8.9 с  R 0.46",
+   "track_id": 29
+  },
+  {
+   "t_s": 2769.71,
+   "kind": "fast",
+   "text": "#29  cam_4 → cam_5  быстрый переход  контакт 0.7 с  G 0.3 м  R 0.71",
+   "track_id": 29
+  },
+  {
+   "t_s": 2770.15,
+   "kind": "handoff",
+   "text": "#28  cam_3 → cam_5  G 0.2 м  T 9.3 с  R 0.70",
+   "track_id": 28
+  },
+  {
+   "t_s": 2770.15,
+   "kind": "resume",
+   "text": "#34  вернулся через 1:00, номер сохранён  R 0.62",
+   "track_id": 34
+  },
+  {
+   "t_s": 2771.06,
+   "kind": "handoff",
+   "text": "#34  cam_5 → cam_3  G 0.4 м  T 3.2 с  R 0.08",
+   "track_id": 34
+  },
+  {
+   "t_s": 2774.55,
+   "kind": "close",
+   "text": "Трек #34 закрыт: ушёл в дверь",
+   "track_id": 34
+  },
+  {
+   "t_s": 2779.35,
+   "kind": "close",
+   "text": "Трек #29 закрыт: ушёл в дверь",
+   "track_id": 29
+  },
+  {
+   "t_s": 2780.47,
+   "kind": "close",
+   "text": "Трек #28 закрыт: ушёл в дверь",
+   "track_id": 28
+  },
+  {
+   "t_s": 2789.07,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #42 · Вероятно, вернулся #30 · отсутствовал 1:19 · сходство 0.88 · не склеено по правилу ТЗ",
+   "track_id": 42
+  },
+  {
+   "t_s": 2793.26,
+   "kind": "handoff",
+   "text": "#42  cam_4 → cam_3  G 0.1 м  T 1.6 с  R 0.51",
+   "track_id": 42
+  },
+  {
+   "t_s": 2793.95,
+   "kind": "handoff",
+   "text": "#42  cam_3 → cam_5  G 0.3 м  T 9.1 с  R 0.51",
+   "track_id": 42
+  },
+  {
+   "t_s": 2803.35,
+   "kind": "close",
+   "text": "Трек #42 закрыт: ушёл в дверь",
+   "track_id": 42
+  },
+  {
+   "t_s": 2823.07,
+   "kind": "handoff",
+   "text": "#43  cam_3 → cam_5  G 0.2 м  T 1.3 с  R 0.27",
+   "track_id": 43
+  },
+  {
+   "t_s": 2824.87,
+   "kind": "close",
+   "text": "Трек #43 закрыт: ушёл в дверь",
+   "track_id": 43
+  },
+  {
+   "t_s": 2831.47,
+   "kind": "handoff",
+   "text": "#44  cam_3 → cam_5  G 0.2 м  T 45.4 с  R 0.44  спорная",
+   "track_id": 44
+  },
+  {
+   "t_s": 2855.02,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #45 · Вероятно, вернулся #20 · отсутствовал 4:51 · сходство 0.83 · не склеено по правилу ТЗ",
+   "track_id": 45
+  },
+  {
+   "t_s": 2856.59,
+   "kind": "handoff",
+   "text": "#45  cam_2 → cam_1  G 0.3 м  T 3.4 с  R 0.24",
+   "track_id": 45
+  },
+  {
+   "t_s": 2860.98,
+   "kind": "handoff",
+   "text": "#45  cam_2 → cam_3  G 0.5 м  T 3.0 с  R 0.23",
+   "track_id": 45
+  },
+  {
+   "t_s": 2861.04,
+   "kind": "fast",
+   "text": "#45  cam_1 → cam_3  быстрый переход  контакт 0.1 с  G 0.3 м  R 0.18",
+   "track_id": 45
+  },
+  {
+   "t_s": 2864.62,
+   "kind": "close",
+   "text": "Трек #45 закрыт: потерян на открытом месте",
+   "track_id": 45
+  },
+  {
+   "t_s": 2888.66,
+   "kind": "handoff",
+   "text": "#44  cam_5 → cam_3  G 0.1 м  T 30.9 с  R 0.67",
+   "track_id": 44
+  },
+  {
+   "t_s": 2910.47,
+   "kind": "handoff",
+   "text": "#46  cam_3 → cam_5  G 0.2 м  T 9.2 с  R 0.34",
+   "track_id": 46
+  },
+  {
+   "t_s": 2910.47,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #47 · Вероятно, вернулся #43 · отсутствовал 1:26 · сходство 0.74 · не склеено по правилу ТЗ",
+   "track_id": 47
+  },
+  {
+   "t_s": 2911.06,
+   "kind": "handoff",
+   "text": "#47  cam_5 → cam_3  G 1.3 м  T 7.6 с  R 0.54",
+   "track_id": 47
+  },
+  {
+   "t_s": 2915.57,
+   "kind": "handoff",
+   "text": "#47  cam_3 → cam_4  G 0.2 м  T 3.1 с  R 0.63",
+   "track_id": 47
+  },
+  {
+   "t_s": 2916.17,
+   "kind": "handoff",
+   "text": "#46  cam_3 → cam_4  G 0.3 м  T 3.6 с  R 0.06",
+   "track_id": 46
+  },
+  {
+   "t_s": 2920.01,
+   "kind": "fast",
+   "text": "#46  cam_4 → cam_3  быстрый переход  контакт 0.7 с  G 0.3 м  R 0.14",
+   "track_id": 46
+  },
+  {
+   "t_s": 2921.66,
+   "kind": "handoff",
+   "text": "#44  cam_5 → cam_3  G 0.2 м  T 2.3 с  R 0.48  спорная",
+   "track_id": 44
+  },
+  {
+   "t_s": 2921.87,
+   "kind": "handoff",
+   "text": "#46  cam_3 → cam_4  G 0.3 м  T 3.4 с  R 0.35",
+   "track_id": 46
+  },
+  {
+   "t_s": 2921.95,
+   "kind": "fast",
+   "text": "#46  cam_4 → cam_5  быстрый переход  контакт 0.5 с  G 0.2 м  R 0.33",
+   "track_id": 46
+  },
+  {
+   "t_s": 2924.38,
+   "kind": "handoff",
+   "text": "#44  cam_3 → cam_4  передача встык  G 0.6 м  R 0.39",
+   "track_id": 44
+  },
+  {
+   "t_s": 2924.67,
+   "kind": "close",
+   "text": "Трек #47 закрыт: ушёл в дверь",
+   "track_id": 47
+  },
+  {
+   "t_s": 2924.75,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #48 · Вероятно, вернулся #31 · отсутствовал 3:04 · сходство 0.80 · не склеено по правилу ТЗ",
+   "track_id": 48
+  },
+  {
+   "t_s": 2925.46,
+   "kind": "handoff",
+   "text": "#48  cam_5 → cam_3  G 0.6 м  T 2.6 с  R 0.09  спорная",
+   "track_id": 48
+  },
+  {
+   "t_s": 2927.57,
+   "kind": "close",
+   "text": "Трек #46 закрыт: потерян на открытом месте",
+   "track_id": 46
+  },
+  {
+   "t_s": 2927.78,
+   "kind": "handoff",
+   "text": "#50  cam_5 → cam_3  G 0.2 м  T 4.1 с  R 0.54",
+   "track_id": 50
+  },
+  {
+   "t_s": 2928.55,
+   "kind": "close",
+   "text": "Трек #48 закрыт: ушёл в дверь",
+   "track_id": 48
+  },
+  {
+   "t_s": 2931.77,
+   "kind": "handoff",
+   "text": "#50  cam_3 → cam_4  G 0.3 м  T 1.5 с  R 0.53",
+   "track_id": 50
+  },
+  {
+   "t_s": 2932.15,
+   "kind": "fast",
+   "text": "#50  cam_4 → cam_5  быстрый переход  контакт 0.9 с  G 0.8 м  R 0.21",
+   "track_id": 50
+  },
+  {
+   "t_s": 2933.97,
+   "kind": "handoff",
+   "text": "#49  cam_4 → cam_4  передача встык  G 0.4 м  R 0.27",
+   "track_id": 49
+  },
+  {
+   "t_s": 2934.51,
+   "kind": "handoff",
+   "text": "#51  cam_2 → cam_1  G 0.4 м  T 4.0 с  R 0.46",
+   "track_id": 51
+  },
+  {
+   "t_s": 2937.97,
+   "kind": "handoff",
+   "text": "#44  cam_4 → cam_4  передача встык  G 0.6 м  R 0.40",
+   "track_id": 44
+  },
+  {
+   "t_s": 2938.18,
+   "kind": "handoff",
+   "text": "#51  cam_2 → cam_3  G 0.6 м  T 2.0 с  R 0.30",
+   "track_id": 51
+  },
+  {
+   "t_s": 2939.18,
+   "kind": "handoff",
+   "text": "#52  cam_2 → cam_3  G 1.2 м  T 1.4 с  R 0.23",
+   "track_id": 52
+  },
+  {
+   "t_s": 2941.58,
+   "kind": "handoff",
+   "text": "#51  cam_3 → cam_3  передача встык  G 0.1 м  R 0.28",
+   "track_id": 51
+  },
+  {
+   "t_s": 2941.97,
+   "kind": "close",
+   "text": "Трек #50 закрыт: ушёл в дверь",
+   "track_id": 50
+  },
+  {
+   "t_s": 2943.27,
+   "kind": "handoff",
+   "text": "#51  cam_3 → cam_5  G 0.2 м  T 13.1 с  R 0.57",
+   "track_id": 51
+  },
+  {
+   "t_s": 2943.78,
+   "kind": "handoff",
+   "text": "#52  cam_3 → cam_5  передача встык  G 1.0 м  R 0.24",
+   "track_id": 52
+  },
+  {
+   "t_s": 2944.15,
+   "kind": "close",
+   "text": "Трек #52 закрыт: ушёл в дверь",
+   "track_id": 52
+  },
+  {
+   "t_s": 2946.87,
+   "kind": "handoff",
+   "text": "#51  cam_5 → cam_4  G 0.3 м  T 4.3 с  R 0.60",
+   "track_id": 51
+  },
+  {
+   "t_s": 2957.47,
+   "kind": "close",
+   "text": "Трек #51 закрыт: ушёл в дверь",
+   "track_id": 51
+  },
+  {
+   "t_s": 2992.78,
+   "kind": "handoff",
+   "text": "#53  cam_5 → cam_3  G 0.5 м  T 16.6 с  R 0.77",
+   "track_id": 53
+  },
+  {
+   "t_s": 2998.27,
+   "kind": "handoff",
+   "text": "#53  cam_3 → cam_4  G 0.2 м  T 3.9 с  R 0.36",
+   "track_id": 53
+  },
+  {
+   "t_s": 3002.57,
+   "kind": "fast",
+   "text": "#53  cam_5 → cam_4  быстрый переход  контакт 0.2 с  G 0.3 м",
+   "track_id": 53
+  },
+  {
+   "t_s": 3010.38,
+   "kind": "handoff",
+   "text": "#53  cam_3 → cam_3  передача встык  G 0.1 м  R 0.32",
+   "track_id": 53
+  },
+  {
+   "t_s": 3010.98,
+   "kind": "close",
+   "text": "Трек #53 закрыт: вышел из кадра",
+   "track_id": 53
+  },
+  {
+   "t_s": 3035.78,
+   "kind": "close",
+   "text": "Трек #54 закрыт: вышел из кадра",
+   "track_id": 54
+  },
+  {
+   "t_s": 3099.34,
+   "kind": "fast",
+   "text": "#55  cam_3 → cam_2  быстрый переход  контакт 0.3 с  G 0.6 м",
+   "track_id": 55
+  },
+  {
+   "t_s": 3099.64,
+   "kind": "fast",
+   "text": "#55  cam_2 → cam_3  быстрый переход  разрыв 0.0 с  G 0.9 м",
+   "track_id": 55
+  },
+  {
+   "t_s": 3100.75,
+   "kind": "handoff",
+   "text": "#55  cam_3 → cam_5  G 0.6 м  T 2.3 с  R 0.29",
+   "track_id": 55
+  },
+  {
+   "t_s": 3102.57,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #56 · Вероятно, вернулся #24 · отсутствовал 7:52 · сходство 0.86 · не склеено по правилу ТЗ",
+   "track_id": 56
+  },
+  {
+   "t_s": 3103.67,
+   "kind": "close",
+   "text": "Трек #55 закрыт: ушёл в дверь",
+   "track_id": 55
+  },
+  {
+   "t_s": 3106.75,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #57 · Вероятно, вернулся #53 · отсутствовал 1:36 · сходство 0.79 · не склеено по правилу ТЗ",
+   "track_id": 57
+  },
+  {
+   "t_s": 3106.98,
+   "kind": "handoff",
+   "text": "#56  cam_4 → cam_3  G 0.4 м  T 1.6 с  R 0.38",
+   "track_id": 56
+  },
+  {
+   "t_s": 3106.98,
+   "kind": "handoff",
+   "text": "#57  cam_5 → cam_3  G 0.4 м  T 9.1 с  R 0.61",
+   "track_id": 57
+  },
+  {
+   "t_s": 3107.67,
+   "kind": "handoff",
+   "text": "#56  cam_3 → cam_5  G 0.3 м  T 2.6 с  R 0.46",
+   "track_id": 56
+  },
+  {
+   "t_s": 3111.37,
+   "kind": "handoff",
+   "text": "#57  cam_3 → cam_4  G 0.1 м  T 31.4 с  R 0.39",
+   "track_id": 57
+  },
+  {
+   "t_s": 3113.26,
+   "kind": "close",
+   "text": "Трек #58 закрыт: потерян на открытом месте",
+   "track_id": 58
+  },
+  {
+   "t_s": 3114.37,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #59 · Вероятно, вернулся #47 · отсутствовал 3:10 · сходство 0.83 · не склеено по правилу ТЗ",
+   "track_id": 59
+  },
+  {
+   "t_s": 3115.07,
+   "kind": "handoff",
+   "text": "#49  cam_4 → cam_4  передача встык  G 0.1 м  R 0.52",
+   "track_id": 49
+  },
+  {
+   "t_s": 3120.27,
+   "kind": "handoff",
+   "text": "#59  cam_4 → cam_4  передача встык  G 0.2 м  R 0.75",
+   "track_id": 59
+  },
+  {
+   "t_s": 3124.27,
+   "kind": "resume",
+   "text": "#49  скрыт 13.5 с и продолжен на cam_4  G 0.2 м  R 0.40",
+   "track_id": 49
+  },
+  {
+   "t_s": 3142.67,
+   "kind": "fast",
+   "text": "#57  cam_3 → cam_4  быстрый переход  контакт 0.4 с  G 1.0 м  R 0.19",
+   "track_id": 57
+  },
+  {
+   "t_s": 3142.77,
+   "kind": "handoff",
+   "text": "#57  cam_4 → cam_4  передача встык  G 0.8 м  R 0.84",
+   "track_id": 57
+  },
+  {
+   "t_s": 3147.15,
+   "kind": "resume",
+   "text": "#56  вернулся через 0:33, номер сохранён  R 0.82",
+   "track_id": 56
+  },
+  {
+   "t_s": 3147.77,
+   "kind": "close",
+   "text": "Трек #57 закрыт: потерян на открытом месте",
+   "track_id": 57
+  },
+  {
+   "t_s": 3147.86,
+   "kind": "handoff",
+   "text": "#56  cam_5 → cam_3  G 0.3 м  T 11.4 с  R 0.60",
+   "track_id": 56
+  },
+  {
+   "t_s": 3148.07,
+   "kind": "resume",
+   "text": "#44  скрыт 1.3 с и продолжен на cam_4  G 0.3 м  R 0.31",
+   "track_id": 44
+  },
+  {
+   "t_s": 3150.27,
+   "kind": "close",
+   "text": "Трек #44 закрыт: ушёл в дверь",
+   "track_id": 44
+  },
+  {
+   "t_s": 3150.77,
+   "kind": "close",
+   "text": "Трек #60 закрыт: ушёл в дверь",
+   "track_id": 60
+  },
+  {
+   "t_s": 3152.07,
+   "kind": "close",
+   "text": "Трек #49 закрыт: ушёл в дверь",
+   "track_id": 49
+  },
+  {
+   "t_s": 3152.47,
+   "kind": "handoff",
+   "text": "#56  cam_3 → cam_4  G 0.3 м  T 2.7 с  R 0.06",
+   "track_id": 56
+  },
+  {
+   "t_s": 3157.37,
+   "kind": "close",
+   "text": "Трек #59 закрыт: ушёл в дверь",
+   "track_id": 59
+  },
+  {
+   "t_s": 3186.27,
+   "kind": "handoff",
+   "text": "#61  cam_3 → cam_5  G 0.3 м  T 1.7 с  R 0.32",
+   "track_id": 61
+  },
+  {
+   "t_s": 3188.07,
+   "kind": "close",
+   "text": "Трек #61 закрыт: ушёл в дверь",
+   "track_id": 61
+  },
+  {
+   "t_s": 3192.55,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #62 · Вероятно, вернулся #15 · отсутствовал 9:10 · сходство 0.82 · не склеено по правилу ТЗ",
+   "track_id": 62
+  },
+  {
+   "t_s": 3193.66,
+   "kind": "handoff",
+   "text": "#62  cam_5 → cam_3  G 0.5 м  T 20.4 с  R 0.55",
+   "track_id": 62
+  },
+  {
+   "t_s": 3200.66,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #63 · Вероятно, вернулся #4 · отсутствовал 11:58 · сходство 0.82 · не склеено по правилу ТЗ",
+   "track_id": 63
+  },
+  {
+   "t_s": 3200.75,
+   "kind": "handoff",
+   "text": "#63  cam_3 → cam_5  G 0.3 м  T 7.6 с  R 0.16",
+   "track_id": 63
+  },
+  {
+   "t_s": 3205.27,
+   "kind": "handoff",
+   "text": "#62  cam_5 → cam_4  G 0.3 м  T 1.6 с  спорная",
+   "track_id": 62
+  },
+  {
+   "t_s": 3205.37,
+   "kind": "handoff",
+   "text": "#63  cam_3 → cam_4  G 0.2 м  T 3.6 с  R 0.74",
+   "track_id": 63
+  },
+  {
+   "t_s": 3207.27,
+   "kind": "handoff",
+   "text": "#62  cam_5 → cam_4  G 0.7 м  T 1.4 с  R 0.07  спорная",
+   "track_id": 62
+  },
+  {
+   "t_s": 3209.07,
+   "kind": "fast",
+   "text": "#62  cam_5 → cam_4  быстрый переход  контакт 0.1 с  G 0.4 м",
+   "track_id": 62
+  },
+  {
+   "t_s": 3211.26,
+   "kind": "resume",
+   "text": "#56  вернулся через 0:49, номер сохранён  R 0.87",
+   "track_id": 56
+  },
+  {
+   "t_s": 3213.87,
+   "kind": "close",
+   "text": "Трек #63 закрыт: ушёл в дверь",
+   "track_id": 63
+  },
+  {
+   "t_s": 3215.82,
+   "kind": "handoff",
+   "text": "#62  cam_3 → cam_2  G 0.3 м  T 1.4 с  R 0.44",
+   "track_id": 62
+  },
+  {
+   "t_s": 3216.27,
+   "kind": "handoff",
+   "text": "#56  cam_3 → cam_5  G 0.2 м  T 9.5 с  R 0.42",
+   "track_id": 56
+  },
+  {
+   "t_s": 3217.39,
+   "kind": "handoff",
+   "text": "#62  cam_2 → cam_1  G 0.4 м  T 5.6 с  R -0.08",
+   "track_id": 62
+  },
+  {
+   "t_s": 3218.27,
+   "kind": "handoff",
+   "text": "#56  cam_3 → cam_4  G 0.2 м  T 3.0 с  R 0.24",
+   "track_id": 56
+  },
+  {
+   "t_s": 3225.82,
+   "kind": "close",
+   "text": "Трек #62 закрыт: потерян на открытом месте",
+   "track_id": 62
+  },
+  {
+   "t_s": 3226.67,
+   "kind": "close",
+   "text": "Трек #56 закрыт: ушёл в дверь",
+   "track_id": 56
+  },
+  {
+   "t_s": 3267.98,
+   "kind": "handoff",
+   "text": "#64  cam_4 → cam_3  G 0.2 м  T 1.1 с  R 0.44",
+   "track_id": 64
+  },
+  {
+   "t_s": 3268.87,
+   "kind": "handoff",
+   "text": "#64  cam_3 → cam_5  G 0.3 м  T 9.3 с  R 0.55",
+   "track_id": 64
+  },
+  {
+   "t_s": 3276.98,
+   "kind": "handoff",
+   "text": "#65  cam_5 → cam_3  G 0.5 м  T 3.0 с  R 0.38",
+   "track_id": 65
+  },
+  {
+   "t_s": 3278.75,
+   "kind": "close",
+   "text": "Трек #64 закрыт: ушёл в дверь",
+   "track_id": 64
+  },
+  {
+   "t_s": 3280.75,
+   "kind": "close",
+   "text": "Трек #65 закрыт: ушёл в дверь",
+   "track_id": 65
+  },
+  {
+   "t_s": 3286.02,
+   "kind": "handoff",
+   "text": "#66  cam_1 → cam_2  G 0.3 м  T 3.5 с  R 0.09",
+   "track_id": 66
+  },
+  {
+   "t_s": 3289.86,
+   "kind": "handoff",
+   "text": "#66  cam_2 → cam_3  G 0.3 м  T 1.3 с  R 0.24",
+   "track_id": 66
+  },
+  {
+   "t_s": 3294.35,
+   "kind": "handoff",
+   "text": "#66  cam_3 → cam_5  G 0.4 м  T 1.5 с  R 0.19",
+   "track_id": 66
+  },
+  {
+   "t_s": 3294.46,
+   "kind": "handoff",
+   "text": "#67  cam_4 → cam_3  G 0.5 м  T 2.4 с  R 0.68",
+   "track_id": 67
+  },
+  {
+   "t_s": 3295.55,
+   "kind": "handoff",
+   "text": "#67  cam_3 → cam_5  G 0.3 м  T 5.6 с  R 0.25",
+   "track_id": 67
+  },
+  {
+   "t_s": 3297.07,
+   "kind": "handoff",
+   "text": "#66  cam_3 → cam_4  G 0.4 м  T 2.4 с  R 0.64",
+   "track_id": 66
+  },
+  {
+   "t_s": 3299.55,
+   "kind": "close",
+   "text": "Трек #68 закрыт: потерян на открытом месте",
+   "track_id": 68
+  },
+  {
+   "t_s": 3301.67,
+   "kind": "close",
+   "text": "Трек #67 закрыт: потерян на открытом месте",
+   "track_id": 67
+  },
+  {
+   "t_s": 3304.87,
+   "kind": "close",
+   "text": "Трек #66 закрыт: ушёл в дверь",
+   "track_id": 66
+  },
+  {
+   "t_s": 3331.47,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #69 · Вероятно, вернулся #44 · отсутствовал 3:01 · сходство 0.90 · не склеено по правилу ТЗ",
+   "track_id": 69
+  },
+  {
+   "t_s": 3340.58,
+   "kind": "handoff",
+   "text": "#69  cam_4 → cam_3  G 0.1 м  T 2.4 с  R 0.63",
+   "track_id": 69
+  },
+  {
+   "t_s": 3341.67,
+   "kind": "handoff",
+   "text": "#69  cam_3 → cam_5  G 0.2 м  T 10.8 с  R 0.67",
+   "track_id": 69
+  },
+  {
+   "t_s": 3348.95,
+   "kind": "ghost",
+   "text": "НОВЫЙ ТРЕК #71 · Вероятно, вернулся #5 · отсутствовал 16:33 · сходство 0.77 · не склеено по правилу ТЗ",
+   "track_id": 71
+  },
+  {
+   "t_s": 3350.26,
+   "kind": "handoff",
+   "text": "#71  cam_5 → cam_3  G 0.2 м  T 2.6 с  R 0.27",
+   "track_id": 71
+  },
+  {
+   "t_s": 3352.47,
+   "kind": "resume",
+   "text": "#69  скрыт 0.5 с и продолжен на cam_5  G 0.6 м  R 0.46",
+   "track_id": 69
+  },
+  {
+   "t_s": 3352.67,
+   "kind": "handoff",
+   "text": "#71  cam_3 → cam_5  G 0.2 м  T 9.3 с  R 0.75",
+   "track_id": 71
+  },
+  {
+   "t_s": 3352.72,
+   "kind": "fast",
+   "text": "#71  cam_5 → cam_3  быстрый переход  контакт 0.3 с  G 0.9 м  R 0.69",
+   "track_id": 71
+  },
+  {
+   "t_s": 3359.35,
+   "kind": "fast",
+   "text": "#72  cam_3 → cam_5  быстрый переход  контакт 0.1 с  G 0.1 м  R 0.26",
+   "track_id": 72
+  },
+  {
+   "t_s": 3360.62,
+   "kind": "handoff",
+   "text": "#72  cam_3 → cam_2  G 0.2 м  T 2.2 с  R 0.37",
+   "track_id": 72
+  },
+  {
+   "t_s": 3360.87,
+   "kind": "handoff",
+   "text": "#71  cam_3 → cam_4  G 0.2 м  T 2.1 с  R 0.72",
+   "track_id": 71
+  },
+  {
+   "t_s": 3362.35,
+   "kind": "fast",
+   "text": "#71  cam_3 → cam_5  быстрый переход  контакт 0.2 с  G 1.1 м  R 0.07",
+   "track_id": 71
+  },
+  {
+   "t_s": 3363.11,
+   "kind": "handoff",
+   "text": "#72  cam_2 → cam_1  G 0.5 м  T 4.1 с  R 0.37",
+   "track_id": 72
+  },
+  {
+   "t_s": 3364.97,
+   "kind": "resume",
+   "text": "#70  скрыт 0.8 с и продолжен на cam_4  G 1.4 м  R 0.92",
+   "track_id": 70
+  },
+  {
+   "t_s": 3370.37,
+   "kind": "close",
+   "text": "Трек #71 закрыт: ушёл в дверь",
+   "track_id": 71
+  },
+  {
+   "t_s": 3370.37,
+   "kind": "handoff",
+   "text": "#71  cam_4 → cam_4  передача встык  G 0.2 м  R 0.21",
+   "track_id": 71
+  },
+  {
+   "t_s": 3370.39,
+   "kind": "close",
+   "text": "Трек #72 закрыт: ушёл в дверь",
+   "track_id": 72
+  },
+  {
+   "t_s": 3383.86,
+   "kind": "handoff",
+   "text": "#70  cam_4 → cam_3  G 0.2 м  T 2.2 с  R 0.65",
+   "track_id": 70
+  },
+  {
+   "t_s": 3384.35,
+   "kind": "handoff",
+   "text": "#70  cam_3 → cam_5  G 0.3 м  T 13.6 с  R 0.83",
+   "track_id": 70
+  },
+  {
+   "t_s": 3384.66,
+   "kind": "handoff",
+   "text": "#73  cam_4 → cam_3  G 0.2 м  T 1.6 с  R 0.58",
+   "track_id": 73
+  },
+  {
+   "t_s": 3385.07,
+   "kind": "handoff",
+   "text": "#73  cam_4 → cam_5  G 1.2 м  T 1.2 с  R 0.09",
+   "track_id": 73
+  },
+  {
+   "t_s": 3390.35,
+   "kind": "handoff",
+   "text": "#73  cam_3 → cam_5  G 0.8 м  T 5.7 с  R 0.45",
+   "track_id": 73
+  },
+  {
+   "t_s": 3390.97,
+   "kind": "handoff",
+   "text": "#70  cam_3 → cam_4  G 0.2 м  T 3.0 с  R 0.34  спорная",
+   "track_id": 70
+  },
+  {
+   "t_s": 3397.38,
+   "kind": "close",
+   "text": "Трек #73 закрыт: потерян на открытом месте",
+   "track_id": 73
+  },
+  {
+   "t_s": 3398.67,
+   "kind": "close",
+   "text": "Трек #70 закрыт: потерян на открытом месте",
+   "track_id": 70
+  },
+  {
+   "t_s": 3407.75,
+   "kind": "resume",
+   "text": "#69  вернулся через 0:54, номер сохранён  R 0.89",
+   "track_id": 69
+  },
+  {
+   "t_s": 3409.46,
+   "kind": "handoff",
+   "text": "#69  cam_5 → cam_3  G 0.6 м  T 5.9 с  R 0.39",
+   "track_id": 69
+  },
+  {
+   "t_s": 3417.78,
+   "kind": "close",
+   "text": "Трек #69 закрыт: ушёл в дверь",
+   "track_id": 69
+  },
+  {
+   "t_s": 3508.95,
+   "kind": "handoff",
+   "text": "#74  cam_3 → cam_5  G 0.4 м  T 12.1 с  R 0.45",
+   "track_id": 74
+  },
+  {
+   "t_s": 3519.18,
+   "kind": "handoff",
+   "text": "#75  cam_5 → cam_3  G 0.5 м  T 1.9 с  R 0.31",
+   "track_id": 75
+  }
+ ],
+ "chunks": [
+  {
+   "file": "chunks/000.mp4",
+   "t_start_s": 2319.59,
+   "t_end_s": 2379.59,
+   "start": "17:38:39.5",
+   "mb": 12.32,
+   "render_s": 8.5
+  },
+  {
+   "file": "chunks/001.mp4",
+   "t_start_s": 2379.59,
+   "t_end_s": 2439.59,
+   "start": "17:39:39.5",
+   "mb": 12.39,
+   "render_s": 9.0
+  },
+  {
+   "file": "chunks/002.mp4",
+   "t_start_s": 2439.59,
+   "t_end_s": 2499.59,
+   "start": "17:40:39.5",
+   "mb": 12.5,
+   "render_s": 9.8
+  },
+  {
+   "file": "chunks/003.mp4",
+   "t_start_s": 2499.59,
+   "t_end_s": 2559.59,
+   "start": "17:41:39.5",
+   "mb": 12.51,
+   "render_s": 10.6
+  },
+  {
+   "file": "chunks/004.mp4",
+   "t_start_s": 2559.59,
+   "t_end_s": 2619.59,
+   "start": "17:42:39.5",
+   "mb": 12.41,
+   "render_s": 9.8
+  },
+  {
+   "file": "chunks/005.mp4",
+   "t_start_s": 2619.59,
+   "t_end_s": 2679.59,
+   "start": "17:43:39.5",
+   "mb": 12.43,
+   "render_s": 9.6
+  },
+  {
+   "file": "chunks/006.mp4",
+   "t_start_s": 2679.59,
+   "t_end_s": 2739.59,
+   "start": "17:44:39.5",
+   "mb": 12.59,
+   "render_s": 10.4
+  },
+  {
+   "file": "chunks/007.mp4",
+   "t_start_s": 2739.59,
+   "t_end_s": 2799.59,
+   "start": "17:45:39.5",
+   "mb": 12.48,
+   "render_s": 10.0
+  },
+  {
+   "file": "chunks/008.mp4",
+   "t_start_s": 2799.59,
+   "t_end_s": 2859.59,
+   "start": "17:46:39.5",
+   "mb": 12.38,
+   "render_s": 8.9
+  },
+  {
+   "file": "chunks/009.mp4",
+   "t_start_s": 2859.59,
+   "t_end_s": 2919.59,
+   "start": "17:47:39.5",
+   "mb": 12.39,
+   "render_s": 9.0
+  },
+  {
+   "file": "chunks/010.mp4",
+   "t_start_s": 2919.59,
+   "t_end_s": 2979.59,
+   "start": "17:48:39.5",
+   "mb": 12.42,
+   "render_s": 9.7
+  },
+  {
+   "file": "chunks/011.mp4",
+   "t_start_s": 2979.59,
+   "t_end_s": 3039.59,
+   "start": "17:49:39.5",
+   "mb": 12.39,
+   "render_s": 9.2
+  },
+  {
+   "file": "chunks/012.mp4",
+   "t_start_s": 3039.59,
+   "t_end_s": 3099.59,
+   "start": "17:50:39.5",
+   "mb": 12.41,
+   "render_s": 9.1
+  },
+  {
+   "file": "chunks/013.mp4",
+   "t_start_s": 3099.59,
+   "t_end_s": 3159.59,
+   "start": "17:51:39.5",
+   "mb": 12.46,
+   "render_s": 10.2
+  },
+  {
+   "file": "chunks/014.mp4",
+   "t_start_s": 3159.59,
+   "t_end_s": 3219.59,
+   "start": "17:52:39.5",
+   "mb": 12.44,
+   "render_s": 8.8
+  },
+  {
+   "file": "chunks/015.mp4",
+   "t_start_s": 3219.59,
+   "t_end_s": 3279.59,
+   "start": "17:53:39.5",
+   "mb": 12.37,
+   "render_s": 8.5
+  },
+  {
+   "file": "chunks/016.mp4",
+   "t_start_s": 3279.59,
+   "t_end_s": 3339.59,
+   "start": "17:54:39.5",
+   "mb": 12.35,
+   "render_s": 8.5
+  },
+  {
+   "file": "chunks/017.mp4",
+   "t_start_s": 3339.59,
+   "t_end_s": 3399.59,
+   "start": "17:55:39.5",
+   "mb": 12.4,
+   "render_s": 9.3
+  },
+  {
+   "file": "chunks/018.mp4",
+   "t_start_s": 3399.59,
+   "t_end_s": 3459.59,
+   "start": "17:56:39.5",
+   "mb": 12.31,
+   "render_s": 8.4
+  },
+  {
+   "file": "chunks/019.mp4",
+   "t_start_s": 3459.59,
+   "t_end_s": 3519.59,
+   "start": "17:57:39.5",
+   "mb": 12.39,
+   "render_s": 8.4
+  },
+  {
+   "file": "chunks/020.mp4",
+   "t_start_s": 3519.59,
+   "t_end_s": 3523.659,
+   "start": "17:58:39.5",
+   "mb": 0.74,
+   "render_s": 0.4
+  }
+ ]
+}

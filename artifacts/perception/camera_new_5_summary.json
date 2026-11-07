@@ -1,0 +1,12 @@
+{
+  "camera": "camera_new_5",
+  "model": "yolo11m-seg.pt",
+  "imgsz": 960,
+  "fps": 10.0,
+  "conf": 0.1,
+  "embedder": "boxmot:osnet_ain_x1_0_msmt17",
+  "frames": 11986,
+  "observations": 10063,
+  "raw_tracks": 147,
+  "seconds": 1000.0
+}

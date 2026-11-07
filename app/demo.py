@@ -179,7 +179,7 @@ SCREENS = {
 }
 
 if not PLAN_IMAGE.exists():
-    shutil.copy(ROOT.parent / "data" / "office.jpg", PLAN_IMAGE)
+    shutil.copy(ROOT / "data" / "office.jpg", PLAN_IMAGE)
 st.title("Сквозной трекинг людей по камерам")
 st.caption(f"Сквозных треков: {TRACKS_DATA['total_tracks']}. Один номер, пока человека видит хотя бы одна камера и пока его нет меньше минуты. Нет дольше минуты: трек закрыт, при возврате новый номер.")
 SCREENS[st.radio("Раздел", list(SCREENS), horizontal=True, label_visibility="collapsed")]()

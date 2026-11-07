@@ -1,0 +1,90 @@
+{
+ "fps": 10.0,
+ "size": [
+  1280,
+  720
+ ],
+ "chunk_s": 60,
+ "clock_start_s": 2494.0,
+ "clock_end_s": 2512.0,
+ "total_tracks": 5,
+ "people_estimate": 5,
+ "events": [
+  {
+   "t_s": 2493.9,
+   "kind": "handoff",
+   "text": "#3  cam_3 → cam_5  передача встык  G 0.5 м  R 0.60",
+   "track_id": 3
+  },
+  {
+   "t_s": 2494.86,
+   "kind": "close",
+   "text": "Трек #3 закрыт: ушёл в дверь",
+   "track_id": 3
+  },
+  {
+   "t_s": 2495.42,
+   "kind": "handoff",
+   "text": "#1  cam_3 → cam_2  G 0.3 м  T 2.8 с  R 0.80  спорная",
+   "track_id": 1
+  },
+  {
+   "t_s": 2496.3,
+   "kind": "handoff",
+   "text": "#2  cam_3 → cam_2  G 0.3 м  T 3.0 с  R 0.84  спорная",
+   "track_id": 2
+  },
+  {
+   "t_s": 2497.34,
+   "kind": "handoff",
+   "text": "#1  cam_2 → cam_1  G 0.4 м  T 7.2 с  R 0.83  спорная",
+   "track_id": 1
+  },
+  {
+   "t_s": 2497.94,
+   "kind": "handoff",
+   "text": "#2  cam_2 → cam_1  G 0.4 м  T 12.3 с  R 0.87",
+   "track_id": 2
+  },
+  {
+   "t_s": 2501.5,
+   "kind": "handoff",
+   "text": "#4  cam_4 → cam_3  G 0.4 м  T 1.4 с  R 0.87",
+   "track_id": 4
+  },
+  {
+   "t_s": 2501.54,
+   "kind": "handoff",
+   "text": "#4  cam_3 → cam_5  G 0.6 м  T 6.8 с  R 0.83",
+   "track_id": 4
+  },
+  {
+   "t_s": 2502.42,
+   "kind": "handoff",
+   "text": "#5  cam_4 → cam_3  G 0.4 м  T 1.9 с  R 0.83",
+   "track_id": 5
+  },
+  {
+   "t_s": 2503.06,
+   "kind": "handoff",
+   "text": "#5  cam_3 → cam_5  G 1.6 м  T 5.7 с  R 0.73  спорная",
+   "track_id": 5
+  },
+  {
+   "t_s": 2504.62,
+   "kind": "handoff",
+   "text": "#1  cam_1 → cam_2  G 0.3 м  T 5.6 с  R 0.81  спорная",
+   "track_id": 1
+  }
+ ],
+ "chunks": [
+  {
+   "file": "chunks/000.mp4",
+   "t_start_s": 2494.0,
+   "t_end_s": 2512.0,
+   "start": "17:41:34.0",
+   "mb": 3.67,
+   "render_s": 3.7
+  }
+ ]
+}

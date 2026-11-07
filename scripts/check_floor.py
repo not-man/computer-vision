@@ -50,7 +50,7 @@ def nearest_distances(a: pd.DataFrame, b: pd.DataFrame, lag_s: float = 0.0, wind
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("perception", type=Path)
-    parser.add_argument("--plan", type=Path, default=Path("../data/office_camera.png"))
+    parser.add_argument("--plan", type=Path, default=Path("data/office_camera.png"))
     parser.add_argument("--features", type=Path, default=Path("configs/plan_features.yaml"))
     parser.add_argument("--out", type=Path, default=Path("artifacts/geometry/people_on_plan.jpg"))
     parser.add_argument("--max-obs", type=int, default=20000)

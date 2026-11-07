@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from mct.demo_check import moov_before_mdat, run_checks, video_problems
+from mct.demo_check import moov_before_mdat, run_checks, source_stamp, video_problems
 from mct.summary import KNOWN_ERRORS
 from mct.video import H264Writer
 
@@ -49,6 +49,7 @@ def kit(tmp_path: Path) -> dict[str, Path]:
     }))
     (render_dir / "report.html").write_text("<html></html>")
     (render_dir / "plan.jpg").write_bytes(b"x")
+    (render_dir / "built_from.json").write_text(json.dumps(source_stamp(tracks_dir)))
     return {"tracks_dir": tracks_dir, "render_dir": render_dir, "results_csv": results}
 
 
@@ -86,9 +87,14 @@ def test_gap_between_chunks_is_caught(kit: dict[str, Path]) -> None:
 
 
 def test_old_render_after_a_new_linking_is_caught(kit: dict[str, Path]) -> None:
-    old = (kit["tracks_dir"] / "tracks.json").stat().st_mtime - 100
-    os.utime(kit["render_dir"] / "showcase.mp4", (old, old))
+    (kit["tracks_dir"] / "robustness.csv").write_text("name\nновое\n")
     assert failed(run_checks(**kit)) == ["Ничего не устарело"]
+
+
+def test_fresh_clone_with_shuffled_file_times_is_not_stale(kit: dict[str, Path]) -> None:
+    # Git не хранит время файлов: после клона порядок времён случайный, а содержимое то же
+    os.utime(kit["render_dir"] / "report.html", (1000, 1000))
+    assert failed(run_checks(**kit)) == []
 
 
 def test_hint_to_a_track_that_has_not_ended_is_caught(kit: dict[str, Path]) -> None:
@@ -98,6 +104,7 @@ def test_hint_to_a_track_that_has_not_ended_is_caught(kit: dict[str, Path]) -> N
     later, earlier = (first, second) if first["t_start_ms"] > second["t_start_ms"] else (second, first)
     earlier["possibly_same_person_as"] = [{"track_id": later["track_id"]}]
     path.write_text(json.dumps(doc))
+    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])))
     assert failed(run_checks(**kit)) == ["Подсказки ссылаются на прошлые треки"]
 
 
@@ -106,6 +113,7 @@ def test_known_error_that_moved_is_caught(kit: dict[str, Path]) -> None:
     doc = json.loads(path.read_text())
     doc["tracks"][0]["t_start_ms"], doc["tracks"][0]["t_end_ms"] = 0, 1000
     path.write_text(json.dumps(doc))
+    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])))
     assert failed(run_checks(**kit)) == ["Примеры ошибок ещё верны"]
 
 

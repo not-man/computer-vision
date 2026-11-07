@@ -168,7 +168,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("perception", type=Path)
     parser.add_argument("tracks", type=Path)
-    parser.add_argument("--videos", type=Path, default=Path("../data"))
+    parser.add_argument("--videos", type=Path, default=Path("data"))
     args = parser.parse_args()
     out = args.tracks / "gallery"
     out.mkdir(parents=True, exist_ok=True)

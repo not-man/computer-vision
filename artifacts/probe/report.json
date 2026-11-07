@@ -1,0 +1,122 @@
+{
+  "camera_new_1": {
+    "size_mb": 43.6,
+    "width": 2592,
+    "height": 1944,
+    "fps": 25.0,
+    "frames": 30001,
+    "duration": "00:20:00.03",
+    "start": "0.051000",
+    "stream": "h264 (Main), yuv420p(tv, progressive), 2592x1944, 25 fps, 25 tbr, 1k tbn, start 0.785000",
+    "metadata": [
+      [
+        "title",
+        "Media Server"
+      ],
+      [
+        "ENCODER",
+        "Lavf62.3.100"
+      ],
+      [
+        "Duration",
+        "00:20:00.03, start: 0.051000, bitrate: 290 kb/s"
+      ]
+    ]
+  },
+  "camera_new_2": {
+    "size_mb": 38.2,
+    "width": 2592,
+    "height": 1944,
+    "fps": 25.0,
+    "frames": 30002,
+    "duration": "00:20:00.10",
+    "start": "0.012000",
+    "stream": "h264 (Main), yuv420p(tv, progressive), 2592x1944, 25 fps, 25 tbr, 1k tbn, start 0.785000",
+    "metadata": [
+      [
+        "title",
+        "Media Server"
+      ],
+      [
+        "ENCODER",
+        "Lavf62.3.100"
+      ],
+      [
+        "Duration",
+        "00:20:00.10, start: 0.012000, bitrate: 254 kb/s"
+      ]
+    ]
+  },
+  "camera_new_3": {
+    "size_mb": 59.8,
+    "width": 2592,
+    "height": 1944,
+    "fps": 25.0,
+    "frames": 30003,
+    "duration": "00:20:00.12",
+    "start": "0.026000",
+    "stream": "h264 (Main), yuv420p(tv, progressive), 2592x1944, 25 fps, 25 tbr, 1k tbn, start 0.784000",
+    "metadata": [
+      [
+        "title",
+        "Media Server"
+      ],
+      [
+        "ENCODER",
+        "Lavf62.3.100"
+      ],
+      [
+        "Duration",
+        "00:20:00.12, start: 0.026000, bitrate: 398 kb/s"
+      ]
+    ]
+  },
+  "camera_new_4": {
+    "size_mb": 52.8,
+    "width": 2592,
+    "height": 1944,
+    "fps": 20.0,
+    "frames": 24001,
+    "duration": "00:20:00.03",
+    "start": "0.000000",
+    "stream": "hevc (Main), yuv420p(tv), 2592x1944, 20 fps, 20 tbr, 1k tbn, start 4.629000",
+    "metadata": [
+      [
+        "title",
+        "Media Server"
+      ],
+      [
+        "ENCODER",
+        "Lavf62.3.100"
+      ],
+      [
+        "Duration",
+        "00:20:00.03, start: 0.000000, bitrate: 351 kb/s"
+      ]
+    ]
+  },
+  "camera_new_5": {
+    "size_mb": 36.7,
+    "width": 2592,
+    "height": 1944,
+    "fps": 25.0,
+    "frames": 30002,
+    "duration": "00:20:00.08",
+    "start": "0.000000",
+    "stream": "h264, none(tv, progressive), 2592x1944, 25 fps, 25 tbr, 1k tbn",
+    "metadata": [
+      [
+        "title",
+        "Media Server"
+      ],
+      [
+        "ENCODER",
+        "Lavf62.3.100"
+      ],
+      [
+        "Duration",
+        "00:20:00.08, start: 0.000000, bitrate: 244 kb/s"
+      ]
+    ]
+  }
+}

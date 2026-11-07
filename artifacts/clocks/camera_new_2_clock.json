@@ -1,0 +1,11 @@
+{
+  "camera": "camera_new_2",
+  "frames": 30077,
+  "frames_per_clock_s": 25.0,
+  "clock_at_frame_0": 2320.3,
+  "ticks_total": 1279,
+  "ticks_used": 599,
+  "fit_residual_frames_p95": 1.51,
+  "predicted_last_s": 3523.34,
+  "read_last_s": 3523
+}

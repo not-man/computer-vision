@@ -10,22 +10,14 @@
 - На Linux без графического окружения нужна системная библиотека `libgl1`: её требует OpenCV.
 - Для демо и пересчёта треков GPU не нужен. Детекции на всей записи нужен GPU: в Colab это около полутора часов.
 
-Записей и готовых результатов в git нет: в них кадры с людьми. Раскладка на диске:
-
-```text
-data/                     записи camera_new_1.mkv … camera_new_5.mkv и план office.jpg
-mct-demo-kit.tar.gz       готовый результат, собирается командой make package
-computer-vision/          этот репозиторий
-  artifacts/perception/   результат детекции и ReID
-  artifacts/tracks/       треки, снимки, проверка устойчивости
-  render/full/            ролики и офлайн-отчёт
-```
+Репозиторий закрытый и содержит всё: записи и план (`data/`), результат детекции (`artifacts/perception`), треки и снимки (`artifacts/tracks`), ролики и отчёт (`render/full`), веса (`weights/`), ТЗ (`docs/brief/`). В записях и роликах кадры с людьми: не делайте репозиторий открытым и не публикуйте их.
 
 ## Запуск демо
 
 ```bash
+git clone -b mct-pipeline https://github.com/not-man/computer-vision.git
+cd computer-vision
 make setup
-tar -xzf ../mct-demo-kit.tar.gz
 make demo
 ```
 
@@ -47,12 +39,12 @@ make demo
 make all
 ```
 
-Пересчитывает всё после детекции: треки, мозаику, снимки, проверку устойчивости, витрину и отчёт. Нужны `artifacts/perception` и `../data`, GPU не нужен, на ноутбуке это занимает около 8 минут. На чистой копии репозитория перечень треков совпал побайтно: см. [docs/SOLUTION.md](docs/SOLUTION.md).
+Пересчитывает всё после детекции: треки, мозаику, снимки, проверку устойчивости, витрину и отчёт. Нужны `artifacts/perception` и `data/`, GPU не нужен, на ноутбуке это занимает около 8 минут. На чистой копии репозитория перечень треков совпал побайтно: см. [docs/SOLUTION.md](docs/SOLUTION.md).
 
 Детекцию и ReID запускайте на GPU. Удобнее всего в Colab: `colab/run_perception.ipynb`, архив кода для него собирает `scripts/make_colab_bundle.py`. На своей машине:
 
 ```bash
-PYTHONPATH=src python scripts/run_perception.py ../data --out artifacts/perception --device 0 --model yolo11m-seg.pt
+PYTHONPATH=src python scripts/run_perception.py data --out artifacts/perception --device 0 --model yolo11m-seg.pt
 ```
 
 Веса YOLO и OSNet скачиваются при первом запуске.
@@ -65,7 +57,6 @@ PYTHONPATH=src python scripts/run_perception.py ../data --out artifacts/percepti
 | `make demo` | Проверяет файлы и запускает интерфейс |
 | `make check` | Только проверка файлов перед показом |
 | `make all` | Всё после детекции |
-| `make package` | Архив `../mct-demo-kit.tar.gz` с готовым результатом |
 | `make test` | Тесты |
 
 ## Зависимости
