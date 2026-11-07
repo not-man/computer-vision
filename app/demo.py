@@ -85,7 +85,7 @@ def track_chunks(track: dict) -> list[dict]:
 
 
 def show_crops(track: dict) -> None:
-    items = [CROPS[str(tracklet)] for tracklet in track["tracklets"] if str(tracklet) in CROPS][:MAX_CROPS]
+    items = sorted((CROPS[str(tracklet)] for tracklet in track["tracklets"] if str(tracklet) in CROPS), key=lambda item: item["t_s"])[:MAX_CROPS]
     if not items:
         return
     columns = st.columns(MAX_CROPS)
