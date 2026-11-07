@@ -152,7 +152,7 @@ def test_return_is_not_decided_between_two_different_people() -> None:
 def test_missing_column_marking_splits_after_open_buffer() -> None:
     # Единственный пропуск зоны с заметным вредом: без разметки разрыв 3 с длиннее буфера OPEN
     a = walker(1, "cam_1", 0.0, 10.0, (3.0, 5.0), velocity=(0.7, 0.0), embedding=look(0))
-    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=look(60.0))
+    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=look(75.0))
     assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
 
 
@@ -418,7 +418,7 @@ def test_same_object_on_one_camera_may_turn_around() -> None:
 
 
 def test_same_object_needs_strong_appearance_and_touching_boxes() -> None:
-    assert groups(run(same_object_pair(60.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1}), frozenset({2})}
+    assert groups(run(same_object_pair(75.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1}), frozenset({2})}
 
 
 def contact_away_from_edge(angle: float) -> list[Tracklet]:
@@ -509,3 +509,57 @@ def test_hint_needs_physically_reachable_return() -> None:
     gone = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
     too_far = walker(2, "cam_2", 11.5, 21.5, (50.0, 5.0), embedding=SAME)
     assert all(not t.hints for t in run([gone, too_far]).tracks)
+
+
+# Два номера трекера на одном человеке и быстрый возврат
+
+
+def with_box(tracklet: Tracklet, box: tuple[float, float, float, float]) -> Tracklet:
+    tracklet.boxes = np.tile(np.array(box, float), (len(tracklet.t), 1))
+    return tracklet
+
+
+def test_second_tracker_number_on_the_same_person_is_one_track() -> None:
+    a = with_box(walker(1, "cam_1", 0.0, 6.0, (0.0, 5.0), embedding=look(0)), (100, 100, 150, 250))
+    b = with_box(walker(2, "cam_1", 4.5, 12.0, (6.3, 5.0), embedding=look(45)), (102, 100, 152, 250))
+    assert groups(run([a, b])) == {frozenset({1, 2})}
+
+
+def test_couple_in_one_box_is_not_merged_however_alike_the_crops_are() -> None:
+    # Пара в обнимку: рамки и вырезки почти одинаковые, но это длится дольше, чем держится лишний номер
+    a = with_box(walker(1, "cam_1", 0.0, 12.0, (0.0, 5.0), velocity=(0.0, 0.0), embedding=look(0)), (100, 100, 150, 250))
+    b = with_box(walker(2, "cam_1", 3.0, 14.0, (0.1, 5.0), velocity=(0.0, 0.0), embedding=look(45)), (102, 100, 152, 250))
+    assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
+
+
+def test_second_tracker_number_needs_alike_appearance_and_coinciding_boxes() -> None:
+    a = with_box(walker(1, "cam_1", 0.0, 6.0, (0.0, 5.0), embedding=look(0)), (100, 100, 150, 250))
+    other = with_box(walker(2, "cam_1", 4.5, 12.0, (6.3, 5.0), embedding=look(70)), (102, 100, 152, 250))
+    assert groups(run([a, other])) == {frozenset({1}), frozenset({2})}
+    aside = with_box(walker(2, "cam_1", 4.5, 12.0, (6.3, 5.0), embedding=look(45)), (130, 100, 180, 250))
+    assert groups(run([a, aside])) == {frozenset({1}), frozenset({2})}
+
+
+def left_and_came_back(pause: float, angle: float, x: float = 10.5) -> list[Tracklet]:
+    """Человек дошёл до точки (10, 5) и через паузу появился на x. Пауза длиннее буфера открытого места, поэтому решает только возврат."""
+    a = walker(1, "cam_1", 0.0, 5.0, (3.0, 5.0), embedding=look(0))
+    b = walker(2, "cam_1", 5.0 + pause, 10.0 + pause, (x, 5.0), embedding=look(angle))
+    return [a, b]
+
+
+def test_quick_return_to_the_same_place_needs_less_similarity() -> None:
+    assert groups(run(left_and_came_back(8.0, 60.0))) == {frozenset({1, 2})}
+
+
+def test_late_return_needs_full_similarity() -> None:
+    assert len(run(left_and_came_back(30.0, 60.0)).tracks) == 2
+    assert groups(run(left_and_came_back(30.0, 45.0))) == {frozenset({1, 2})}
+
+
+def test_quick_return_elsewhere_needs_full_similarity() -> None:
+    assert len(run(left_and_came_back(8.0, 60.0, x=20.0)).tracks) == 2
+    assert groups(run(left_and_came_back(8.0, 45.0, x=20.0))) == {frozenset({1, 2})}
+
+
+def test_quick_return_with_little_similarity_is_another_person() -> None:
+    assert len(run(left_and_came_back(8.0, 75.0)).tracks) == 2

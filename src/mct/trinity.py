@@ -54,6 +54,12 @@ class TrinityConfig:
     return_window_s: float = 60.0  # организаторы: длительное отсутствие, это больше минуты без человека на всех камерах
     r_return: float = 0.6  # вернувшегося можно узнать только по внешности: на снимках от этого порога пары верные
     return_margin: float = 0.1  # заведомо другой человек похож почти так же: это не решаем
+    near_return_s: float = 15.0  # вернулся быстро и почти туда же: других объяснений мало, сходства нужно меньше
+    near_return_m: float = 2.0
+    near_return_r: float = 0.45
+    duplicate_iou: float = 0.45  # трекер завёл второй номер на того же человека: две почти одинаковые рамки одного кадра
+    duplicate_r: float = 0.5
+    duplicate_max_s: float = 3.0  # пара в обнимку тоже даёт похожие рамки и вырезки, но так долго: второй номер на человека быстро пропадает
     weight_g: float = 0.5
     weight_t: float = 0.3
     weight_r: float = 0.2
@@ -250,6 +256,26 @@ def _same_object(cfg: TrinityConfig, last: Tracklet, first: Tracklet, gap: float
     return r is not None and r >= cfg.contact_r and not _disjoint(last.boxes[-1], first.boxes[0])
 
 
+def _box_iou(a: np.ndarray, b: np.ndarray) -> float:
+    inter = max(0.0, min(a[2], b[2]) - max(a[0], b[0])) * max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    union = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - inter
+    return float(inter / union) if union > 0 else 0.0
+
+
+def _duplicate(cfg: TrinityConfig, a: Tracklet, b: Tracklet) -> bool:
+    """Два номера трекера на одном человеке: та же камера, недолго вместе, рамки почти совпадают, внешность совпадает."""
+    if a.camera != b.camera or a.boxes is None or b.boxes is None:
+        return False
+    start, end = max(a.start, b.start), min(a.end, b.end)
+    if end <= start or end - start > cfg.duplicate_max_s:
+        return False
+    r = _similarity(a, b)
+    if r is None or r < cfg.duplicate_r:
+        return False
+    times = np.arange(start, end + 1e-9, STEP_S)
+    return float(np.median([_box_iou(a.boxes[int(np.abs(a.t - t).argmin())], b.boxes[int(np.abs(b.t - t).argmin())]) for t in times])) >= cfg.duplicate_iou
+
+
 def _score(cfg: TrinityConfig, g: float, t: float, r: float | None) -> float:
     return cfg.weight_g * g + cfg.weight_t * t + cfg.weight_r * (0.5 if r is None else max(r, 0.0))
 
@@ -310,7 +336,7 @@ class _Linker:
         overlap = min(a.end, b.end) - max(a.start, b.start)
         if a.camera == b.camera and overlap >= 0:
             if overlap > cfg.same_camera_overlap_s:
-                return True
+                return not _duplicate(cfg, a, b)
             middle = np.array([(max(a.start, b.start) + min(a.end, b.end)) / 2])
             if _boxes_apart(a, b, float(middle[0])):
                 return True
@@ -527,6 +553,13 @@ class _Linker:
                     r = _similarity(last, first)
                     distance = float(np.hypot(*(first.state_near(first.start)[0] - last.state_near(last.end)[0])))
                     links.append(Link(last.id, first.id, "gap", last.end, distance, -gap, r, _score(cfg, 1.0, 0.2, r), pause=self.zones.policy(last).pause))
+        for index, a in enumerate(items):
+            for b in items[index + 1:]:
+                if b.start >= a.end:
+                    break
+                if self.group_of[a.id] != self.group_of[b.id] and _duplicate(cfg, a, b):
+                    r = _similarity(a, b)
+                    links.append(Link(a.id, b.id, "gap", b.start, 0.0, min(a.end, b.end) - b.start, r, _score(cfg, 1.0, 0.2, r), pause="occluded"))
         for link in sorted(links, key=lambda x: (-x.score, x.a, x.b)):
             if self._can_merge(link.a, link.b):
                 self._record(link.a, link.b, "gap", True, "", r=link.r, g_m=link.g_m, overlap=link.contact_s)
@@ -566,10 +599,14 @@ class _Linker:
                 for other in vectors if other != group
             )
 
+        def needed(link: Link) -> float:
+            near = -link.contact_s <= cfg.near_return_s and link.g_m <= cfg.near_return_m
+            return min(cfg.near_return_r, cfg.r_return) if near else cfg.r_return
+
         for pair in sorted(possible, key=lambda p: (-similarity(p), min(p), max(p))):
             r = similarity(pair)
-            if r < cfg.r_return:
-                return False
+            if r < needed(possible[pair]):
+                continue
             g1, g2 = tuple(pair)
             if has_rival(g1, g2, r) or has_rival(g2, g1, r):
                 self._record(possible[pair].a, possible[pair].b, "return", False, "неоднозначно", r=r)
@@ -791,7 +828,7 @@ def check_invariants(result: LinkResult, tracklets: Iterable[Tracklet], cfg: Tri
         for index, a in enumerate(members):
             for b in members[index + 1:]:
                 overlap = min(a.end, b.end) - max(a.start, b.start)
-                if a.camera == b.camera and overlap > cfg.same_camera_overlap_s:
+                if a.camera == b.camera and overlap > cfg.same_camera_overlap_s and not _duplicate(cfg, a, b):
                     problems.append(f"трек {track.track_id}: треклеты {a.id} и {b.id} одной камеры пересекаются")
                 elif a.camera == b.camera and overlap >= 0 and _boxes_apart(a, b, b.start + overlap / 2):
                     problems.append(f"трек {track.track_id}: треклеты {a.id} и {b.id} в разных рамках одного кадра")

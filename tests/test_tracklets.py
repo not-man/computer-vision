@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from mct.tracklets import FilterConfig, _set_embeddings, build_tracklets, find_identity_jumps, find_tail_swaps
+from mct.geometry import load_cameras
+from mct.tracklets import FilterConfig, _set_embeddings, build_tracklets, find_identity_jumps, find_tail_swaps, relocate_hidden_feet
 from mct.trinity import Tracklet
 
 
@@ -235,3 +236,57 @@ def test_exchange_needs_high_cross_similarity() -> None:
     }
     assert find_tail_swaps([a, b], weak, FilterConfig()) == {}
     assert set(find_tail_swaps([a, b], weak, FilterConfig(swap_min_match=0.3))) == {1, 2}
+
+
+def located_person(camera, floor: tuple[float, float], height: float, seen_height: np.ndarray, raw_track: int = 1) -> pd.DataFrame:
+    """Строки как после locate: ноги дают floor, макушка на настоящем месте человека, рост в кадре задан."""
+    head = camera.project(np.array([[floor[0], floor[1], height]]))[0]
+    return pd.DataFrame({
+        "raw_track": raw_track, "X": floor[0], "Y": floor[1], "foot_x": floor[0], "foot_y": floor[1], "cov_xx": 0.1, "cov_xy": 0.0, "cov_yy": 0.1,
+        "source": "foot", "person_height": seen_height, "touches_edge": False, "head_u": head[0], "head_v": head[1], "foot_u": head[0], "foot_v": head[1] + 40.0,
+    })
+
+
+def test_hidden_feet_far_away_are_replaced_by_the_head_with_own_height() -> None:
+    camera = load_cameras()["camera_new_3"]
+    true_floor = (21.0, 32.0)
+    clean = located_person(camera, true_floor, 1.8, np.full(8, 1.8))
+    hidden = clean.head(4).assign(person_height=1.4, X=21.0, Y=44.0, foot_y=44.0)
+    fixed = relocate_hidden_feet(pd.concat([clean, hidden], ignore_index=True), camera)
+    assert (fixed.source.iloc[8:] == "head").all() and (fixed.source.iloc[:8] == "foot").all()
+    assert np.hypot(fixed.X.iloc[-1] - true_floor[0], fixed.Y.iloc[-1] - true_floor[1]) < 0.5
+    assert fixed.cov_yy.iloc[-1] > 0.1
+
+
+def test_hidden_feet_nearby_keep_their_position() -> None:
+    camera = load_cameras()["camera_new_3"]
+    near = (21.0, 16.0)
+    clean = located_person(camera, near, 1.8, np.full(8, 1.8))
+    hidden = clean.head(4).assign(person_height=1.4)
+    fixed = relocate_hidden_feet(pd.concat([clean, hidden], ignore_index=True), camera)
+    assert (fixed.source == "foot").all() and fixed.Y.iloc[-1] == near[1]
+
+
+def test_own_height_needs_enough_clean_rows() -> None:
+    camera = load_cameras()["camera_new_3"]
+    few = located_person(camera, (21.0, 32.0), 1.8, np.array([1.8, 1.8, 1.4]))
+    assert (relocate_hidden_feet(few, camera).source == "foot").all()
+
+
+def test_dense_snapshots_replace_the_piece_vector() -> None:
+    table = observations("a", 1, T, 1.0 + 1.2 * T)
+    frames = table.frame.to_numpy()
+    sparse = np.array([[1.0, 0.0]] * 3)
+    keys = np.column_stack([frames[[0, 10, 20]], np.ones(3, int)])
+    dense_keys = np.column_stack([frames[::3], np.ones(len(frames[::3]), int)])
+    other = observations("b", 1, T, 1.0 + 1.2 * T)
+    dense_vectors = np.tile([0.0, 1.0], (len(dense_keys), 1))
+    both = pd.concat([table, other], ignore_index=True)
+    # Вторая камера нужна, чтобы среднее камеры не вычло весь сигнал
+    second = np.tile([1.0, 0.0], (len(dense_keys), 1))
+    dense_vectors[: len(dense_vectors) // 2] = [0.6, 0.8]
+    tracklets, _, _ = build_tracklets(both, {"a": (keys, sparse, (dense_keys, dense_vectors)), "b": (keys, sparse, (dense_keys, second))})
+    plain, _, _ = build_tracklets(both, {"a": (keys, sparse), "b": (keys, sparse)})
+    assert tracklets[0].embedding is not None and plain[0].embedding is not None
+    # Среднее камеры у единственного куска вычитается целиком: вектор считается, а не остаётся от редких снимков
+    assert not np.allclose(tracklets[0].embedding, plain[0].embedding)

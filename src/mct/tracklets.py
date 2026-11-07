@@ -20,6 +20,12 @@ FRAME_MARGIN_PX = 6  # ближе к краю кадра точка считае
 MIN_FOOT_HEIGHT_M = 1.35  # ниже этого ноги, скорее всего, закрыты: положение берём по макушке
 ASSUMED_HEIGHT_M = 1.72
 HEIGHT_SIGMA_M = 0.12
+OWN_HEIGHT_QUANTILE = 0.75  # верхняя часть роста: ноги закрыты только в части кадров
+OWN_HEIGHT_MIN_ROWS = 5
+OWN_HEIGHT_RANGE = (1.55, 2.0)
+OWN_HEIGHT_SIGMA_M = 0.06
+HIDDEN_FEET_MARGIN_M = 0.2
+HIDDEN_FEET_FROM_M = 15.0  # ближе низ рамки уходит мало, а положение по макушке само по себе хуже
 UNRELIABLE_SIGMA_M = 2.0
 MAX_HEAD_DISTANCE_M = 30.0
 
@@ -142,6 +148,41 @@ def locate(row_rle: str, camera: Camera) -> dict | None:
     }
 
 
+def relocate_hidden_feet(located: pd.DataFrame, camera: Camera, margin_m: float = HIDDEN_FEET_MARGIN_M, near_m: float = HIDDEN_FEET_FROM_M) -> pd.DataFrame:
+    """Ноги закрыты другим человеком: рост в кадре заметно ниже обычного роста этого номера трекера.
+
+    Вдали низ рамки уходит на метры, поэтому такие точки считаем по макушке, но уже с собственным ростом человека, а не со средним.
+    """
+    located = located.copy()
+    clean = located[(located.source == "foot") & ~located.touches_edge]
+    counts = clean.groupby("raw_track").size()
+    own = clean.groupby("raw_track").person_height.quantile(OWN_HEIGHT_QUANTILE)[counts >= OWN_HEIGHT_MIN_ROWS].clip(*OWN_HEIGHT_RANGE)
+    heights = located.raw_track.map(own)
+    far = np.hypot(located.foot_x - camera.x, located.foot_y - camera.y) >= near_m
+    chosen = far & heights.notna() & ((located.source == "head") | ((located.source == "foot") & (located.person_height < heights - margin_m)))
+    if not chosen.any():
+        return located
+    rows = located[chosen]
+    head = rows[["head_u", "head_v"]].to_numpy()
+    foot = rows[["foot_u", "foot_v"]].to_numpy()
+    height = heights[chosen].to_numpy()
+    span = np.maximum(np.linalg.norm(head - foot, axis=1, keepdims=True), 1e-6)
+    along = (head - foot) / span
+    across = np.column_stack([-along[:, 1], along[:, 0]])
+    floor = camera.floors_from_heads(head, height)
+    a = camera.floors_from_heads(head + along * (4.0 + 0.03 * span), height) - floor
+    b = camera.floors_from_heads(head + across * 3.0, height) - floor
+    c = camera.floors_from_heads(head, height + OWN_HEIGHT_SIGMA_M) - floor
+    near = np.hypot(floor[:, 0] - camera.x, floor[:, 1] - camera.y) <= MAX_HEAD_DISTANCE_M
+    index = rows.index[near]
+    located.loc[index, "X"], located.loc[index, "Y"] = floor[near, 0], floor[near, 1]
+    located.loc[index, "cov_xx"] = (a[:, 0] ** 2 + b[:, 0] ** 2 + c[:, 0] ** 2)[near]
+    located.loc[index, "cov_xy"] = (a[:, 0] * a[:, 1] + b[:, 0] * b[:, 1] + c[:, 0] * c[:, 1])[near]
+    located.loc[index, "cov_yy"] = (a[:, 1] ** 2 + b[:, 1] ** 2 + c[:, 1] ** 2)[near]
+    located.loc[index, "source"] = "head"
+    return located
+
+
 def locate_observations(frame: pd.DataFrame, camera: Camera, plan: Plan) -> pd.DataFrame:
     located = []
     for row in frame.itertuples():
@@ -257,7 +298,7 @@ def build_tracklets(
         xy = piece[["X", "Y"]].rolling(SMOOTH_WINDOW, center=True, min_periods=1).median().to_numpy()
         cov = np.stack([piece.cov_xx, piece.cov_xy, piece.cov_xy, piece.cov_yy], axis=1).reshape(-1, 2, 2)
         if camera in embeddings:
-            keys, vectors = embeddings[camera]
+            keys, vectors = embeddings[camera][:2]
             if len(vectors):
                 chosen = (keys[:, 1] == raw_track) & np.isin(keys[:, 0], piece.frame.to_numpy())
                 if chosen.any():
@@ -278,6 +319,7 @@ def build_tracklets(
     _set_embeddings(tracklets, appearance)
     table = pd.concat(assigned, ignore_index=True) if assigned else pd.DataFrame()
     tracklets, table = _split_identity_jumps(tracklets, table, appearance, snapshots, cfg)
+    _set_dense_embeddings(tracklets, table, {camera: value[2] for camera, value in embeddings.items() if len(value) > 2 and value[2] is not None})
     return tracklets, table, pd.DataFrame(dropped)
 
 
@@ -298,6 +340,26 @@ def _set_embeddings(tracklets: list[Tracklet], appearance: dict[int, np.ndarray]
             centered /= np.maximum(np.linalg.norm(centered, axis=1, keepdims=True), 1e-12)
             mean = centered.mean(axis=0)
             tracklet.embedding = mean / max(float(np.linalg.norm(mean)), 1e-12)
+
+
+def _set_dense_embeddings(tracklets: list[Tracklet], table: pd.DataFrame, dense: dict[str, tuple[np.ndarray, np.ndarray]]) -> None:
+    """Вектор куска по снимкам чаще раза в секунду: один неудачный кадр меньше решает, особенно у коротких кусков.
+
+    Разрезы кусков считаются до этого, по снимкам раз в секунду: их окна заданы в снимках.
+    """
+    by_id = {x.id: x for x in tracklets}
+    for camera, (keys, vectors) in dense.items():
+        rows = pd.DataFrame(keys, columns=["frame", "raw_track"])
+        mine = table[table.camera == camera][["frame", "raw_track", "tracklet"]].drop_duplicates(["frame", "raw_track"])
+        owners = rows.merge(mine, on=["frame", "raw_track"], how="left").tracklet.to_numpy()
+        real = ~np.isnan(owners)
+        if not real.any():
+            continue
+        centered = vectors[real] - vectors[real].mean(axis=0)
+        centered /= np.maximum(np.linalg.norm(centered, axis=1, keepdims=True), 1e-12)
+        owners = owners[real]
+        for owner in np.unique(owners):
+            by_id[int(owner)].embedding = _unit(centered[owners == owner])
 
 
 def _unit(vectors: np.ndarray) -> np.ndarray:
@@ -483,7 +545,7 @@ def filter_config(path: Path = FEATURES) -> FilterConfig:
     return FilterConfig(mirrors=mirrors)
 
 
-def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan) -> tuple[pd.DataFrame, dict[str, tuple[np.ndarray, np.ndarray]]]:
+def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan, feet_margin_m: float | None = HIDDEN_FEET_MARGIN_M, near_m: float = HIDDEN_FEET_FROM_M, use_dense: bool = True) -> tuple[pd.DataFrame, dict[str, tuple[np.ndarray, np.ndarray]]]:
     """Наблюдения всех камер на плане. Положения считаются раз и лежат в кэше, а время всегда берётся из текущих часов."""
     clocks = yaml.safe_load((CAMERAS_CONFIG.parent / "clocks.yaml").read_text())
     names = [name for name in cameras if (directory / f"{name}.parquet").exists()]
@@ -501,8 +563,15 @@ def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan) -> 
     tables, embeddings = [], {}
     for name in names:
         located = pd.read_parquet(caches[name])
+        if feet_margin_m is not None:
+            located = relocate_hidden_feet(located, cameras[name], feet_margin_m, near_m)
         located["t_s"] = clocks[name]["clock_at_frame_0"] + located.frame / clocks[name]["fps"]
         tables.append(located)
         stored = np.load(directory / f"{name}_emb.npz")
-        embeddings[name] = (stored["keys"], stored["vectors"])
+        dense_path = directory / f"{name}_emb_dense.npz"
+        dense = None
+        if use_dense and dense_path.exists():
+            frequent = np.load(dense_path)
+            dense = frequent["keys"], frequent["vectors"]
+        embeddings[name] = (stored["keys"], stored["vectors"], dense)
     return pd.concat(tables, ignore_index=True), embeddings

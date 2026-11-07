@@ -138,6 +138,13 @@ class Camera:
         distance = (self.height - person_height) / max(ray[2], 1e-9)
         return np.array([self.x + ray[0] * distance, self.y + ray[1] * distance])
 
+    def floors_from_heads(self, heads: np.ndarray, heights: np.ndarray) -> np.ndarray:
+        """То же для многих точек, у каждой свой рост. Если луч не идёт вниз, расстояние получается огромным: это проверяет вызывающий."""
+        heads = np.asarray(heads, np.float64).reshape(-1, 2)
+        rays = np.linalg.solve(self.camera_matrix() @ self.rotation(), np.column_stack([heads, np.ones(len(heads))]).T).T
+        distance = (self.height - np.asarray(heights, np.float64)) / np.maximum(rays[:, 2], 1e-9)
+        return np.array([self.x, self.y]) + rays[:, :2] * distance[:, None]
+
     def heights_of(self, foot: np.ndarray, head: np.ndarray) -> np.ndarray:
         """Высоты над полом точек head, стоящих строго над точками foot; всё в кадре без дисторсии."""
         foot, head = np.asarray(foot, np.float64).reshape(-1, 2), np.asarray(head, np.float64).reshape(-1, 2)

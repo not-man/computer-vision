@@ -51,6 +51,7 @@ def main() -> None:
     parser.add_argument("--models", nargs="+", default=["osnet_ain_x1_0_msmt17"])
     parser.add_argument("--kinds", nargs="+", default=["mask"], choices=["box", "mask"])
     parser.add_argument("--every", type=int, default=None, help="каждое N-е наблюдение вместо записанных снимков")
+    parser.add_argument("--suffix", default=None, help="писать <out>/<камера>_emb_<suffix>.npz вместо отдельной папки на вариант")
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
 
@@ -67,14 +68,15 @@ def main() -> None:
             print(f"{model}: не загрузилась ({type(error).__name__}: {error})", flush=True)
             continue
         for kind in args.kinds:
-            folder = args.out / f"{model}_{kind}"
+            folder = args.out if args.suffix else args.out / f"{model}_{kind}"
             folder.mkdir(parents=True, exist_ok=True)
             for camera, (keys, crops, masks) in data.items():
-                if (folder / f"{camera}_emb.npz").exists():
+                target = folder / (f"{camera}_emb_{args.suffix}.npz" if args.suffix else f"{camera}_emb.npz")
+                if target.exists():
                     continue
                 inputs = crops if kind == "box" else [without_background(crop, mask) for crop, mask in zip(crops, masks)]
                 vectors = np.vstack([embedder.embed_crops(inputs[start:start + BATCH]) for start in range(0, len(inputs), BATCH)])
-                np.savez_compressed(folder / f"{camera}_emb.npz", keys=keys, vectors=vectors)
+                np.savez_compressed(target, keys=keys, vectors=vectors)
             print(model, kind, "готово", flush=True)
 
 
