@@ -116,7 +116,8 @@ def main() -> None:
 
     digest = hashlib.sha256()
     for path in CONFIGS:
-        digest.update(path.read_bytes())
+        # Windows Git can change YAML line endings without changing settings.
+        digest.update(path.read_bytes().replace(b"\r\n", b"\n"))
     summaries = sorted(args.perception.glob("*_summary.json"))
     embedder = json.loads(summaries[0].read_text(encoding="utf-8")).get("embedder", "") if summaries else ""
     document = to_json(result, tracklets, digest.hexdigest(), embedder)

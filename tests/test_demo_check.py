@@ -97,6 +97,18 @@ def test_fresh_clone_with_shuffled_file_times_is_not_stale(kit: dict[str, Path])
     assert failed(run_checks(**kit)) == []
 
 
+def test_windows_checkout_line_endings_are_not_stale(kit: dict[str, Path]) -> None:
+    before = source_stamp(kit["tracks_dir"])
+    for name in ("tracks.json", "robustness.csv"):
+        path = kit["tracks_dir"] / name
+        lf = path.read_bytes().replace(b"\r\n", b"\n")
+        path.write_bytes(lf)
+        assert source_stamp(kit["tracks_dir"]) == before
+        path.write_bytes(lf.replace(b"\n", b"\r\n"))
+        assert source_stamp(kit["tracks_dir"]) == before
+    assert failed(run_checks(**kit)) == []
+
+
 def test_hint_to_a_track_that_has_not_ended_is_caught(kit: dict[str, Path]) -> None:
     path = kit["tracks_dir"] / "tracks.json"
     doc = json.loads(path.read_text(encoding="utf-8"))
