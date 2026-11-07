@@ -9,7 +9,8 @@ import streamlit as st
 
 from mct.charts import TIMELINE_HEIGHT, camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
+    CHECKS_NOTE, EXPERIMENTS_NOTE, HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, check_rows, close_text, duration_s, hint_texts, link_rows, quality_tiles,
+    robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
 )
 from mct.highlight import highlight_clip, track_boxes, visible_window
 from mct.video import clock_text
@@ -17,6 +18,7 @@ from mct.video import clock_text
 ROOT = Path(__file__).resolve().parents[1]
 RENDER = ROOT / "render" / "full"
 TRACKS = ROOT / "artifacts" / "tracks"
+RESULTS = ROOT / "artifacts" / "test-results"
 PLAN_IMAGE = RENDER / "plan.jpg"
 CHART_CONFIG = {"displayModeBar": False}
 MAX_CROPS = 8
@@ -44,6 +46,17 @@ def load() -> tuple[dict, dict, dict, pd.DataFrame | None]:
 
 
 TRACKS_DATA, MANIFEST, CROPS, ROBUSTNESS = load()
+
+
+@st.cache_data
+def load_checks() -> tuple[dict | None, pd.DataFrame | None]:
+    """Итоги ручных проверок и таблица опытов, которые не вошли в результат."""
+    checks, experiments = RESULTS / "checks.json", RESULTS / "experiments.csv"
+    return (json.loads(checks.read_text(encoding="utf-8")) if checks.exists() else None,
+            pd.read_csv(experiments, dtype=str) if experiments.exists() else None)
+
+
+CHECKS, EXPERIMENTS = load_checks()
 
 
 @st.cache_data(show_spinner="Готовлю видео с обведённым треком...", max_entries=32)
@@ -190,7 +203,7 @@ def screen_returns() -> None:
 
 def screen_honesty() -> None:
     st.write(HONESTY_NOTE)
-    quality = quality_tiles(TRACKS_DATA)
+    quality = quality_tiles(TRACKS_DATA, CHECKS)
     for column, (label, value) in zip(st.columns(max(len(quality), 1)), quality):
         column.metric(label, value)
     if ROBUSTNESS is None:
@@ -198,11 +211,20 @@ def screen_honesty() -> None:
         return
     for column, (label, value) in zip(st.columns(3), robustness_tiles(ROBUSTNESS)):
         column.metric(label, value)
+    if CHECKS is not None:
+        st.subheader("Проверки по всей записи")
+        st.caption(CHECKS_NOTE)
+        st.table(pd.DataFrame(check_rows(CHECKS)), hide_index=True, border="horizontal")  # длинный текст переносится, а не обрезается
     for column, figure in zip(st.columns(2), robustness_curves(ROBUSTNESS)):
         column.plotly_chart(figure, config=CHART_CONFIG, width="stretch")
 
     st.subheader("Что будет, если отключить правило")
     st.dataframe(pd.DataFrame(rule_rows(ROBUSTNESS)), hide_index=True, width="stretch")
+
+    if EXPERIMENTS is not None:
+        st.subheader("Что пробовали и не взяли")
+        st.caption(EXPERIMENTS_NOTE)
+        st.table(EXPERIMENTS, hide_index=True, border="horizontal")
 
     st.subheader("Известные ошибки")
     for error in KNOWN_ERRORS:

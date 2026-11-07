@@ -6,7 +6,8 @@ import pandas as pd
 from PIL import Image
 
 from mct.report import build_report
-from mct.summary import KNOWN_ERRORS, check_known_errors, hint_texts, link_rows, quality_tiles, rule_rows, segment_rows, track_rows, track_video_chunks
+from mct.summary import KNOWN_ERRORS, check_known_errors, check_rows, hint_texts, link_rows, quality_tiles, rule_rows, segment_rows, track_rows, track_video_chunks
+from scripts.summarize_checks import stale_rows, windows
 
 
 def track(track_id: int = 1, start_s: float = 0.0, end_s: float = 10.0) -> dict:
@@ -63,6 +64,30 @@ def test_measured_quality_is_shown_only_when_present() -> None:
     tiles = quality_tiles({"quality": {"crowd": {"match": 0.926, "purity": 0.955, "people": 7, "tracks": 8}, "pairs": {"right": 25, "total": 28, "errors": {}}}})
     assert ("Пары, проверенные глазами: верно", "25 из 28") in tiles and tiles[0][1] == "0.93"
     assert len(tiles) == 3
+    # С итогами проверок толпа считается на всех размеченных рамках, а не только на вошедших в треки
+    assert quality_tiles({"quality": {"crowd": {"match": 0.926, "people": 7, "tracks": 8}, "pairs": {"right": 25, "total": 28}}}, checks())[0][1] == "0.922"
+
+
+def checks(**transitions: int) -> dict:
+    return {
+        "tracks_json": "x",
+        "transitions": {"total": 12, "verdicts": transitions or {"один человек": 10, "не разобрать": 2}, "reviewer": "Claude по снимкам"},
+        "closures": {"total": 5, "verdicts": {"верно": 3, "неверно": 1, "не разобрать": 1}, "wrong": [25], "unclear": [46], "reviewer": "Claude по кадрам"},
+        "holdout": {"points": 42, "right": 41, "purity": 1.0, "windows": [[2425.0, 2445.0], [2918.0, 2928.0]], "reviewer": "вторая сессия"},
+        "people": {"tracks": 61, "people": 31, "by_rule": 59, "extra": [13, 33], "reviewer": "Claude по снимкам"},
+        "crowd": {"window": [2725.0, 2747.0], "labeled": 1639, "matched": 1511, "match": 0.922, "purity": 0.955},
+    }
+
+
+def test_checks_name_the_wrong_tracks_and_who_looked() -> None:
+    rows = {row["Проверка"]: row for row in check_rows(checks())}
+    assert rows["Все склейки кусков: 12"]["Результат"] == "один человек 10, не разобрать 2; явно разных людей нет"
+    assert rows["Все закрытия треков: 5"]["Результат"] == "верно 3, неверно 1 (#25), не разобрать 1 (#46)"
+    assert rows["Независимые точки: 42 в окнах 17:40:25–45, 17:48:38–48"]["Результат"] == "на своём треке 41 из 42, смешений нет"
+    assert "лишние #13, #33" in rows["Треки по людям на снимках: 61"]["Результат"]
+    assert all(row["Кто смотрел"] for row in rows.values())
+    # Вердикт вне известных: заявлять, что разных людей нет, уже нельзя
+    assert "явно разных" not in check_rows(checks(**{"один человек": 10, "разные люди": 1}))[0]["Результат"]
 
 
 def test_rules_are_sorted_from_the_most_harmful() -> None:
@@ -107,3 +132,16 @@ def test_report_needs_no_network_and_opens_videos_next_to_it(tmp_path: Path) -> 
     assert data["tracks"]["1"]["crops"][0]["uri"].startswith("data:image/jpeg;base64,")
     page_only = html[:html.index("<script>")]
     assert not re.search(r'(src|href)="https?:', page_only)
+    assert data["checks"] == [] and data["experiments"] == []  # без итогов проверок разделы скрыты
+
+    experiments = pd.DataFrame({"Вариант": ["DINOv2"], "Треков": ["122"], "Почему не взят": ["хуже"]})
+    build_report({"total_tracks": 1, "tracks": [track()]}, manifest, robustness, tracks_dir, plan, configs, out, checks=checks(), experiments=experiments)
+    html = out.read_text(encoding="utf-8")
+    data = json.loads(html[html.index("const DATA = ") + len("const DATA = "):html.index(";\nconst CONFIG")].replace("<\\/", "</"))
+    assert len(data["checks"]) == 5 and data["experiments"] == [{"Вариант": "DINOv2", "Треков": "122", "Почему не взят": "хуже"}]
+
+
+def test_reviewed_rows_must_match_the_current_tracks() -> None:
+    assert stale_rows("Склейки", {(1, 2, "gap")}, {(1, 2, "gap")}) is None
+    assert stale_rows("Склейки", {(1, 2, "gap")}, {(1, 3, "gap"), (4, 5, "brief")}) == "Склейки: 1 просмотренных строк устарели, 2 не просмотрены"
+    assert windows(pd.Series([2918.0, 2425.0, 2445.0, 2923.0])) == [[2425.0, 2445.0], [2918.0, 2923.0]]

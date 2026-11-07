@@ -49,8 +49,17 @@ def kit(tmp_path: Path) -> dict[str, Path]:
     }), encoding="utf-8")
     (render_dir / "report.html").write_text("<html></html>", encoding="utf-8")
     (render_dir / "plan.jpg").write_bytes(b"x")
-    (render_dir / "built_from.json").write_text(json.dumps(source_stamp(tracks_dir)), encoding="utf-8")
-    return {"tracks_dir": tracks_dir, "render_dir": render_dir, "results_csv": results}
+    (tmp_path / "test-results").mkdir()
+    kit = {"tracks_dir": tracks_dir, "render_dir": render_dir, "results_csv": results}
+    restamp(kit)
+    return kit
+
+
+def restamp(kit: dict[str, Path]) -> None:
+    """Отчёт и итоги проверок собраны заново после правки tracks.json."""
+    stamp = source_stamp(kit["tracks_dir"])
+    (kit["render_dir"] / "built_from.json").write_text(json.dumps(stamp), encoding="utf-8")
+    (kit["tracks_dir"].parent / "test-results" / "checks.json").write_text(json.dumps({"tracks_json": stamp["tracks.json"]}), encoding="utf-8")
 
 
 def failed(results: dict[str, list[str]]) -> list[str]:
@@ -91,6 +100,11 @@ def test_old_render_after_a_new_linking_is_caught(kit: dict[str, Path]) -> None:
     assert failed(run_checks(**kit)) == ["Ничего не устарело"]
 
 
+def test_checks_reviewed_on_other_tracks_are_caught(kit: dict[str, Path]) -> None:
+    (kit["tracks_dir"].parent / "test-results" / "checks.json").write_text(json.dumps({"tracks_json": "старые треки"}), encoding="utf-8")
+    assert failed(run_checks(**kit)) == ["Ничего не устарело"]
+
+
 def test_fresh_clone_with_shuffled_file_times_is_not_stale(kit: dict[str, Path]) -> None:
     # Git не хранит время файлов: после клона порядок времён случайный, а содержимое то же
     os.utime(kit["render_dir"] / "report.html", (1000, 1000))
@@ -116,7 +130,7 @@ def test_hint_to_a_track_that_has_not_ended_is_caught(kit: dict[str, Path]) -> N
     later, earlier = (first, second) if first["t_start_ms"] > second["t_start_ms"] else (second, first)
     earlier["possibly_same_person_as"] = [{"track_id": later["track_id"]}]
     path.write_text(json.dumps(doc), encoding="utf-8")
-    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])), encoding="utf-8")
+    restamp(kit)
     assert failed(run_checks(**kit)) == ["Подсказки ссылаются на прошлые треки"]
 
 
@@ -125,7 +139,7 @@ def test_known_error_that_moved_is_caught(kit: dict[str, Path]) -> None:
     doc = json.loads(path.read_text(encoding="utf-8"))
     doc["tracks"][0]["t_start_ms"], doc["tracks"][0]["t_end_ms"] = 0, 1000
     path.write_text(json.dumps(doc), encoding="utf-8")
-    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])), encoding="utf-8")
+    restamp(kit)
     assert failed(run_checks(**kit)) == ["Примеры ошибок ещё верны"]
 
 

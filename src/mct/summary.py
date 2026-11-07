@@ -9,9 +9,16 @@ from mct.video import clock_text
 
 LINK_TIERS = {"sustained": "перекрытие", "brief": "короткий контакт", "gap": "разрыв", "return": "возврат до минуты"}
 SEGMENT_JOIN_S = 1.0  # соседние куски одной камеры с таким разрывом показываются одной строкой
-HONESTY_NOTE = ("Полной эталонной разметки нет. Качество измерено на толпе в 22 секунды, размеченной вручную по одежде, и на парах треков "
-                "из просмотра всей записи глазами. Эти примеры использовались при настройке правил, поэтому оценка скорее оптимистичная. "
-                "Совпадение ниже показывает стабильность результата, а не его правильность.")
+HONESTY_NOTE = ("Полной эталонной разметки нет. Числа ниже измерены на толпе в 22 секунды, размеченной вручную по одежде, и на парах треков "
+                "из просмотра всей записи глазами. По этим примерам настраивали правила, поэтому оценка скорее оптимистичная. "
+                "Независимая проверка ниже: точки в окнах, где правила не настраивались, и просмотр всех склеек и закрытий. "
+                "Совпадение при изменении порогов показывает стабильность результата, а не его правильность.")
+CHECKS_NOTE = ("Каждую склейку и каждое закрытие смотрели по снимкам из исходных кадров. Это сделал ИИ, человеком пока не подтверждено: "
+               "это проверка, а не эталон.")
+EXPERIMENTS_NOTE = ("Правила склейки во всех опытах прежние, у другой модели внешности пороги приведены к той же доле пар. Толпа: доля размеченных "
+                    "рамок на своём треке; для прогонов детектора и порога разреза на всех 1639 размеченных рамках (основной вариант 0.922), "
+                    "для остальных по наблюдениям, вошедшим в треки (основной вариант 0.926).")
+CLEAR_VERDICTS = {"один человек", "скорее один", "на известной ошибке", "не разобрать"}
 
 
 @dataclass(frozen=True)
@@ -124,17 +131,55 @@ def rule_rows(robustness: pd.DataFrame) -> list[dict]:
             for row in removed.itertuples()]
 
 
-def quality_tiles(tracks_doc: dict) -> list[tuple[str, str]]:
-    """Измеренное качество из tracks.json. Если его нет, показывать нечего."""
+def quality_tiles(tracks_doc: dict, checks: dict | None = None) -> list[tuple[str, str]]:
+    """Измеренное качество из tracks.json. Если его нет, показывать нечего.
+
+    Соответствие на толпе берётся из итогов проверок, если они есть: там знаменатель все размеченные рамки, а не только вошедшие в треки.
+    """
     quality = tracks_doc.get("quality")
     if not quality:
         return []
-    tiles = [("Толпа: соответствие человек-трек", f"{quality['crowd']['match']:.2f}"),
+    crowd = f"{checks['crowd']['match']:.3f}" if checks else f"{quality['crowd']['match']:.2f}"
+    tiles = [("Толпа: соответствие человек-трек", crowd),
              ("Толпа: людей и треков", f"{quality['crowd']['people']} и {quality['crowd']['tracks']}"),
              ("Пары, проверенные глазами: верно", f"{quality['pairs']['right']} из {quality['pairs']['total']}")]
     if "tracks_without_returns" in quality:
         tiles.append(("Треков без возвратов по внешности", str(quality["tracks_without_returns"])))
     return tiles
+
+
+def _clock_range(window: list[float]) -> str:
+    start, end = clock_text(window[0])[:8], clock_text(window[1])[:8]
+    return f"{start}–{end[6:]}" if start[:5] == end[:5] else f"{start}–{end}"
+
+
+def _tracks_text(tracks: list[int]) -> str:
+    return ", ".join(f"#{track}" for track in tracks)
+
+
+def check_rows(checks: dict) -> list[dict]:
+    """Итоги проверок по всей записи из artifacts/test-results/checks.json: что смотрели, что получилось, кто смотрел."""
+    transitions, closures, holdout, people, crowd = (checks[key] for key in ("transitions", "closures", "holdout", "people", "crowd"))
+    linked = ", ".join(f"{verdict} {count}" for verdict, count in transitions["verdicts"].items())
+    if set(transitions["verdicts"]) <= CLEAR_VERDICTS:
+        linked += "; явно разных людей нет"
+    named = {"неверно": closures["wrong"], "не разобрать": closures["unclear"]}
+    closed = ", ".join(f"{verdict} {count}" + (f" ({_tracks_text(named[verdict])})" if named.get(verdict) else "")
+                       for verdict, count in closures["verdicts"].items())
+    points = f"на своём треке {holdout['right']} из {holdout['points']}"
+    points += ", смешений нет" if holdout["purity"] == 1.0 else f", чистота {holdout['purity']:.3f}"
+    return [
+        {"Проверка": f"Все склейки кусков: {transitions['total']}", "Результат": linked, "Кто смотрел": transitions["reviewer"]},
+        {"Проверка": f"Все закрытия треков: {closures['total']}", "Результат": closed, "Кто смотрел": closures["reviewer"]},
+        {"Проверка": f"Независимые точки: {holdout['points']} в окнах {', '.join(_clock_range(window) for window in holdout['windows'])}",
+         "Результат": points, "Кто смотрел": f"{holdout['reviewer']}; правила по этим окнам не настраивались"},
+        {"Проверка": f"Треки по людям на снимках: {people['tracks']}",
+         "Результат": f"{people['people']} человек; по правилу минуты треков должно быть {people['by_rule']}, лишние {_tracks_text(people['extra'])}",
+         "Кто смотрел": people["reviewer"]},
+        {"Проверка": f"Толпа {_clock_range(crowd['window'])}: {crowd['labeled']} размеченных рамок",
+         "Результат": f"на своём треке {crowd['matched']} ({crowd['match']:.3f}), чистота {crowd['purity']:.3f}",
+         "Кто смотрел": "Разметка вручную по одежде; по ней настраивали правила"},
+    ]
 
 
 def robustness_tiles(robustness: pd.DataFrame) -> list[tuple[str, str]]:

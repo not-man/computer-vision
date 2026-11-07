@@ -15,17 +15,11 @@ WINDOW_S = 60.0
 BORDER_S = (50.0, 80.0)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--tracks", type=Path, default=Path("artifacts/tracks/tracks.json"))
-    parser.add_argument("--people", type=Path, default=Path("evaluation/people_truth.csv"))
-    args = parser.parse_args()
-
-    tracks = {track["track_id"]: track for track in json.loads(args.tracks.read_text(encoding="utf-8"))["tracks"]}
-    people = pd.read_csv(args.people)
+def rule_count(tracks: dict[int, dict], people: pd.DataFrame) -> tuple[list[tuple], list[tuple]]:
+    """Соседние треки одного человека: с паузой не дольше минуты (второй лишний) и с паузой у границы минуты."""
     missing = sorted(set(tracks) - set(people.track))
     if missing:
-        raise SystemExit(f"В таблице людей нет треков {missing}: таблица устарела после пересчёта")
+        raise ValueError(f"В таблице людей нет треков {missing}: таблица устарела после пересчёта")
     extra, border = [], []
     for person, part in people.groupby("person"):
         own = sorted((tracks[track] for track in part.track), key=lambda track: track["t_start_ms"])
@@ -35,6 +29,21 @@ def main() -> None:
                 extra.append((person, before["track_id"], after["track_id"], pause))
             if BORDER_S[0] <= pause <= BORDER_S[1]:
                 border.append((person, before["track_id"], after["track_id"], pause))
+    return extra, border
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--tracks", type=Path, default=Path("artifacts/tracks/tracks.json"))
+    parser.add_argument("--people", type=Path, default=Path("evaluation/people_truth.csv"))
+    args = parser.parse_args()
+
+    tracks = {track["track_id"]: track for track in json.loads(args.tracks.read_text(encoding="utf-8"))["tracks"]}
+    people = pd.read_csv(args.people)
+    try:
+        extra, border = rule_count(tracks, people)
+    except ValueError as problem:
+        raise SystemExit(str(problem))
     print(f"треков {len(tracks)}, людей в таблице {people.person.nunique()}, уверенных подписей {int((people.confidence == 'уверенно').sum())}")
     print(f"по правилу минуты должно быть {len(tracks) - len(extra)}")
     for person, a, b, pause in extra:

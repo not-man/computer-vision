@@ -102,19 +102,24 @@ def source_stamp(tracks_dir: Path) -> dict[str, str]:
             for name in ("tracks.json", "robustness.csv")}
 
 
-def _stale_problems(tracks_dir: Path, stamp: Path) -> list[str]:
+def _stale_problems(tracks_dir: Path, stamp: Path, checks: Path) -> list[str]:
     built_from = json.loads(stamp.read_text(encoding="utf-8"))
-    return [f"{name} изменился после сборки: запустите make all" for name, value in source_stamp(tracks_dir).items() if built_from.get(name) != value]
+    current = source_stamp(tracks_dir)
+    problems = [f"{name} изменился после сборки: запустите make all" for name, value in current.items() if built_from.get(name) != value]
+    if json.loads(checks.read_text(encoding="utf-8")).get("tracks_json") != current["tracks.json"]:
+        problems.append("Итоги проверок сделаны для других треков: нарисуйте листы заново, пересмотрите и запустите scripts/summarize_checks.py")
+    return problems
 
 
-def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[str, list[str]]:
+def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path, checks_json: Path | None = None) -> dict[str, list[str]]:
     """Название проверки и найденные проблемы; пустой список значит, что проверка пройдена."""
     tracks_json, tracks_csv = tracks_dir / "tracks.json", tracks_dir / "tracks.csv"
     robustness, crops_index = tracks_dir / "robustness.csv", tracks_dir / "crops" / "index.json"
     hints_sheet = tracks_dir / "gallery" / "hints.jpg"
     manifest_path, showcase = render_dir / "manifest.json", render_dir / "showcase.mp4"
     report, plan, stamp = render_dir / "report.html", render_dir / "plan.jpg", render_dir / "built_from.json"
-    required = [tracks_json, tracks_csv, robustness, crops_index, hints_sheet, manifest_path, showcase, report, plan, stamp, results_csv]
+    checks = checks_json or tracks_dir.parent / "test-results" / "checks.json"
+    required = [tracks_json, tracks_csv, robustness, crops_index, hints_sheet, manifest_path, showcase, report, plan, stamp, results_csv, checks]
     missing = [f"{path}: нет файла" for path in required if not path.exists()]
     if missing:
         return {"Файлы на месте": missing}
@@ -136,5 +141,5 @@ def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[st
         "Подсказки ссылаются на прошлые треки": _hint_problems(tracks),
         "Снимки для досье на месте": [f"{item['file']}: нет файла" for item in crops.values() if not (tracks_dir / "crops" / item["file"]).exists()],
         "Примеры ошибок ещё верны": check_known_errors(tracks),
-        "Ничего не устарело": _stale_problems(tracks_dir, stamp),
+        "Ничего не устарело": _stale_problems(tracks_dir, stamp, checks),
     }

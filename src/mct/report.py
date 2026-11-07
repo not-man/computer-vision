@@ -12,7 +12,8 @@ from plotly.offline import get_plotlyjs
 from mct.highlight import track_boxes
 from mct.charts import camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
+    CHECKS_NOTE, EXPERIMENTS_NOTE, HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, check_rows, close_text, duration_s, hint_texts, link_rows, quality_tiles,
+    robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
 )
 from mct.video import clock_text
 
@@ -94,9 +95,19 @@ button{cursor:pointer}button:hover{border-color:var(--muted)}
 <h2 id="honesty">Как проверяли</h2>
 <p id="honesty-note"></p>
 <div class="tiles" id="honesty-tiles"></div>
+<section id="checks-block">
+<h3>Проверки по всей записи</h3>
+<p id="checks-note"></p>
+<div class="scroll" id="checks"></div>
+</section>
 <div class="pair"><div id="curve-0"></div><div id="curve-1"></div></div>
 <h3>Что будет, если отключить правило</h3>
 <div class="scroll" id="rules"></div>
+<section id="experiments-block">
+<h3>Что пробовали и не взяли</h3>
+<p id="experiments-note"></p>
+<div class="scroll" id="experiments"></div>
+</section>
 <h3>Известные ошибки</h3>
 <div id="errors"></div>
 </main>
@@ -238,6 +249,11 @@ plot('timeline', DATA.timeline);
 byId('hints').src = DATA.hints_uri;
 byId('honesty-note').textContent = DATA.honesty_note;
 tiles(byId('honesty-tiles'), DATA.honesty_tiles);
+for (const name of ['checks', 'experiments']) {
+  byId(name + '-block').hidden = !DATA[name].length;
+  byId(name + '-note').textContent = DATA[name + '_note'];
+  byId(name).replaceChildren(makeTable(DATA[name]));
+}
 DATA.curves.forEach((figure, index) => plot('curve-' + index, figure));
 byId('rules').replaceChildren(makeTable(DATA.rules));
 byId('errors').replaceChildren(...DATA.errors.map(([title, text]) => {
@@ -309,7 +325,8 @@ def _track_entry(track: dict, row: int, crops: dict[str, dict], chunks: list[dic
     }
 
 
-def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tracks_dir: Path, plan_image: Path, configs: Path, out: Path) -> None:
+def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tracks_dir: Path, plan_image: Path, configs: Path, out: Path,
+                 checks: dict | None = None, experiments: pd.DataFrame | None = None) -> None:
     tracks = tracks_doc["tracks"]
     chunks = manifest["chunks"]
     crops = _crops(tracks_dir)
@@ -333,7 +350,11 @@ def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tra
         "plan_uri": _data_uri(plan_image.read_bytes()),
         "hints_uri": _data_uri(hints.read_bytes()) if hints.exists() else "",
         "honesty_note": HONESTY_NOTE,
-        "honesty_tiles": quality_tiles(tracks_doc) + robustness_tiles(robustness),
+        "honesty_tiles": quality_tiles(tracks_doc, checks) + robustness_tiles(robustness),
+        "checks_note": CHECKS_NOTE,
+        "checks": check_rows(checks) if checks else [],
+        "experiments_note": EXPERIMENTS_NOTE,
+        "experiments": experiments.to_dict("records") if experiments is not None else [],
         "curves": [_figure(figure) for figure in robustness_curves(robustness)],
         "rules": rule_rows(robustness),
         "errors": [(error.title, error.text) for error in KNOWN_ERRORS],
