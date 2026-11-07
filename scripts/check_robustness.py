@@ -105,7 +105,6 @@ def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) ->
         Case("снимки чаще раза в секунду", "откл", no_dense=True),
         Case("положение по своему росту", "откл", no_own_height=True),
         Case("два номера на одном человеке", "откл", trinity={"duplicate_r": OFF}),
-        Case("быстрый возврат рядом", "откл", trinity={"near_return_r": OFF}),
     ]
     cases += [Case(f"каждый третий снимок, сдвиг {phase}", "снимки", dense_phase=phase) for phase in range(3)]
     cases += [Case(f"время cam_{c[-1]} {dt:+.1f} с", "время", shift=(c, dt)) for c in CAMERAS for dt in (-0.2, 0.2)]

@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from mct.trinity import LinkResult, Tracklet, TrinityConfig, Zone, ZoneMap, check_invariants, link_tracklets
+from mct.trinity import LinkResult, Tracklet, TrinityConfig, Zone, ZoneMap, _Linker, check_invariants, link_tracklets
 
 CONFIG = TrinityConfig()
 
@@ -152,7 +152,7 @@ def test_return_is_not_decided_between_two_different_people() -> None:
 def test_missing_column_marking_splits_after_open_buffer() -> None:
     # Единственный пропуск зоны с заметным вредом: без разметки разрыв 3 с длиннее буфера OPEN
     a = walker(1, "cam_1", 0.0, 10.0, (3.0, 5.0), velocity=(0.7, 0.0), embedding=look(0))
-    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=look(75.0))
+    b = walker(2, "cam_1", 13.0, 20.0, (12.0, 5.0), velocity=(0.7, 0.0), embedding=look(60.0))
     assert groups(run([a, b])) == {frozenset({1}), frozenset({2})}
 
 
@@ -418,7 +418,7 @@ def test_same_object_on_one_camera_may_turn_around() -> None:
 
 
 def test_same_object_needs_strong_appearance_and_touching_boxes() -> None:
-    assert groups(run(same_object_pair(75.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1}), frozenset({2})}
+    assert groups(run(same_object_pair(60.0, (45.0, 10.0, 85.0, 90.0)))) == {frozenset({1}), frozenset({2})}
 
 
 def contact_away_from_edge(angle: float) -> list[Tracklet]:
@@ -540,26 +540,11 @@ def test_second_tracker_number_needs_alike_appearance_and_coinciding_boxes() -> 
     assert groups(run([a, aside])) == {frozenset({1}), frozenset({2})}
 
 
-def left_and_came_back(pause: float, angle: float, x: float = 10.5) -> list[Tracklet]:
-    """Человек дошёл до точки (10, 5) и через паузу появился на x. Пауза длиннее буфера открытого места, поэтому решает только возврат."""
-    a = walker(1, "cam_1", 0.0, 5.0, (3.0, 5.0), embedding=look(0))
-    b = walker(2, "cam_1", 5.0 + pause, 10.0 + pause, (x, 5.0), embedding=look(angle))
-    return [a, b]
-
-
-def test_quick_return_to_the_same_place_needs_less_similarity() -> None:
-    assert groups(run(left_and_came_back(8.0, 60.0))) == {frozenset({1, 2})}
-
-
-def test_late_return_needs_full_similarity() -> None:
-    assert len(run(left_and_came_back(30.0, 60.0)).tracks) == 2
-    assert groups(run(left_and_came_back(30.0, 45.0))) == {frozenset({1, 2})}
-
-
-def test_quick_return_elsewhere_needs_full_similarity() -> None:
-    assert len(run(left_and_came_back(8.0, 60.0, x=20.0)).tracks) == 2
-    assert groups(run(left_and_came_back(8.0, 45.0, x=20.0))) == {frozenset({1, 2})}
-
-
-def test_quick_return_with_little_similarity_is_another_person() -> None:
-    assert len(run(left_and_came_back(8.0, 75.0)).tracks) == 2
+def test_number_switch_with_a_jump_on_the_plan_does_not_block_the_merge() -> None:
+    # Вдали рамка та же, а точка на плане прыгнула: ноги закрылись. Связывает третий кусок на другой камере
+    a = with_box(walker(1, "cam_1", 0.0, 6.0, (0.0, 5.0)), (100, 100, 150, 250))
+    b = with_box(walker(2, "cam_1", 6.1, 12.0, (20.0, 5.0)), (105, 100, 155, 250))
+    linker = _Linker([a, b], CONFIG, ZoneMap())
+    assert not linker._pair_conflict(a, b)
+    apart = with_box(walker(2, "cam_1", 6.1, 12.0, (20.0, 5.0)), (400, 100, 450, 250))
+    assert _Linker([a, apart], CONFIG, ZoneMap())._pair_conflict(a, apart)

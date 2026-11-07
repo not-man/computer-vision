@@ -54,9 +54,6 @@ class TrinityConfig:
     return_window_s: float = 60.0  # организаторы: длительное отсутствие, это больше минуты без человека на всех камерах
     r_return: float = 0.6  # вернувшегося можно узнать только по внешности: на снимках от этого порога пары верные
     return_margin: float = 0.1  # заведомо другой человек похож почти так же: это не решаем
-    near_return_s: float = 15.0  # вернулся быстро и почти туда же: других объяснений мало, сходства нужно меньше
-    near_return_m: float = 2.0
-    near_return_r: float = 0.45
     duplicate_iou: float = 0.45  # трекер завёл второй номер на того же человека: две почти одинаковые рамки одного кадра
     duplicate_r: float = 0.5
     duplicate_max_s: float = 3.0  # пара в обнимку тоже даёт похожие рамки и вырезки, но так долго: второй номер на человека быстро пропадает
@@ -248,12 +245,17 @@ def _boxes_apart(a: Tracklet, b: Tracklet, time: float) -> bool:
     return _disjoint(a.boxes[int(np.abs(a.t - time).argmin())], b.boxes[int(np.abs(b.t - time).argmin())])
 
 
-def _same_object(cfg: TrinityConfig, last: Tracklet, first: Tracklet, gap: float) -> bool:
-    """Трекер сменил номер у того же объекта: та же камера, почти без паузы, рамки пересекаются, внешность совпадает."""
+def _number_switch(cfg: TrinityConfig, last: Tracklet, first: Tracklet, gap: float) -> bool:
+    """На кадре это похоже на смену номера у одного объекта: та же камера, почти без паузы, рамки пересекаются."""
     if last.camera != first.camera or gap > cfg.contact_gap_s or last.boxes is None or first.boxes is None:
         return False
+    return not _disjoint(last.boxes[-1], first.boxes[0])
+
+
+def _same_object(cfg: TrinityConfig, last: Tracklet, first: Tracklet, gap: float) -> bool:
+    """Трекер сменил номер у того же объекта: к смене номера добавляется совпадение внешности."""
     r = _similarity(last, first)
-    return r is not None and r >= cfg.contact_r and not _disjoint(last.boxes[-1], first.boxes[0])
+    return _number_switch(cfg, last, first, gap) and r is not None and r >= cfg.contact_r
 
 
 def _box_iou(a: np.ndarray, b: np.ndarray) -> float:
@@ -350,7 +352,8 @@ class _Linker:
             return False
         first, second = (a, b) if a.end <= b.start else (b, a)
         gap = second.start - first.end
-        return not self._reachable(first, second, gap)
+        # Рамки соприкасаются, а точки на плане далеко: вдали это скачок из-за закрытых ног, а не движение
+        return not _number_switch(cfg, first, second, gap) and not self._reachable(first, second, gap)
 
     def _reachable(self, first: Tracklet, second: Tracklet, gap: float) -> bool:
         """Можно ли дойти за разрыв с учётом погрешности положения."""
@@ -599,14 +602,10 @@ class _Linker:
                 for other in vectors if other != group
             )
 
-        def needed(link: Link) -> float:
-            near = -link.contact_s <= cfg.near_return_s and link.g_m <= cfg.near_return_m
-            return min(cfg.near_return_r, cfg.r_return) if near else cfg.r_return
-
         for pair in sorted(possible, key=lambda p: (-similarity(p), min(p), max(p))):
             r = similarity(pair)
-            if r < needed(possible[pair]):
-                continue
+            if r < cfg.r_return:
+                return False
             g1, g2 = tuple(pair)
             if has_rival(g1, g2, r) or has_rival(g2, g1, r):
                 self._record(possible[pair].a, possible[pair].b, "return", False, "неоднозначно", r=r)
@@ -840,7 +839,7 @@ def check_invariants(result: LinkResult, tracklets: Iterable[Tracklet], cfg: Tri
         tolerance = 3 * cfg.calibration_sigma
         for a, b in zip(members, members[1:]):
             gap = b.start - a.end
-            if gap > 0 and np.hypot(*(b.xy[0] - a.xy[-1])) > cfg.v_max * gap + tolerance + 3 * np.sqrt(
+            if gap > 0 and not _number_switch(cfg, a, b, gap) and np.hypot(*(b.xy[0] - a.xy[-1])) > cfg.v_max * gap + tolerance + 3 * np.sqrt(
                 max(np.linalg.eigvalsh(a.cov[-1])[-1], np.linalg.eigvalsh(b.cov[0])[-1])
             ):
                 problems.append(f"трек {track.track_id}: скорость между {a.id} и {b.id} выше предела")
