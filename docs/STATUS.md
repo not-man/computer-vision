@@ -3,28 +3,26 @@
 Читать первым после перерыва. Подробности и измерения в [DESIGN.md](DESIGN.md), раздел 0.
 
 ## Где что лежит
-- Код в ветке `mct-pipeline`, репозиторий https://github.com/not-man/computer-vision. В `main` пока не сливалась. На 2026-11-07 ветка на GitHub не отправлена: на первом ноутбуке нет входа в GitHub. Проверить: `git ls-remote --heads origin mct-pipeline`. Автор в git не задан: коммитить с `-c user.name=... -c user.email=...` как у первого коммита.
+- Код в ветке `mct-pipeline`, репозиторий https://github.com/not-man/computer-vision. В `main` пока не сливалась. На первом ноутбуке у git в терминале нет входа в GitHub: оттуда ветку отправляют кнопкой синхронизации в VS Code. Автор в git не задан: коммитить с `-c user.name=... -c user.email=...` как у первого коммита.
 - Записи и план: `../data`, рядом с папкой репозитория. Результат полного прохода в Colab: `artifacts/perception` и архив `../perception-20261106T213720Z-1-001.zip`.
 - `artifacts/` и `render/` не в git и восстанавливаются командами ниже.
 - Окружение: `uv sync --extra cpu` на машине без GPU.
 
 ## Перенос на другой ноутбук
-Скопировать в одну папку с первого ноутбука (`~/Downloads/computer vision`):
-- `mct-pipeline.bundle`: весь код с историей, собирается `git bundle create ../mct-pipeline.bundle --all`. Не нужен, если ветка уже на GitHub.
+Код берётся с GitHub. Остального в git нет, это скопировать в одну папку с первого ноутбука (`~/Downloads/computer vision`):
 - `mct-demo-kit.tar.gz`: `artifacts/perception`, `artifacts/tracks` и `render/full`, собирается `make package`. Без `artifacts/perception` придётся снова запускать Colab, около 1 ч 25 мин.
 - `data/`: записи `camera_new_*.mkv`, `office.jpg`, `office_camera.png`. Нужны для пересчёта мозаики и снимков.
 - ТЗ и презентация организаторов: `ТЗ на хакатон_v2(1).docx`, `Хакатон презентация.pdf`, на первом ноутбуке в `~/Downloads`.
 
 Затем в этой папке:
 ```bash
-git clone -b mct-pipeline mct-pipeline.bundle computer-vision
+git clone -b mct-pipeline https://github.com/not-man/computer-vision.git
 cd computer-vision
-git remote set-url origin https://github.com/not-man/computer-vision.git
 tar -xzf ../mct-demo-kit.tar.gz
 uv sync --extra cpu
 make demo
 ```
-Если ветка уже на GitHub, вместо первой и третьей команд: `git clone -b mct-pipeline https://github.com/not-man/computer-vision.git`. Нужны `uv` и `make`; `make` и пути `.venv/bin` рассчитаны на Linux и macOS.
+Нужны `uv` и `make`; `make` и пути `.venv/bin` рассчитаны на Linux и macOS.
 
 Память Claude Code и контекст прошлого разговора не переносятся: всё нужное для продолжения записано здесь.
 
@@ -65,7 +63,7 @@ make test
 - В ходе работы давать список ручных проверок: что, где, когда.
 - Время ожидания при уходе со всех камер не менять до ответа организаторов. Правило короткого возврата (10 с) просчитано, но не применено: DESIGN.md, раздел 0.
 - Сначала точность, затем интерфейс. Точность сделана насколько это возможно без эталона.
-- Коммитить на контрольных точках. 2026-11-07 пользователь попросил сохранить всё, чтобы продолжить с другого ноутбука. Репозиторий открытый: записи и кадры в него не класть. В `main` сливать только по просьбе.
+- Коммитить на контрольных точках. 2026-11-07 пользователь попросил сохранить всё, чтобы продолжить с другого ноутбука, и опубликовал ветку на GitHub. Репозиторий открытый: записи и кадры в него не класть. В `main` сливать только по просьбе.
 
 ## Применено без явного ответа пользователя
 - Запрет внешности на разрывах 0.15 вместо 0.05 (`gap_veto` в `src/mct/trinity.py`): пользователь сказал продолжать, не выбрав вариант. Откат одной строкой.
