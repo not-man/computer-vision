@@ -21,7 +21,7 @@ def test_every_screen_opens_without_errors(screen: str) -> None:
 
 
 def test_total_count_is_on_the_screen() -> None:
-    total = json.loads(TRACKS.read_text())["total_tracks"]
+    total = json.loads(TRACKS.read_text(encoding="utf-8"))["total_tracks"]
     assert any(f"Сквозных треков: {total}." in caption.value for caption in opened("Треки").caption)
 
 

@@ -57,7 +57,7 @@ def main() -> None:
     args = parser.parse_args()
 
     camera = args.video.stem
-    clock = yaml.safe_load(Path("configs/clocks.yaml").read_text())[camera]
+    clock = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))[camera]
     ticks, frames = find_ticks(args.video)
     period, phase = fit_period(ticks, clock["fps"])
 

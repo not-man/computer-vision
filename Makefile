@@ -4,7 +4,7 @@ PERCEPTION := artifacts/perception
 TRACKS := artifacts/tracks
 RENDER := render/full
 
-.PHONY: setup demo check all tracks render robustness test
+.PHONY: setup demo check dense all tracks render robustness test
 
 setup:
 	uv sync --extra cpu
@@ -15,6 +15,10 @@ demo: check
 
 check:
 	$(PY) scripts/demo_check.py
+
+# Снимки внешности чаще раза в секунду: после детекции, один раз, на CPU около 10 минут
+dense:
+	$(PY) scripts/reembed.py data --every 3 --kinds box --out $(PERCEPTION) --suffix dense
 
 # Всё после детекции: треки, мозаика, снимки, проверка устойчивости, витрина, отчёт
 all: tracks render robustness

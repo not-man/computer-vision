@@ -490,11 +490,11 @@ def render_mosaic(
     configs: Path = Path("configs"),
 ) -> dict:
     """Рендерит части мозаики и возвращает манифест для интерфейса."""
-    result = json.loads((tracks_dir / "tracks.json").read_text())
+    result = json.loads((tracks_dir / "tracks.json").read_text(encoding="utf-8"))
     observations = pd.read_parquet(tracks_dir / "observations.parquet", columns=["camera", "frame", "raw_track", "tracklet"])
     track_of = {tracklet: track["track_id"] for track in result["tracks"] for tracklet in track["tracklets"]}
-    clocks = yaml.safe_load((configs / "clocks.yaml").read_text())
-    features = yaml.safe_load((configs / "plan_features.yaml").read_text())
+    clocks = yaml.safe_load((configs / "clocks.yaml").read_text(encoding="utf-8"))
+    features = yaml.safe_load((configs / "plan_features.yaml").read_text(encoding="utf-8"))
     cameras = load_cameras()
     names = list(clocks)
 
@@ -606,5 +606,5 @@ def render_mosaic(
         "events": [{"t_s": round(e.t, 2), "kind": e.kind, "text": e.text, "track_id": e.track_id} for e in events],
         "chunks": manifest_chunks,
     }
-    (out_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1))
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     return manifest

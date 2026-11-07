@@ -92,9 +92,12 @@ def label_rows(rows: pd.DataFrame) -> pd.Series:
     return people
 
 
-def score(rows: pd.DataFrame, track_of_row: pd.Series) -> dict:
-    """Соответствие человек-трек в окне. rows: наблюдения с camera, raw_track, t_s; track_of_row: итоговый номер трека для тех же строк."""
-    table = pd.DataFrame({"person": label_rows(rows), "track": track_of_row.reindex(rows.index)}).dropna()
+def score(rows: pd.DataFrame, track_of_row: pd.Series, people: pd.Series | None = None) -> dict:
+    """Соответствие человек-трек в окне. rows: наблюдения с camera, raw_track, t_s; track_of_row: итоговый номер трека для тех же строк.
+
+    people: кто в какой строке, если разметка перенесена на другой прогон детектора.
+    """
+    table = pd.DataFrame({"person": label_rows(rows) if people is None else people, "track": track_of_row.reindex(rows.index)}).dropna()
     crossed = pd.crosstab(table.person, table.track)
     total = int(crossed.values.sum())
     # одно лучшее соответствие человек-трек: как IDF1 в этом окне

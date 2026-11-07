@@ -540,14 +540,14 @@ def _locate_file(path: Path, camera: Camera, plan: Plan, cache: Path) -> None:
 
 
 def filter_config(path: Path = FEATURES) -> FilterConfig:
-    features = yaml.safe_load(path.read_text())
+    features = yaml.safe_load(path.read_text(encoding="utf-8"))
     mirrors = tuple((camera, tuple(region)) for camera, regions in (features.get("mirrors") or {}).items() for region in regions)
     return FilterConfig(mirrors=mirrors)
 
 
 def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan, feet_margin_m: float | None = HIDDEN_FEET_MARGIN_M, near_m: float = HIDDEN_FEET_FROM_M, use_dense: bool = True) -> tuple[pd.DataFrame, dict[str, tuple[np.ndarray, np.ndarray]]]:
     """Наблюдения всех камер на плане. Положения считаются раз и лежат в кэше, а время всегда берётся из текущих часов."""
-    clocks = yaml.safe_load((CAMERAS_CONFIG.parent / "clocks.yaml").read_text())
+    clocks = yaml.safe_load((CAMERAS_CONFIG.parent / "clocks.yaml").read_text(encoding="utf-8"))
     names = [name for name in cameras if (directory / f"{name}.parquet").exists()]
     caches = {name: directory / f"{name}_located_v{LOCATE_VERSION}.parquet" for name in names}
     stale = [

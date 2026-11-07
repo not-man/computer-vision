@@ -40,7 +40,7 @@ def test_plan_path_is_dotted_across_the_pause(tmp_path: Path) -> None:
     Image.new("RGB", (612, 658), "white").save(image)
     configs = tmp_path / "configs"
     configs.mkdir()
-    (configs / "plan_features.yaml").write_text("plan_px_per_m: 29.0\nplan_image: {scale: 2.0, dx: 4.0, dy: 2.0}\n")
+    (configs / "plan_features.yaml").write_text("plan_px_per_m: 29.0\nplan_image: {scale: 2.0, dx: 4.0, dy: 2.0}\n", encoding="utf-8")
     figure = plan_figure(track(1, 0.0, 10.0), image, configs)
     dotted = [trace for trace in figure.data if trace.line.dash == "dot"]
     assert len(dotted) == 1

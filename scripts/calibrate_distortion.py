@@ -77,7 +77,7 @@ def main() -> None:
             print(f"  {name}: цепочек {len(chains[name])}, было {cost(Lens(0.0), chains[name], weights):.5f}, стало {cost(lens, chains[name], weights):.5f}", flush=True)
             lenses[name] = {"k1": round(lens.k1, 5), "k2": round(lens.k2, 5), "cx": round(lens.cx, 2), "cy": round(lens.cy, 2)}
             cv2.imwrite(str(rectified_dir / f"{name}.jpg"), lens.rectify(images[name], 0.6, (1296, 972)))
-    (args.out / "lenses.json").write_text(json.dumps(lenses, indent=2))
+    (args.out / "lenses.json").write_text(json.dumps(lenses, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

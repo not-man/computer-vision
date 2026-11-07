@@ -98,7 +98,7 @@ def collect_people(tracks_dir: Path) -> list[PeopleSamples]:
     usable = observations[(observations.source == "foot") & ~observations.touches_edge]
     paths = {tracklet: group.sort_values("t_s") for tracklet, group in usable.groupby("tracklet")}
     rows: dict[tuple[str, str], list[np.ndarray]] = {}
-    for track in json.loads((tracks_dir / "tracks.json").read_text())["tracks"]:
+    for track in json.loads((tracks_dir / "tracks.json").read_text(encoding="utf-8"))["tracks"]:
         doubtful = {end for link in track["links"] if link["confidence"] == "yellow" for end in (link["a"], link["b"])}
         present = [tracklet for tracklet in track["tracklets"] if tracklet in paths and tracklet not in doubtful]
         for first, second in combinations(present, 2):
@@ -170,9 +170,9 @@ def main() -> None:
     parser.add_argument("--holdout", action="store_true", help="подбирать на половине треков и проверять на другой половине")
     args = parser.parse_args()
 
-    features = yaml.safe_load(args.features.read_text())
+    features = yaml.safe_load(args.features.read_text(encoding="utf-8"))
     scale = features["plan_px_per_m"]
-    lenses = {name: Lens(**values) for name, values in json.loads(args.lenses.read_text()).items()}
+    lenses = {name: Lens(**values) for name, values in json.loads(args.lenses.read_text(encoding="utf-8")).items()}
     names = list(features["cameras"])
     # У камер одной модели фокус общий
     focus_groups = [["camera_new_1", "camera_new_2", "camera_new_3", "camera_new_5"], ["camera_new_4"]]
@@ -313,7 +313,7 @@ def main() -> None:
     print("стол на плане, px:", np.round(center * scale).astype(int).tolist(), "поворот, град:", round(float(np.degrees(angle)), 1), flush=True)
     config["table"] = {"x": round(float(center[0]), 3), "y": round(float(center[1]), 3), "angle": round(float(angle), 4)}
 
-    args.out.write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False))
+    args.out.write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

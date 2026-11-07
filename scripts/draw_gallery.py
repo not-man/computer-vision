@@ -73,7 +73,7 @@ def save_crops(best: pd.DataFrame, crops: dict, tracks_dir: Path) -> None:
             name = f"tracklet_{int(row.tracklet)}.jpg"
             cv2.imwrite(str(out / name), crop, [cv2.IMWRITE_JPEG_QUALITY, 90])
             index[int(row.tracklet)] = {"file": name, "camera": row.camera, "t_s": round(float(row.t_s), 2)}
-    (out / "index.json").write_text(json.dumps(index))
+    (out / "index.json").write_text(json.dumps(index), encoding="utf-8")
 
 
 def track_pages(result: dict, best: pd.DataFrame, crops: dict, out: Path, stamps: Stamps) -> int:
@@ -175,7 +175,7 @@ def main() -> None:
     for old in out.glob("*.jpg"):
         old.unlink()
 
-    result = json.loads((args.tracks / "tracks.json").read_text())
+    result = json.loads((args.tracks / "tracks.json").read_text(encoding="utf-8"))
     columns = ["frame", "raw_track", "x1", "y1", "x2", "y2", "mask_area", "conf", "touches_edge"]
     detections = pd.concat(
         [pd.read_parquet(path, columns=columns).assign(camera=path.stem) for path in sorted(args.perception.glob("camera_new_?.parquet"))],

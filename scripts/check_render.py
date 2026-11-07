@@ -30,7 +30,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=Path("render/check"))
     args = parser.parse_args()
 
-    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text())
+    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))
     readers = []
     for video in sorted(args.videos.glob("*.mkv")):
         clock = clocks[video.stem]

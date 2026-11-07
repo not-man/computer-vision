@@ -6,7 +6,7 @@ import pandas as pd
 from PIL import Image
 
 from mct.report import build_report
-from mct.summary import KNOWN_ERRORS, check_known_errors, hint_texts, link_rows, rule_rows, segment_rows, track_rows
+from mct.summary import KNOWN_ERRORS, check_known_errors, hint_texts, link_rows, quality_tiles, rule_rows, segment_rows, track_rows
 
 
 def track(track_id: int = 1, start_s: float = 0.0, end_s: float = 10.0) -> dict:
@@ -43,6 +43,12 @@ def test_doubtful_link_is_named_and_hint_shows_absence() -> None:
     assert "5:17" in hint_texts(track())[0]
 
 
+def test_measured_quality_is_shown_only_when_present() -> None:
+    assert quality_tiles({}) == []
+    tiles = quality_tiles({"quality": {"crowd": {"match": 0.926, "purity": 0.955, "people": 7, "tracks": 8}, "pairs": {"right": 25, "total": 28, "errors": {}}}})
+    assert ("Пары, проверенные глазами: верно", "25 из 28") in tiles and tiles[0][1] == "0.93"
+
+
 def test_rules_are_sorted_from_the_most_harmful() -> None:
     robustness = pd.DataFrame({"name": ["мелочь", "важное"], "group": ["откл", "откл"], "tracks": [108, 213], "yellow": [37, 43], "agreement": [0.99, 0.86]})
     assert [row["Правило"] for row in rule_rows(robustness)] == ["важное", "мелочь"]
@@ -62,12 +68,12 @@ def test_report_needs_no_network_and_opens_videos_next_to_it(tmp_path: Path) -> 
     tracks_dir = tmp_path / "tracks"
     (tracks_dir / "crops").mkdir(parents=True)
     Image.new("RGB", (40, 80), "white").save(tracks_dir / "crops" / "tracklet_7.jpg")
-    (tracks_dir / "crops" / "index.json").write_text(json.dumps({"7": {"file": "tracklet_7.jpg", "camera": "camera_new_1", "t_s": 1.0}}))
+    (tracks_dir / "crops" / "index.json").write_text(json.dumps({"7": {"file": "tracklet_7.jpg", "camera": "camera_new_1", "t_s": 1.0}}), encoding="utf-8")
     plan = tmp_path / "plan.jpg"
     Image.new("RGB", (60, 60), "white").save(plan)
     configs = tmp_path / "configs"
     configs.mkdir()
-    (configs / "plan_features.yaml").write_text("plan_px_per_m: 29.0\nplan_image: {scale: 2.0, dx: 4.0, dy: 2.0}\n")
+    (configs / "plan_features.yaml").write_text("plan_px_per_m: 29.0\nplan_image: {scale: 2.0, dx: 4.0, dy: 2.0}\n", encoding="utf-8")
     robustness = pd.DataFrame({
         "name": ["длительность 2.0", "r_veto 0.05", "правило"], "group": ["кривая длительности", "кривая r_veto", "откл"],
         "tracks": [108, 108, 120], "yellow": [37, 37, 40], "agreement": [1.0, 1.0, 0.9],
@@ -76,7 +82,7 @@ def test_report_needs_no_network_and_opens_videos_next_to_it(tmp_path: Path) -> 
                 "chunks": [{"file": "chunks/000.mp4", "t_start_s": 0.0, "t_end_s": 60.0, "start": "17:00:00.0"}]}
     out = tmp_path / "report.html"
     build_report({"total_tracks": 1, "tracks": [track()]}, manifest, robustness, tracks_dir, plan, configs, out)
-    html = out.read_text()
+    html = out.read_text(encoding="utf-8")
     data = json.loads(html[html.index("const DATA = ") + len("const DATA = "):html.index(";\nconst CONFIG")].replace("<\\/", "</"))
     assert data["tracks"]["1"]["chunks"][0] == {"label": "17:00:00", "file": "chunks/000.mp4", "offset": 0}
     assert data["tracks"]["1"]["plan"]["layout"]["images"][0]["source"] == ""

@@ -17,7 +17,7 @@ def collect_lags(tracks_dir: Path) -> list[PairLag]:
     observations = pd.read_parquet(tracks_dir / "observations.parquet")
     observations = observations[observations.source == "foot"]
     paths = {tracklet: group.sort_values("t_s") for tracklet, group in observations.groupby("tracklet")}
-    result = json.loads((tracks_dir / "tracks.json").read_text())
+    result = json.loads((tracks_dir / "tracks.json").read_text(encoding="utf-8"))
 
     lags = []
     for track in result["tracks"]:
@@ -41,7 +41,7 @@ def main() -> None:
     parser.add_argument("--tracks", type=Path, default=Path("artifacts/tracks"))
     args = parser.parse_args()
 
-    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text())
+    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))
     lags = collect_lags(args.tracks)
     table = pd.DataFrame([vars(item) for item in lags])
     table["pair"] = table.camera_a.str[-1] + "-" + table.camera_b.str[-1]

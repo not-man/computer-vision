@@ -60,6 +60,9 @@ class Case:
     no_doors: bool = False
     no_column: bool = False
     plain_embedding: bool = False
+    no_dense: bool = False
+    no_own_height: bool = False
+    dense_phase: int | None = None
 
 
 def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) -> list[Case]:
@@ -99,7 +102,12 @@ def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) ->
         Case("зоны дверей", "откл", no_doors=True),
         Case("колонна", "откл", no_column=True),
         Case("вычитание среднего камеры", "откл", plain_embedding=True),
+        Case("снимки чаще раза в секунду", "откл", no_dense=True),
+        Case("положение по своему росту", "откл", no_own_height=True),
+        Case("два номера на одном человеке", "откл", trinity={"duplicate_r": OFF}),
+        Case("быстрый возврат рядом", "откл", trinity={"near_return_r": OFF}),
     ]
+    cases += [Case(f"каждый третий снимок, сдвиг {phase}", "снимки", dense_phase=phase) for phase in range(3)]
     cases += [Case(f"время cam_{c[-1]} {dt:+.1f} с", "время", shift=(c, dt)) for c in CAMERAS for dt in (-0.2, 0.2)]
     cases += [Case(f"порог детекции {c}", "детектор", min_conf=c) for c in (0.15, 0.25, 0.35)]
     cases += [Case(f"r_veto {v}", "кривая r_veto", trinity={"r_veto": v}) for v in R_VETO_CURVE]
@@ -109,6 +117,7 @@ def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) ->
 
 class Context:
     observations: pd.DataFrame
+    observations_foot: pd.DataFrame
     embeddings: dict
     plan: Plan
     extra_zones: list[T.Zone]
@@ -124,7 +133,12 @@ def plain_mean_embeddings(items: list[T.Tracklet], appearance: dict[int, np.ndar
 
 
 def run_case(case: Case) -> dict:
-    observations = Context.observations
+    observations = Context.observations_foot if case.no_own_height else Context.observations
+    embeddings = Context.embeddings
+    if case.no_dense or case.plain_embedding:
+        embeddings = {camera: value[:2] for camera, value in embeddings.items()}
+    if case.dense_phase is not None:
+        embeddings = {camera: (*value[:2], (value[2][0][case.dense_phase::3], value[2][1][case.dense_phase::3]) if value[2] else None) for camera, value in embeddings.items()}
     if case.shift:
         camera, delta = case.shift
         observations = observations.copy()
@@ -137,7 +151,7 @@ def run_case(case: Case) -> dict:
     if case.plain_embedding:
         tracklets_module._set_embeddings = plain_mean_embeddings
     try:
-        tracklets, assigned, dropped = build_tracklets(observations, Context.embeddings, replace(Context.filters, **case.filter))
+        tracklets, assigned, dropped = build_tracklets(observations, embeddings, replace(Context.filters, **case.filter))
     finally:
         tracklets_module._set_embeddings = original
 
@@ -182,7 +196,8 @@ def main() -> None:
 
     Context.plan = Plan.load()
     Context.observations, Context.embeddings = load_perception(args.perception, load_cameras(), Context.plan)
-    Context.extra_zones = [T.Zone(**zone) for zone in yaml.safe_load(Path("configs/zones.yaml").read_text())["zones"]]
+    Context.observations_foot = load_perception(args.perception, load_cameras(), Context.plan, feet_margin_m=None)[0]
+    Context.extra_zones = [T.Zone(**zone) for zone in yaml.safe_load(Path("configs/zones.yaml").read_text(encoding="utf-8"))["zones"]]
     Context.filters = filter_config()
 
     cases = build_cases(Context.trinity, Context.filters)

@@ -33,12 +33,12 @@ def kit(tmp_path: Path) -> dict[str, Path]:
         "possibly_same_person_as": [],
     } for error in KNOWN_ERRORS]
     csv = "track_id,start,end,cameras\n" + "".join(f"{track['track_id']},a,b,c\n" for track in tracks)
-    (tracks_dir / "tracks.csv").write_text(csv)
-    results.write_text(csv)
-    (tracks_dir / "tracks.json").write_text(json.dumps({"total_tracks": len(tracks), "tracks": tracks}))
-    (tracks_dir / "robustness.csv").write_text("name\n")
+    (tracks_dir / "tracks.csv").write_text(csv, encoding="utf-8")
+    results.write_text(csv, encoding="utf-8")
+    (tracks_dir / "tracks.json").write_text(json.dumps({"total_tracks": len(tracks), "tracks": tracks}), encoding="utf-8")
+    (tracks_dir / "robustness.csv").write_text("name\n", encoding="utf-8")
     (tracks_dir / "crops" / "a.jpg").write_bytes(b"x")
-    (tracks_dir / "crops" / "index.json").write_text(json.dumps({"1": {"file": "a.jpg"}}))
+    (tracks_dir / "crops" / "index.json").write_text(json.dumps({"1": {"file": "a.jpg"}}), encoding="utf-8")
     (tracks_dir / "gallery" / "hints.jpg").write_bytes(b"x")
     write_video(render_dir / "chunks" / "000.mp4")
     write_video(render_dir / "chunks" / "001.mp4")
@@ -46,10 +46,10 @@ def kit(tmp_path: Path) -> dict[str, Path]:
     (render_dir / "manifest.json").write_text(json.dumps({
         "total_tracks": len(tracks), "clock_start_s": 0.0, "clock_end_s": 120.0,
         "chunks": [{"file": "chunks/000.mp4", "t_start_s": 0.0, "t_end_s": 60.0}, {"file": "chunks/001.mp4", "t_start_s": 60.0, "t_end_s": 120.0}],
-    }))
-    (render_dir / "report.html").write_text("<html></html>")
+    }), encoding="utf-8")
+    (render_dir / "report.html").write_text("<html></html>", encoding="utf-8")
     (render_dir / "plan.jpg").write_bytes(b"x")
-    (render_dir / "built_from.json").write_text(json.dumps(source_stamp(tracks_dir)))
+    (render_dir / "built_from.json").write_text(json.dumps(source_stamp(tracks_dir)), encoding="utf-8")
     return {"tracks_dir": tracks_dir, "render_dir": render_dir, "results_csv": results}
 
 
@@ -68,26 +68,26 @@ def test_missing_file_stops_the_rest(kit: dict[str, Path]) -> None:
 
 def test_count_mismatch_is_caught(kit: dict[str, Path]) -> None:
     path = kit["render_dir"] / "manifest.json"
-    manifest = json.loads(path.read_text())
-    path.write_text(json.dumps({**manifest, "total_tracks": 999}))
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    path.write_text(json.dumps({**manifest, "total_tracks": 999}), encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Число треков сходится"]
 
 
 def test_stale_list_in_the_repository_is_caught(kit: dict[str, Path]) -> None:
-    kit["results_csv"].write_text("track_id,start,end,cameras\n1,a,b,c\n")
+    kit["results_csv"].write_text("track_id,start,end,cameras\n1,a,b,c\n", encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Число треков сходится"]
 
 
 def test_gap_between_chunks_is_caught(kit: dict[str, Path]) -> None:
     path = kit["render_dir"] / "manifest.json"
-    manifest = json.loads(path.read_text())
+    manifest = json.loads(path.read_text(encoding="utf-8"))
     manifest["chunks"][1]["t_start_s"] = 65.0
-    path.write_text(json.dumps(manifest))
+    path.write_text(json.dumps(manifest), encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Запись покрыта без разрывов"]
 
 
 def test_old_render_after_a_new_linking_is_caught(kit: dict[str, Path]) -> None:
-    (kit["tracks_dir"] / "robustness.csv").write_text("name\nновое\n")
+    (kit["tracks_dir"] / "robustness.csv").write_text("name\nновое\n", encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Ничего не устарело"]
 
 
@@ -99,21 +99,21 @@ def test_fresh_clone_with_shuffled_file_times_is_not_stale(kit: dict[str, Path])
 
 def test_hint_to_a_track_that_has_not_ended_is_caught(kit: dict[str, Path]) -> None:
     path = kit["tracks_dir"] / "tracks.json"
-    doc = json.loads(path.read_text())
+    doc = json.loads(path.read_text(encoding="utf-8"))
     first, second = doc["tracks"][0], doc["tracks"][1]
     later, earlier = (first, second) if first["t_start_ms"] > second["t_start_ms"] else (second, first)
     earlier["possibly_same_person_as"] = [{"track_id": later["track_id"]}]
-    path.write_text(json.dumps(doc))
-    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])))
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])), encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Подсказки ссылаются на прошлые треки"]
 
 
 def test_known_error_that_moved_is_caught(kit: dict[str, Path]) -> None:
     path = kit["tracks_dir"] / "tracks.json"
-    doc = json.loads(path.read_text())
+    doc = json.loads(path.read_text(encoding="utf-8"))
     doc["tracks"][0]["t_start_ms"], doc["tracks"][0]["t_end_ms"] = 0, 1000
-    path.write_text(json.dumps(doc))
-    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])))
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    (kit["render_dir"] / "built_from.json").write_text(json.dumps(source_stamp(kit["tracks_dir"])), encoding="utf-8")
     assert failed(run_checks(**kit)) == ["Примеры ошибок ещё верны"]
 
 

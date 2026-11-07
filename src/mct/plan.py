@@ -30,7 +30,7 @@ class Plan:
 
     @classmethod
     def load(cls, path: Path = FEATURES) -> "Plan":
-        features = yaml.safe_load(path.read_text())
+        features = yaml.safe_load(path.read_text(encoding="utf-8"))
         scale = features["plan_px_per_m"]
         return cls(
             scale,

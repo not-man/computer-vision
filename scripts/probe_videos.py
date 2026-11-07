@@ -50,7 +50,7 @@ def main() -> None:
                 cv2.imwrite(str(args.out / f"{path.stem}_{name}.jpg"), frame)
         cap.release()
         report[path.stem] = info
-    (args.out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
+    (args.out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
 

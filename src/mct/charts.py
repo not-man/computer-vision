@@ -84,7 +84,7 @@ def timeline_figure(tracks: list[dict], selected: int | None = None, height: int
 
 def plan_figure(track: dict, plan_image: Path, configs: Path = Path("configs")) -> go.Figure:
     """Путь одного трека на плане: сплошная там, где человека видели, пунктир там, где нет."""
-    features = yaml.safe_load((configs / "plan_features.yaml").read_text())
+    features = yaml.safe_load((configs / "plan_features.yaml").read_text(encoding="utf-8"))
     scale, placement = features["plan_px_per_m"], features["plan_image"]
     path = pd.DataFrame(track["plan_path"], columns=["x", "y", "t_ms"])
     figure = go.Figure()

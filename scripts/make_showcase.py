@@ -13,8 +13,8 @@ def main() -> None:
     parser.add_argument("--render", type=Path, default=Path("render/full"))
     args = parser.parse_args()
 
-    tracks = json.loads(args.tracks.read_text())["tracks"]
-    manifest = json.loads((args.render / "manifest.json").read_text())
+    tracks = json.loads(args.tracks.read_text(encoding="utf-8"))["tracks"]
+    manifest = json.loads((args.render / "manifest.json").read_text(encoding="utf-8"))
     moments = pick_moments(tracks)
     for moment in moments:
         spans = ", ".join(f"{clock_text(start)[:8]}–{clock_text(end)[:8]}" for start, end in moment.spans)

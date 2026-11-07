@@ -25,7 +25,7 @@ def main() -> None:
     parser.add_argument("--detect-scale", type=int, default=1, help="во сколько раз крупнее рабочего кадра кадр для детектора")
     args = parser.parse_args()
 
-    clocks = yaml.safe_load((CONFIGS / "clocks.yaml").read_text())
+    clocks = yaml.safe_load((CONFIGS / "clocks.yaml").read_text(encoding="utf-8"))
 
     embedder = create_embedder(args.device, args.reid_model)
     print(f"ReID: {embedder.name}", flush=True)

@@ -8,7 +8,7 @@ import streamlit as st
 
 from mct.charts import TIMELINE_HEIGHT, camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, robustness_tiles, rule_rows, segment_rows, track_rows,
+    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows,
 )
 from mct.video import clock_text
 
@@ -33,10 +33,10 @@ st.set_page_config(layout="wide", page_title="Сквозной трекинг", 
 
 @st.cache_data
 def load() -> tuple[dict, dict, dict, pd.DataFrame | None]:
-    tracks = json.loads((TRACKS / "tracks.json").read_text())
-    manifest = json.loads((RENDER / "manifest.json").read_text())
+    tracks = json.loads((TRACKS / "tracks.json").read_text(encoding="utf-8"))
+    manifest = json.loads((RENDER / "manifest.json").read_text(encoding="utf-8"))
     crops_path = TRACKS / "crops" / "index.json"
-    crops = json.loads(crops_path.read_text()) if crops_path.exists() else {}
+    crops = json.loads(crops_path.read_text(encoding="utf-8")) if crops_path.exists() else {}
     robustness = TRACKS / "robustness.csv"
     return tracks, manifest, crops, pd.read_csv(robustness) if robustness.exists() else None
 
@@ -154,6 +154,8 @@ def screen_returns() -> None:
 
 def screen_honesty() -> None:
     st.write(HONESTY_NOTE)
+    for column, (label, value) in zip(st.columns(3), quality_tiles(TRACKS_DATA)):
+        column.metric(label, value)
     if ROBUSTNESS is None:
         st.info("Проверка ещё не запускалась: scripts/check_robustness.py")
         return

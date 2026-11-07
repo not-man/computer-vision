@@ -32,12 +32,12 @@ def main() -> None:
     out = args.out or args.tracks / "check"
     out.mkdir(parents=True, exist_ok=True)
 
-    result = json.loads((args.tracks / "tracks.json").read_text())
+    result = json.loads((args.tracks / "tracks.json").read_text(encoding="utf-8"))
     track_of = {tracklet: track["track_id"] for track in result["tracks"] for tracklet in track["tracklets"]}
     colors = assign_colors(result["tracks"])
     assigned = pd.read_parquet(args.tracks / "observations.parquet")
     assigned["track"] = assigned.tracklet.map(track_of)
-    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text())
+    clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))
     times = np.arange(args.clock_start, args.clock_end + 1e-9, args.step)
     plan_image = cv2.imread(str(args.plan))
     scale = Plan.load().px_per_m

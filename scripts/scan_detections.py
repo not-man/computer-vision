@@ -25,7 +25,7 @@ def main() -> None:
     camera = args.video.stem
     crops_dir = args.out / camera
     crops_dir.mkdir(parents=True, exist_ok=True)
-    clock = yaml.safe_load(Path("configs/clocks.yaml").read_text())[camera]
+    clock = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))[camera]
     model = YOLO(args.model)
 
     rows = []

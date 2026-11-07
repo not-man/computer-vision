@@ -56,7 +56,7 @@ def main() -> None:
     parser.add_argument("--max-obs", type=int, default=20000)
     args = parser.parse_args()
 
-    scale = yaml.safe_load(args.features.read_text())["plan_px_per_m"]
+    scale = yaml.safe_load(args.features.read_text(encoding="utf-8"))["plan_px_per_m"]
     cameras = load_cameras()
     located = {}
     for name, camera in cameras.items():

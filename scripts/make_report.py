@@ -22,12 +22,12 @@ def main() -> None:
     if not plan_image.exists():
         shutil.copy(args.plan, plan_image)
     build_report(
-        json.loads((args.tracks / "tracks.json").read_text()),
-        json.loads((args.render / "manifest.json").read_text()),
+        json.loads((args.tracks / "tracks.json").read_text(encoding="utf-8")),
+        json.loads((args.render / "manifest.json").read_text(encoding="utf-8")),
         pd.read_csv(args.tracks / "robustness.csv"),
         args.tracks, plan_image, args.configs, args.render / "report.html",
     )
-    (args.render / "built_from.json").write_text(json.dumps(source_stamp(args.tracks), indent=1))
+    (args.render / "built_from.json").write_text(json.dumps(source_stamp(args.tracks), indent=1), encoding="utf-8")
     print(f"Отчёт: {(args.render / 'report.html').stat().st_size / 1e6:.1f} МБ")
 
 

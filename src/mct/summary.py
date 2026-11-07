@@ -9,7 +9,8 @@ from mct.video import clock_text
 
 LINK_TIERS = {"sustained": "перекрытие", "brief": "короткий контакт", "gap": "разрыв", "return": "возврат до минуты"}
 SEGMENT_JOIN_S = 1.0  # соседние куски одной камеры с таким разрывом показываются одной строкой
-HONESTY_NOTE = ("Эталонной разметки нет, поэтому качество проверено глазами по снимкам, а не измерено. "
+HONESTY_NOTE = ("Полной эталонной разметки нет. Качество измерено на толпе в 22 секунды, размеченной вручную по одежде, и на парах треков "
+                "из просмотра всей записи глазами. Эти примеры использовались при настройке правил, поэтому оценка скорее оптимистичная. "
                 "Совпадение ниже показывает стабильность результата, а не его правильность.")
 
 
@@ -99,6 +100,16 @@ def rule_rows(robustness: pd.DataFrame) -> list[dict]:
     removed = robustness[robustness.group == "откл"].sort_values("agreement")
     return [{"Правило": row.name, "Треков": int(row.tracks), "Спорных связей": int(row.yellow), "Совпадение": round(float(row.agreement), 3)}
             for row in removed.itertuples()]
+
+
+def quality_tiles(tracks_doc: dict) -> list[tuple[str, str]]:
+    """Измеренное качество из tracks.json. Если его нет, показывать нечего."""
+    quality = tracks_doc.get("quality")
+    if not quality:
+        return []
+    return [("Толпа: соответствие человек-трек", f"{quality['crowd']['match']:.2f}"),
+            ("Толпа: людей и треков", f"{quality['crowd']['people']} и {quality['crowd']['tracks']}"),
+            ("Пары, проверенные глазами: верно", f"{quality['pairs']['right']} из {quality['pairs']['total']}")]
 
 
 def robustness_tiles(robustness: pd.DataFrame) -> list[tuple[str, str]]:

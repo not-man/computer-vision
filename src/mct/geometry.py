@@ -185,7 +185,7 @@ def straightness(points: np.ndarray) -> tuple[float, float]:
 
 
 def load_cameras(path: Path = CONFIG) -> dict[str, Camera]:
-    config = yaml.safe_load(path.read_text())["cameras"]
+    config = yaml.safe_load(path.read_text(encoding="utf-8"))["cameras"]
     cameras = {}
     for name, values in config.items():
         cameras[name] = Camera(lens=Lens(**values["lens"]), **{k: v for k, v in values.items() if k != "lens"})

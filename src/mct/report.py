@@ -10,7 +10,7 @@ from plotly.offline import get_plotlyjs
 
 from mct.charts import camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, robustness_tiles, rule_rows, segment_rows, track_rows,
+    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows,
 )
 from mct.video import clock_text
 
@@ -224,7 +224,7 @@ def _crops(tracks_dir: Path) -> dict[str, dict]:
     if not index_path.exists():
         return {}
     crops = {}
-    for tracklet, item in json.loads(index_path.read_text()).items():
+    for tracklet, item in json.loads(index_path.read_text(encoding="utf-8")).items():
         image = cv2.imread(str(tracks_dir / "crops" / item["file"]))
         if image is None:
             continue
@@ -279,10 +279,10 @@ def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tra
         "plan_uri": _data_uri(plan_image.read_bytes()),
         "hints_uri": _data_uri(hints.read_bytes()) if hints.exists() else "",
         "honesty_note": HONESTY_NOTE,
-        "honesty_tiles": robustness_tiles(robustness),
+        "honesty_tiles": quality_tiles(tracks_doc) + robustness_tiles(robustness),
         "curves": [_figure(figure) for figure in robustness_curves(robustness)],
         "rules": rule_rows(robustness),
         "errors": [(error.title, error.text) for error in KNOWN_ERRORS],
     }
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
-    out.write_text(PAGE.replace("/*PLOTLY*/", get_plotlyjs().replace("</script", "<\\/script")).replace("/*DATA*/", payload))
+    out.write_text(PAGE.replace("/*PLOTLY*/", get_plotlyjs().replace("</script", "<\\/script")).replace("/*DATA*/", payload), encoding="utf-8")

@@ -49,7 +49,7 @@ def process_camera(
     detect_scale: детектор получает кадр во столько раз крупнее PROCESS_SIZE, рамки и маски всё равно пишутся в PROCESS_SIZE.
     """
     camera = video.stem
-    clock = yaml.safe_load((CONFIGS / "clocks.yaml").read_text())[camera]
+    clock = yaml.safe_load((CONFIGS / "clocks.yaml").read_text(encoding="utf-8"))[camera]
     out_dir.mkdir(parents=True, exist_ok=True)
 
     model = YOLO(model_name)  # новая модель на камеру, чтобы состояние трекера не переходило между ними
@@ -109,5 +109,5 @@ def process_camera(
         "raw_tracks": int(frame_table["raw_track"].nunique()) if rows else 0,
         "seconds": round(time.perf_counter() - started, 1),
     }
-    (out_dir / f"{camera}_summary.json").write_text(json.dumps(summary, indent=2))
+    (out_dir / f"{camera}_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     return summary

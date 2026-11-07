@@ -100,7 +100,7 @@ def source_stamp(tracks_dir: Path) -> dict[str, str]:
 
 
 def _stale_problems(tracks_dir: Path, stamp: Path) -> list[str]:
-    built_from = json.loads(stamp.read_text())
+    built_from = json.loads(stamp.read_text(encoding="utf-8"))
     return [f"{name} изменился после сборки: запустите make all" for name, value in source_stamp(tracks_dir).items() if built_from.get(name) != value]
 
 
@@ -116,10 +116,10 @@ def run_checks(tracks_dir: Path, render_dir: Path, results_csv: Path) -> dict[st
     if missing:
         return {"Файлы на месте": missing}
 
-    tracks_doc = json.loads(tracks_json.read_text())
-    manifest = json.loads(manifest_path.read_text())
+    tracks_doc = json.loads(tracks_json.read_text(encoding="utf-8"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     tracks = tracks_doc["tracks"]
-    crops = json.loads(crops_index.read_text())
+    crops = json.loads(crops_index.read_text(encoding="utf-8"))
     videos = [problem for chunk in manifest["chunks"] for problem in video_problems(render_dir / chunk["file"], MAX_CHUNK_MB)]
     videos += video_problems(showcase, MAX_SHOWCASE_MB)
     length = video_seconds(showcase)

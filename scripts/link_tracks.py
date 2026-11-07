@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from mct.fragment_truth import DIFFERENT_PEOPLE, SAME_PERSON, check_pairs, score
 from mct.geometry import load_cameras
 from mct.plan import Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception
@@ -37,6 +38,19 @@ def plan_path(track_tracklets: list[Tracklet], start: float, end: float) -> list
             mean = np.average(positions, axis=0, weights=weights)
             path.append([round(float(mean[0]), 2), round(float(mean[1]), 2), int(round(t * 1000))])
     return path
+
+
+def measured_quality(result: LinkResult, assigned: pd.DataFrame) -> dict:
+    """Что измерено вручную размеченным: толпа 22 с и пары из просмотра всех треков глазами."""
+    owner = {i: track.track_id for track in result.tracks for i in track.tracklets}
+    track_of_row = assigned.tracklet.map(owner)
+    crowd = score(assigned, track_of_row)
+    errors = check_pairs(assigned, track_of_row)
+    total = len(SAME_PERSON) + len(DIFFERENT_PEOPLE)
+    return {
+        "crowd": {"match": crowd["соответствие"], "purity": crowd["чистота"], "people": crowd["людей"], "tracks": crowd["треков"]},
+        "pairs": {"right": total - sum(map(len, errors.values())), "total": total, "errors": errors},
+    }
 
 
 def to_json(result: LinkResult, tracklets: list[Tracklet], config_hash: str, embedder: str) -> dict:
@@ -93,7 +107,7 @@ def main() -> None:
     observations, embeddings = load_perception(args.perception, cameras, plan)
     tracklets, assigned, dropped = build_tracklets(observations, embeddings, filter_config())
 
-    zones_config = yaml.safe_load(Path("configs/zones.yaml").read_text()) or {}
+    zones_config = yaml.safe_load(Path("configs/zones.yaml").read_text(encoding="utf-8")) or {}
     extra = [Zone(**zone) for zone in zones_config.get("zones") or []]
     zones = ZoneMap(plan.door_zones() + extra, strict_blind=bool(zones_config.get("strict_blind", False)))
     config = TrinityConfig()
@@ -104,8 +118,10 @@ def main() -> None:
     for path in CONFIGS:
         digest.update(path.read_bytes())
     summaries = sorted(args.perception.glob("*_summary.json"))
-    embedder = json.loads(summaries[0].read_text()).get("embedder", "") if summaries else ""
-    (args.out / "tracks.json").write_text(json.dumps(to_json(result, tracklets, digest.hexdigest(), embedder), ensure_ascii=False, indent=1))
+    embedder = json.loads(summaries[0].read_text(encoding="utf-8")).get("embedder", "") if summaries else ""
+    document = to_json(result, tracklets, digest.hexdigest(), embedder)
+    document["quality"] = measured_quality(result, assigned)
+    (args.out / "tracks.json").write_text(json.dumps(document, ensure_ascii=False, indent=1), encoding="utf-8")
     pd.DataFrame([
         {"track_id": t.track_id, "start": clock_text(t.t_start), "end": clock_text(t.t_end), "cameras": ", ".join(t.cameras)}
         for t in result.tracks

@@ -39,7 +39,7 @@ def main() -> None:
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    source_fps = yaml.safe_load(Path("configs/clocks.yaml").read_text())[args.video.stem]["fps"]
+    source_fps = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))[args.video.stem]["fps"]
     model = YOLO(args.model)
     ious, frames, with_people, overlays, ids = [], 0, 0, 0, set()
     infer_s = 0.0
