@@ -3,6 +3,7 @@ import json
 import time
 from pathlib import Path
 
+import cv2
 import numpy as np
 import pandas as pd
 import yaml
@@ -41,8 +42,12 @@ def process_camera(
     embed_every_s: float = 1.0,
     start_s: float = 0.0,
     duration_s: float | None = None,
+    detect_scale: int = 1,
 ) -> dict:
-    """Пишет <камера>.parquet и <камера>_emb.npz; файл summary появляется последним и означает готовность."""
+    """Пишет <камера>.parquet и <камера>_emb.npz; файл summary появляется последним и означает готовность.
+
+    detect_scale: детектор получает кадр во столько раз крупнее PROCESS_SIZE, рамки и маски всё равно пишутся в PROCESS_SIZE.
+    """
     camera = video.stem
     clock = yaml.safe_load((CONFIGS / "clocks.yaml").read_text())[camera]
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -52,22 +57,27 @@ def process_camera(
     last_embedded: dict[int, float] = {}
     started = time.perf_counter()
     frames = 0
-    for index, frame in read_frames(video, PROCESS_SIZE, clock["fps"], fps, start_s, duration_s):
+    detect_size = (PROCESS_SIZE[0] * detect_scale, PROCESS_SIZE[1] * detect_scale)
+    for index, large in read_frames(video, detect_size, clock["fps"], fps, start_s, duration_s):
         t_s = clock["clock_at_frame_0"] + index / clock["fps"]  # общее время всех камер
         frames += 1
         if frames % 1000 == 0:
             print(f"{camera}: {frames} кадров, {time.perf_counter() - started:.0f} с", flush=True)
         result = model.track(
-            frame, imgsz=imgsz, conf=conf, classes=[0], persist=True, tracker=TRACKER,
+            large, imgsz=imgsz, conf=conf, classes=[0], persist=True, tracker=TRACKER,
             retina_masks=True, device=device, verbose=False,
         )[0]
         if result.boxes is None or result.boxes.id is None or result.masks is None:
             continue
 
-        boxes = result.boxes.xyxy.cpu().numpy()
+        boxes = result.boxes.xyxy.cpu().numpy() / detect_scale
         scores = result.boxes.conf.cpu().numpy()
         track_ids = result.boxes.id.int().cpu().numpy()
         masks = result.masks.data.cpu().numpy() > 0.5
+        frame = large
+        if detect_scale > 1:
+            frame = cv2.resize(large, PROCESS_SIZE, interpolation=cv2.INTER_AREA)
+            masks = [cv2.resize(mask.astype(np.uint8), PROCESS_SIZE, interpolation=cv2.INTER_NEAREST) > 0 for mask in masks]
 
         to_embed = []
         for box, score, track_id, mask in zip(boxes, scores, track_ids, masks):
@@ -94,7 +104,7 @@ def process_camera(
         vectors=np.vstack(emb_vectors) if emb_vectors else np.empty((0, 0), np.float32),
     )
     summary = {
-        "camera": camera, "model": model_name, "imgsz": imgsz, "fps": fps, "conf": conf,
+        "camera": camera, "model": model_name, "imgsz": imgsz, "detect_scale": detect_scale, "fps": fps, "conf": conf,
         "embedder": embedder.name, "frames": frames, "observations": len(rows),
         "raw_tracks": int(frame_table["raw_track"].nunique()) if rows else 0,
         "seconds": round(time.perf_counter() - started, 1),

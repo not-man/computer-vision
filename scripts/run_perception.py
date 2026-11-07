@@ -3,8 +3,10 @@ import argparse
 import json
 from pathlib import Path
 
+import yaml
+
 from mct.embedder import create_embedder
-from mct.perception import process_camera
+from mct.perception import CONFIGS, process_camera
 
 
 def main() -> None:
@@ -19,7 +21,11 @@ def main() -> None:
     parser.add_argument("--reid-model", default="osnet_ain_x1_0_msmt17")
     parser.add_argument("--start", type=float, default=0.0)
     parser.add_argument("--duration", type=float, default=None)
+    parser.add_argument("--clock-start", type=float, default=None, help="начало окна по общим часам, секунды от 17:00:00; у каждой камеры свой первый кадр")
+    parser.add_argument("--detect-scale", type=int, default=1, help="во сколько раз крупнее рабочего кадра кадр для детектора")
     args = parser.parse_args()
+
+    clocks = yaml.safe_load((CONFIGS / "clocks.yaml").read_text())
 
     embedder = create_embedder(args.device, args.reid_model)
     print(f"ReID: {embedder.name}", flush=True)
@@ -27,9 +33,10 @@ def main() -> None:
         if (args.out / f"{video.stem}_summary.json").exists():
             print(f"{video.stem}: уже готово", flush=True)
             continue
+        start = args.start if args.clock_start is None else args.clock_start - clocks[video.stem]["clock_at_frame_0"]
         summary = process_camera(
             video, args.out, embedder, args.model, args.device,
-            args.fps, args.imgsz, args.conf, start_s=args.start, duration_s=args.duration,
+            args.fps, args.imgsz, args.conf, start_s=start, duration_s=args.duration, detect_scale=args.detect_scale,
         )
         print(json.dumps(summary, ensure_ascii=False), flush=True)
 

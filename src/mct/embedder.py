@@ -18,6 +18,15 @@ def _normalize(vectors: np.ndarray) -> np.ndarray:
     return vectors / np.maximum(norms, 1e-12)
 
 
+def without_background(crop_bgr: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Вырезка, где всё вне маски человека закрашено средним цветом ImageNet: после нормировки входа это почти ноль."""
+    kept = cv2.dilate(mask.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))) > 0
+    painted = np.empty_like(crop_bgr)
+    painted[:] = (104, 116, 124)
+    painted[kept] = crop_bgr[kept]
+    return painted
+
+
 def _crops(frame_bgr: np.ndarray, boxes_xyxy: np.ndarray) -> list[np.ndarray]:
     height, width = frame_bgr.shape[:2]
     crops = []
@@ -51,6 +60,23 @@ class BoxmotEmbedder:
             sample_id="frame",
         )
         return _normalize(self._encoder.encode([frame], [detections])[0].numpy())
+
+    def embed_crops(self, crops_bgr: list[np.ndarray]) -> np.ndarray:
+        """Векторы готовых вырезок: у каждой свой фон, поэтому одним кадром их не передать."""
+        import torch
+        from boxmot.structures import Boxes, Detections, Frame
+
+        frames, detections = [], []
+        for number, crop in enumerate(crops_bgr):
+            height, width = crop.shape[:2]
+            frames.append(Frame(image=torch.from_numpy(crop[:, :, ::-1].copy()).permute(2, 0, 1).contiguous(), sample_id=str(number)))
+            detections.append(Detections(
+                geometry=Boxes(torch.tensor([[0.0, 0.0, float(width), float(height)]], dtype=torch.float32)),
+                scores=torch.ones(1, dtype=torch.float32),
+                class_ids=torch.zeros(1, dtype=torch.int64),
+                sample_id=str(number),
+            ))
+        return _normalize(np.vstack([part.numpy() for part in self._encoder.encode(frames, detections)]))
 
 
 class UltralyticsEmbedder:
