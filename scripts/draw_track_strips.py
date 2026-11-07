@@ -21,9 +21,12 @@ def main() -> None:
     parser.add_argument("--tracks", type=Path, default=Path("artifacts/tracks"))
     parser.add_argument("--videos", type=Path, default=Path("data"))
     parser.add_argument("--out", type=Path, default=Path("artifacts/test-results/audit/source_res"))
+    parser.add_argument("--only", type=int, nargs="+", default=None, help="только эти треки: например, изменившиеся после правки")
     args = parser.parse_args()
 
     tracks = json.loads((args.tracks / "tracks.json").read_text(encoding="utf-8"))["tracks"]
+    if args.only:
+        tracks = [track for track in tracks if track["track_id"] in args.only]
     table = pd.read_parquet(args.tracks / "observations.parquet", columns=["tracklet", "camera", "frame", "t_s", "x1", "y1", "x2", "y2"])
     chosen, wanted = {}, {}
     for track in tracks:

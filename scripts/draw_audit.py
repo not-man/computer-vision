@@ -29,11 +29,13 @@ MOMENTS_S = (-0.5, 1.0, 3.0)
 TRACKS_PER_SHEET = 12
 
 
-def sample(items: list, count: int, rng: random.Random) -> list:
-    return sorted(rng.sample(items, count), key=lambda item: item["t_s"]) if len(items) > count else sorted(items, key=lambda item: item["t_s"])
+def sample(items: list, count: int, rng: random.Random, everything: bool = False) -> list:
+    if everything or len(items) <= count:
+        return sorted(items, key=lambda item: item["t_s"])
+    return sorted(rng.sample(items, count), key=lambda item: item["t_s"])
 
 
-def transitions_table(tracks: list[dict]) -> pd.DataFrame:
+def transitions_table(tracks: list[dict], everything: bool = False) -> pd.DataFrame:
     rng = random.Random(SEED)
     by_tier: dict[str, list[dict]] = {tier: [] for tier in TRANSITIONS}
     for track in tracks:
@@ -43,7 +45,7 @@ def transitions_table(tracks: list[dict]) -> pd.DataFrame:
                     "track": track["track_id"], "tier": link["tier"], "a": link["a"], "b": link["b"], "camera_a": link["camera_a"][-1], "camera_b": link["camera_b"][-1],
                     "t_s": link["t_ms"] / 1000, "time": clock_text(link["t_ms"] / 1000)[:8], "g_m": link["g_m"], "contact_s": link["contact_s"], "r": link["r"], "confidence": link["confidence"],
                 })
-    rows = [row for tier, count in TRANSITIONS.items() for row in sample(by_tier[tier], count, rng)]
+    rows = [row for tier, count in TRANSITIONS.items() for row in sample(by_tier[tier], count, rng, everything)]
     print({tier: len(items) for tier, items in by_tier.items()})
     return pd.DataFrame(rows).assign(verdict="", note="")
 
@@ -78,7 +80,7 @@ def draw_transitions(table: pd.DataFrame, crops_dir: Path, out: Path) -> None:
         print(name.name, sheet.shape)
 
 
-def closures_table(tracks: list[dict], observations: pd.DataFrame, owner: dict[int, int]) -> pd.DataFrame:
+def closures_table(tracks: list[dict], observations: pd.DataFrame, owner: dict[int, int], everything: bool = False) -> pd.DataFrame:
     rng = random.Random(SEED)
     by_zone: dict[str, list[dict]] = {}
     last_rows = observations[observations.source != "unreliable"].assign(track=lambda t: t.tracklet.map(owner)).dropna(subset=["track"]).sort_values("t_s").groupby("track").tail(1)
@@ -90,7 +92,7 @@ def closures_table(tracks: list[dict], observations: pd.DataFrame, owner: dict[i
             "x1": row.x1, "y1": row.y1, "x2": row.x2, "y2": row.y2,
         })
     print({zone: len(items) for zone, items in by_zone.items()})
-    rows = [row for zone, items in sorted(by_zone.items()) if zone in CLOSURES for row in sample(items, CLOSURES[zone], rng)]
+    rows = [row for zone, items in sorted(by_zone.items()) if zone in CLOSURES for row in sample(items, CLOSURES[zone], rng, everything)]
     return pd.DataFrame(rows).assign(verdict="", note="")
 
 
@@ -137,17 +139,18 @@ def main() -> None:
     parser.add_argument("--tracks", type=Path, default=Path("artifacts/tracks"))
     parser.add_argument("--videos", type=Path, default=Path("data"))
     parser.add_argument("--out", type=Path, default=Path("artifacts/test-results/audit"))
+    parser.add_argument("--all", action="store_true", help="не выборку, а все связи или закрытия")
     args = parser.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
     tracks = json.loads((args.tracks / "tracks.json").read_text(encoding="utf-8"))["tracks"]
     if args.what == "transitions":
-        table = transitions_table(tracks)
+        table = transitions_table(tracks, args.all)
         table.to_csv(args.out / "transitions_blank.csv", index=False)
         draw_transitions(table, args.tracks / "crops", args.out)
     else:
         owner = {tracklet: track["track_id"] for track in tracks for tracklet in track["tracklets"]}
-        table = closures_table(tracks, pd.read_parquet(args.tracks / "observations.parquet"), owner)
+        table = closures_table(tracks, pd.read_parquet(args.tracks / "observations.parquet"), owner, args.all)
         table.to_csv(args.out / "closures_blank.csv", index=False)
         draw_closures(table, args.videos, yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8")), args.out)
 
