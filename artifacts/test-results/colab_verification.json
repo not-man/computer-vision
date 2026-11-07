@@ -1,0 +1,28 @@
+{
+  "base_commit": "8afe7d0d4c465dc51ac795c4e418bc598bef1a93",
+  "source_archive": "demo_ready_64.zip",
+  "total_tracks": 64,
+  "archive_integrity": "passed",
+  "stage_hashes": "passed",
+  "tracks_csv": "matches_current_project_lf",
+  "colab_stages_seconds": {
+    "mosaic": 2002.72,
+    "showcase": 29.69,
+    "report": 11.91,
+    "check": 1.89
+  },
+  "local_demo_check": "10 passed",
+  "ui_tests": {
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "4.904"
+  },
+  "browser_video": {
+    "duration_s": 62.7,
+    "readyState": 4,
+    "error": null
+  },
+  "heavy_local_rerender": false
+}

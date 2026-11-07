@@ -1,0 +1,52 @@
+{
+  "fingerprint": "27a154313f244bc6c27815faf25b41f2c0702adacf004f40af3fac6a6d85ea3a",
+  "stages": {
+    "mosaic": {
+      "seconds": 2002.72,
+      "files": {
+        "manifest.json": "a284c6ecea72786a7654a8d554ff9c557c94cac03564f76f23e71ccad66af3f7",
+        "chunks/000.mp4": "c767d082aafa9f569c84407a7fdc0d02cd0a9a6b78d8dc7e7d08f792ea1bd2be",
+        "chunks/001.mp4": "a9e038d1bfe8b973c10b411fb74541fd1daf549ccd3d268869001c681f35d1ac",
+        "chunks/002.mp4": "8234fc9692e705a97b715a05b89a8c1c1312234889e3e0f2f2ce1abc3663ba2c",
+        "chunks/003.mp4": "ff67a46d997cbdeec7dfd25ec53751d3296c7f227783bb1b4c4cdb8faf5eaec1",
+        "chunks/004.mp4": "493eaffc5a8781ad3d37de609d92aa254dc58498a32e04745b80fb4559abf9ee",
+        "chunks/005.mp4": "772be950d8bf7a67e12b0f3de4b9299e06d1b771a46e91a03a98507ff593c251",
+        "chunks/006.mp4": "4a87ddbaadd2632bc218e5d8f40a0c0ba2dcbab76ab723e8fed96e505c13e0dc",
+        "chunks/007.mp4": "c2535bb7028a05d9c7cf6af763b5a2848398849fa49eca93421cea66f4770c50",
+        "chunks/008.mp4": "ddfbcb02634ab98ff78c6eeaf36ffdaf0b3d7033d4f3ef19e1d5c7edeea3dc03",
+        "chunks/009.mp4": "205005b8505ecba769e06a473b6f90f90591b7ce97c57a12b69879246b6dcbee",
+        "chunks/010.mp4": "cc8960cb3aeb5ab45eab384c03fccba68c14847105618771d592b59c2287fea6",
+        "chunks/011.mp4": "16374bad530229eae6beb04fc14d85ffd58caaa04109f1ca1f78b6b0520345b9",
+        "chunks/012.mp4": "951d2ac478e21af9f8f671cc91d0f7a09fc626c9f87dcb79dc883863d6711bc5",
+        "chunks/013.mp4": "e02af196de4645d63b53e6984979bd08d2f27da083de5d99e07d849dcfc7c081",
+        "chunks/014.mp4": "7d9a9f599403224489f7c7be715957baabec43f2eb48386b85d7a202e664b26e",
+        "chunks/015.mp4": "b3fdbbcf5df3d6b0736cd3c44911abe16f3f3fd50cdcf0a6581687adf7a6637f",
+        "chunks/016.mp4": "ab2ce8a9ad73cc61cb719952f8033fc7afc8dd5becdcdb641ca12094729b0ee7",
+        "chunks/017.mp4": "4a322c092957b962aeee4d59f6b4c5fffb6421883b29f7ebe8d7e7bfd2c7ac28",
+        "chunks/018.mp4": "7875ced4d5279be82f233f9937e765f205d2a087241eaea0a8bb50e0821399d9",
+        "chunks/019.mp4": "08bd21fb08db74c67fc6a25c9667ad40f75cae71275a3c4531f495a769a67c5b",
+        "chunks/020.mp4": "834b6b270e2964f1687c33c18dc02e8446f762cee609aedefc22805a49f9306c"
+      }
+    },
+    "showcase": {
+      "seconds": 29.69,
+      "files": {
+        "showcase.mp4": "6c9d2296937ef9d662f04049bb25cd8ee8b6f07abd41f804d1a2d6a54880dfe5"
+      }
+    },
+    "report": {
+      "seconds": 11.91,
+      "files": {
+        "report.html": "44ade2818bd3f16fc42ce48efac425e7e01109ceff04108026356217b3d4a022",
+        "plan.jpg": "a1dfd42b263cbec05a00d109e67b8a730602b8b4dbcfca426a04a584e1b068a5",
+        "built_from.json": "aac0d0130bf78ce83da9f80a943316d8c92b3d7e1e0b94c4f7927aba46682195"
+      }
+    },
+    "check": {
+      "seconds": 1.89,
+      "files": {
+        "build_check.log": "8d22b90ac042b0506b1fec21b5e14c2daf2ecfd5da9020be7c654692668c0cb1"
+      }
+    }
+  }
+}
