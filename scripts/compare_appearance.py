@@ -5,6 +5,7 @@
 Чужие: видны одновременно и всё это время далеко друг от друга. Дополнительно: снимки размеченной толпы и вся склейка на этих векторах.
 """
 import argparse
+from dataclasses import replace
 from itertools import combinations
 from pathlib import Path
 
@@ -25,6 +26,7 @@ RIVAL_MARGIN_M = 1.0
 MIN_APART_S = 1.0
 MIN_APART_M = 4.0
 PAUSE_S = 5.0
+SIMILARITY_FIELDS = ("r_veto", "r_gap", "gap_veto", "r_hint", "contact_r", "edge_override_r", "share_override_r", "door_gap_veto", "r_return", "duplicate_r")
 
 
 def unit(values: np.ndarray) -> np.ndarray:
@@ -140,6 +142,20 @@ def stats(pos: list | np.ndarray, neg: list | np.ndarray) -> str:
     return f"{auc:.3f}/{(pos >= np.quantile(neg, 0.97)).mean():.2f}"
 
 
+def cross_camera_similarity(vectors: dict[int, np.ndarray], by_id: dict[int, tr.Tracklet]) -> np.ndarray:
+    ids = sorted(vectors)
+    values = np.stack([vectors[i] for i in ids])
+    cameras = np.array([by_id[i].camera for i in ids])
+    upper = np.triu(np.ones((len(ids), len(ids)), bool), 1) & (cameras[:, None] != cameras[None, :])
+    return (values @ values.T)[upper]
+
+
+def same_share_config(cfg: tr.TrinityConfig, base: np.ndarray, variant: np.ndarray) -> tr.TrinityConfig:
+    """Пороги сходства для другой модели: через порог проходит та же доля всех пар кусков между камерами, что сейчас."""
+    ordered = np.sort(base)
+    return replace(cfg, **{name: float(np.quantile(variant, np.searchsorted(ordered, getattr(cfg, name)) / len(ordered))) for name in SIMILARITY_FIELDS})
+
+
 def load_variant(folder: Path) -> dict[str, tuple[np.ndarray, np.ndarray]]:
     out = {}
     for path in sorted(folder.glob("*_emb*.npz")):
@@ -152,6 +168,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("variants", type=Path, nargs="*", help="папки с векторами")
     parser.add_argument("--perception", type=Path, default=Path("artifacts/perception"))
+    parser.add_argument("--between", type=float, nargs=2, default=None, help="только куски внутри этого отрезка общего времени, без склейки: модель половины записи на другой половине")
+    parser.add_argument("--same-share", action="store_true", help="пороги сходства варианта подобрать по той же доле пар, что у нынешних векторов")
     args = parser.parse_args()
 
     plan = Plan.load()
@@ -165,6 +183,9 @@ def main() -> None:
     sustained = [(link.a, link.b) for track in base.tracks for link in track.links if link.tier == "sustained"]
     later = chain_pairs(base, by_id)
     other_camera = [p for p in apart if by_id[p[0]].camera != by_id[p[1]].camera]
+    if args.between:
+        inside = lambda pair: all(args.between[0] <= by_id[i].start and by_id[i].end <= args.between[1] for i in pair)
+        sure, sustained, later, other_camera = [list(filter(inside, items)) for items in (sure, sustained, later, other_camera)]
     print(f"своих строгих {len(sure)}, по устойчивым связям {len(sustained)}, после паузы {len(later)}, чужих {len(other_camera)}")
     print("Первая цифра AUC, вторая: доля своих при 3% чужих. Толпа: снимки; склейка: треков, толпа, пары из проверки глазами")
 
@@ -172,20 +193,27 @@ def main() -> None:
     if all(len(v) > 2 and v[2] is not None for v in embeddings.values()):
         variants["чаще (как сейчас)"] = {c: v[2] for c, v in embeddings.items()}
     variants.update({folder.name: load_variant(folder) for folder in args.variants})
+    base_similarity = cross_camera_similarity({x.id: x.embedding for x in tracklets if x.embedding is not None}, by_id)
     for name, snapshots in variants.items():
         vectors = piece_vectors(snapshots, assigned)
         pairs = lambda items: [float(vectors[a] @ vectors[b]) for a, b in items if a in vectors and b in vectors]
         negative = pairs(other_camera)
         crowd_same, crowd_other = crowd_similarity(snapshots, assigned)
+        if args.between:
+            print(f"{name:38s} строгие {stats(pairs(sure), negative)}  связи {stats(pairs(sustained), negative)}  после паузы {stats(pairs(later), negative)}", flush=True)
+            continue
         for x in tracklets:
             x.embedding = vectors.get(x.id)
-        result = tr.link_tracklets(tracklets, tr.TrinityConfig(), zones)
+        cfg = tr.TrinityConfig()
+        if args.same_share:
+            cfg = same_share_config(cfg, base_similarity, cross_camera_similarity(vectors, by_id))
+        result = tr.link_tracklets(tracklets, cfg, zones)
         owner = {i: t.track_id for t in result.tracks for i in t.tracklets}
         numbers = score(assigned, assigned.tracklet.map(owner))
         errors = check_pairs(assigned, assigned.tracklet.map(owner))
         verified = len(SAME_PERSON) + len(DIFFERENT_PEOPLE) - sum(map(len, errors.values()))
         print(f"{name:38s} строгие {stats(pairs(sure), negative)}  связи {stats(pairs(sustained), negative)}  после паузы {stats(pairs(later), negative)}  "
-              f"толпа {stats(crowd_same, crowd_other)}  склейка: {len(result.tracks)}, {numbers['соответствие']:.3f}, {verified}/{len(SAME_PERSON) + len(DIFFERENT_PEOPLE)}", flush=True)
+              f"толпа {stats(crowd_same, crowd_other)}  склейка: {len(result.tracks)}, {numbers['соответствие']:.3f}, {numbers['чистота']:.3f}, {verified}/{len(SAME_PERSON) + len(DIFFERENT_PEOPLE)}, возврат от {cfg.r_return:.2f}", flush=True)
 
 
 if __name__ == "__main__":

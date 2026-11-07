@@ -29,7 +29,7 @@
 ## Запуск демо
 
 ```bash
-git clone -b mct-pipeline https://github.com/not-man/computer-vision.git
+git clone --depth 1 -b mct-pipeline https://github.com/not-man/computer-vision.git
 cd computer-vision
 make setup
 make demo

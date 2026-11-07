@@ -1,6 +1,6 @@
 {
- "run_id": "62cb0c",
- "config_hash": "sha256:62cb0c75e14c0c401f5ecbc4166fc254437508ccb1d3cc7561497c480b30f869",
+ "run_id": "687319",
+ "config_hash": "sha256:687319488a2a8910a3854cc070cd5e07d396da964b5518bbfd04a141857d34e5",
  "embedder": "boxmot:osnet_ain_x1_0_msmt17",
  "time_origin": "секунды и миллисекунды от 17:00:00 по часам камер",
  "total_tracks": 61,
@@ -18,7 +18,7 @@
    "close_zone": "DOOR",
    "tracklets": [
     1,
-    24
+    20
    ],
    "segments": [
     {
@@ -37,7 +37,7 @@
    "links": [
     {
      "a": 1,
-     "b": 24,
+     "b": 20,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -132,8 +132,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    55,
-    294
+    51,
+    290
    ],
    "segments": [
     {
@@ -151,8 +151,8 @@
    ],
    "links": [
     {
-     "a": 55,
-     "b": 294,
+     "a": 51,
+     "b": 290,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -303,10 +303,10 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    192,
-    59,
-    297,
-    298
+    188,
+    55,
+    293,
+    294
    ],
    "segments": [
     {
@@ -336,8 +336,8 @@
    ],
    "links": [
     {
-     "a": 192,
-     "b": 59,
+     "a": 188,
+     "b": 55,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -349,8 +349,8 @@
      "confidence": "green"
     },
     {
-     "a": 59,
-     "b": 297,
+     "a": 55,
+     "b": 293,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -362,8 +362,8 @@
      "confidence": "green"
     },
     {
-     "a": 59,
-     "b": 298,
+     "a": 55,
+     "b": 294,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -709,14 +709,14 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    193,
-    196,
-    64,
-    303,
-    65,
-    66,
-    67,
-    304
+    189,
+    192,
+    60,
+    299,
+    61,
+    62,
+    63,
+    300
    ],
    "segments": [
     {
@@ -776,8 +776,8 @@
    ],
    "links": [
     {
-     "a": 193,
-     "b": 196,
+     "a": 189,
+     "b": 192,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -789,8 +789,8 @@
      "confidence": "green"
     },
     {
-     "a": 196,
-     "b": 64,
+     "a": 192,
+     "b": 60,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -802,8 +802,8 @@
      "confidence": "green"
     },
     {
-     "a": 196,
-     "b": 303,
+     "a": 192,
+     "b": 299,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -815,8 +815,8 @@
      "confidence": "green"
     },
     {
-     "a": 303,
-     "b": 65,
+     "a": 299,
+     "b": 61,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -828,8 +828,8 @@
      "confidence": "green"
     },
     {
-     "a": 303,
-     "b": 66,
+     "a": 299,
+     "b": 62,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -841,8 +841,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 303,
-     "b": 67,
+     "a": 299,
+     "b": 63,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -854,8 +854,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 67,
-     "b": 304,
+     "a": 63,
+     "b": 300,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -1860,9 +1860,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    296,
-    58,
-    60
+    292,
+    54,
+    56
    ],
    "segments": [
     {
@@ -1886,8 +1886,8 @@
    ],
    "links": [
     {
-     "a": 296,
-     "b": 58,
+     "a": 292,
+     "b": 54,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -1899,8 +1899,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 296,
-     "b": 60,
+     "a": 292,
+     "b": 56,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -2076,9 +2076,9 @@
    ],
    "close_zone": "OPEN",
    "tracklets": [
-    300,
-    61,
-    25
+    296,
+    57,
+    21
    ],
    "segments": [
     {
@@ -2102,8 +2102,8 @@
    ],
    "links": [
     {
-     "a": 300,
-     "b": 61,
+     "a": 296,
+     "b": 57,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "gap",
@@ -2115,8 +2115,8 @@
      "confidence": "green"
     },
     {
-     "a": 61,
-     "b": 25,
+     "a": 57,
+     "b": 21,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "brief",
@@ -2193,11 +2193,11 @@
    ],
    "close_zone": "OPEN",
    "tracklets": [
-    301,
-    62,
-    197,
-    26,
-    76
+    297,
+    58,
+    193,
+    22,
+    72
    ],
    "segments": [
     {
@@ -2233,8 +2233,8 @@
    ],
    "links": [
     {
-     "a": 301,
-     "b": 62,
+     "a": 297,
+     "b": 58,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -2246,8 +2246,8 @@
      "confidence": "green"
     },
     {
-     "a": 301,
-     "b": 197,
+     "a": 297,
+     "b": 193,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -2259,8 +2259,8 @@
      "confidence": "green"
     },
     {
-     "a": 62,
-     "b": 26,
+     "a": 58,
+     "b": 22,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -2272,8 +2272,8 @@
      "confidence": "green"
     },
     {
-     "a": 26,
-     "b": 76,
+     "a": 22,
+     "b": 72,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -3264,9 +3264,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    195,
-    63,
-    302
+    191,
+    59,
+    298
    ],
    "segments": [
     {
@@ -3290,8 +3290,8 @@
    ],
    "links": [
     {
-     "a": 195,
-     "b": 63,
+     "a": 191,
+     "b": 59,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -3303,8 +3303,8 @@
      "confidence": "green"
     },
     {
-     "a": 63,
-     "b": 302,
+     "a": 59,
+     "b": 298,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -3487,26 +3487,26 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
+    301,
+    65,
     305,
-    69,
-    309,
+    307,
+    194,
     311,
     198,
-    315,
-    202,
-    81,
-    317,
+    77,
+    313,
+    28,
+    5,
+    79,
+    30,
     32,
-    6,
+    7,
     83,
     34,
-    36,
-    8,
+    321,
     87,
-    38,
-    325,
-    91,
-    207
+    203
    ],
    "segments": [
     {
@@ -3644,8 +3644,8 @@
    ],
    "links": [
     {
-     "a": 305,
-     "b": 69,
+     "a": 301,
+     "b": 65,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -3657,8 +3657,8 @@
      "confidence": "green"
     },
     {
-     "a": 69,
-     "b": 309,
+     "a": 65,
+     "b": 305,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -3670,8 +3670,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 69,
-     "b": 311,
+     "a": 65,
+     "b": 307,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -3683,8 +3683,8 @@
      "confidence": "green"
     },
     {
-     "a": 69,
-     "b": 198,
+     "a": 65,
+     "b": 194,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -3696,8 +3696,8 @@
      "confidence": "green"
     },
     {
-     "a": 198,
-     "b": 315,
+     "a": 194,
+     "b": 311,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -3709,8 +3709,8 @@
      "confidence": "green"
     },
     {
-     "a": 198,
-     "b": 202,
+     "a": 194,
+     "b": 198,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -3722,8 +3722,8 @@
      "confidence": "green"
     },
     {
-     "a": 202,
-     "b": 81,
+     "a": 198,
+     "b": 77,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -3735,8 +3735,8 @@
      "confidence": "green"
     },
     {
-     "a": 81,
-     "b": 317,
+     "a": 77,
+     "b": 313,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -3748,8 +3748,8 @@
      "confidence": "green"
     },
     {
-     "a": 81,
-     "b": 32,
+     "a": 77,
+     "b": 28,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -3761,8 +3761,8 @@
      "confidence": "green"
     },
     {
-     "a": 32,
-     "b": 6,
+     "a": 28,
+     "b": 5,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -3774,8 +3774,8 @@
      "confidence": "green"
     },
     {
-     "a": 6,
-     "b": 83,
+     "a": 5,
+     "b": 79,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -3787,8 +3787,8 @@
      "confidence": "green"
     },
     {
-     "a": 32,
-     "b": 34,
+     "a": 28,
+     "b": 30,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_2",
      "tier": "return",
@@ -3800,8 +3800,8 @@
      "confidence": "green"
     },
     {
-     "a": 34,
-     "b": 36,
+     "a": 30,
+     "b": 32,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_2",
      "tier": "gap",
@@ -3813,21 +3813,21 @@
      "confidence": "green"
     },
     {
-     "a": 36,
-     "b": 8,
+     "a": 32,
+     "b": 7,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
      "t_ms": 2540790,
      "g_m": 0.24,
      "contact_s": 2.95,
-     "r": 0.58,
-     "score": 0.688,
+     "r": 0.57,
+     "score": 0.687,
      "confidence": "green"
     },
     {
-     "a": 87,
-     "b": 38,
+     "a": 83,
+     "b": 34,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -3839,21 +3839,21 @@
      "confidence": "green"
     },
     {
-     "a": 8,
-     "b": 38,
+     "a": 7,
+     "b": 34,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_2",
      "tier": "brief",
      "t_ms": 2544667,
      "g_m": 0.36,
      "contact_s": 0.25,
-     "r": 0.41,
-     "score": 0.493,
+     "r": 0.42,
+     "score": 0.495,
      "confidence": "green"
     },
     {
-     "a": 87,
-     "b": 325,
+     "a": 83,
+     "b": 321,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -3865,8 +3865,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 325,
-     "b": 91,
+     "a": 321,
+     "b": 87,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -3878,8 +3878,8 @@
      "confidence": "green"
     },
     {
-     "a": 325,
-     "b": 207,
+     "a": 321,
+     "b": 203,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -4602,32 +4602,32 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    306,
-    70,
-    313,
-    200,
-    28,
-    3,
-    30,
-    31,
-    84,
-    319,
-    205,
+    302,
+    66,
+    309,
+    196,
+    24,
+    2,
+    26,
+    27,
+    80,
+    315,
+    201,
+    323,
     327,
+    328,
     331,
-    332,
-    335,
-    94,
-    212,
-    40,
-    11,
-    99,
-    337,
-    214,
-    221,
-    108,
-    346,
-    352
+    90,
+    208,
+    36,
+    10,
+    95,
+    333,
+    210,
+    217,
+    104,
+    342,
+    348
    ],
    "segments": [
     {
@@ -4819,8 +4819,8 @@
    ],
    "links": [
     {
-     "a": 306,
-     "b": 70,
+     "a": 302,
+     "b": 66,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -4832,8 +4832,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 70,
-     "b": 313,
+     "a": 66,
+     "b": 309,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -4845,8 +4845,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 313,
-     "b": 200,
+     "a": 309,
+     "b": 196,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -4858,8 +4858,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 70,
-     "b": 28,
+     "a": 66,
+     "b": 24,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -4871,8 +4871,8 @@
      "confidence": "green"
     },
     {
-     "a": 28,
-     "b": 3,
+     "a": 24,
+     "b": 2,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -4880,25 +4880,25 @@
      "g_m": 0.42,
      "contact_s": 7.03,
      "r": 0.36,
-     "score": 0.689,
+     "score": 0.69,
      "confidence": "green"
     },
     {
-     "a": 3,
-     "b": 30,
+     "a": 2,
+     "b": 26,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_2",
      "tier": "brief",
      "t_ms": 2504944,
      "g_m": 0.21,
      "contact_s": 0.68,
-     "r": 0.08,
+     "r": 0.09,
      "score": 0.467,
      "confidence": "green"
     },
     {
-     "a": 3,
-     "b": 84,
+     "a": 2,
+     "b": 80,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -4906,12 +4906,12 @@
      "g_m": 0.41,
      "contact_s": 2.33,
      "r": 0.22,
-     "score": 0.495,
+     "score": 0.496,
      "confidence": "green"
     },
     {
-     "a": 31,
-     "b": 84,
+     "a": 27,
+     "b": 80,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -4923,8 +4923,8 @@
      "confidence": "green"
     },
     {
-     "a": 84,
-     "b": 319,
+     "a": 80,
+     "b": 315,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -4936,8 +4936,8 @@
      "confidence": "green"
     },
     {
-     "a": 319,
-     "b": 205,
+     "a": 315,
+     "b": 201,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -4949,8 +4949,8 @@
      "confidence": "green"
     },
     {
-     "a": 319,
-     "b": 327,
+     "a": 315,
+     "b": 323,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -4962,8 +4962,8 @@
      "confidence": "green"
     },
     {
-     "a": 319,
-     "b": 335,
+     "a": 315,
+     "b": 331,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -4975,8 +4975,8 @@
      "confidence": "green"
     },
     {
-     "a": 327,
-     "b": 331,
+     "a": 323,
+     "b": 327,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -4988,8 +4988,8 @@
      "confidence": "green"
     },
     {
-     "a": 331,
-     "b": 332,
+     "a": 327,
+     "b": 328,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -5001,8 +5001,8 @@
      "confidence": "green"
     },
     {
-     "a": 335,
-     "b": 94,
+     "a": 331,
+     "b": 90,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -5014,8 +5014,8 @@
      "confidence": "green"
     },
     {
-     "a": 335,
-     "b": 212,
+     "a": 331,
+     "b": 208,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -5027,8 +5027,8 @@
      "confidence": "green"
     },
     {
-     "a": 94,
-     "b": 40,
+     "a": 90,
+     "b": 36,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -5040,8 +5040,8 @@
      "confidence": "green"
     },
     {
-     "a": 40,
-     "b": 11,
+     "a": 36,
+     "b": 10,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -5049,12 +5049,12 @@
      "g_m": 0.39,
      "contact_s": 12.8,
      "r": 0.42,
-     "score": 0.726,
+     "score": 0.727,
      "confidence": "green"
     },
     {
-     "a": 11,
-     "b": 99,
+     "a": 10,
+     "b": 95,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -5062,12 +5062,12 @@
      "g_m": 0.41,
      "contact_s": 0.53,
      "r": 0.07,
-     "score": 0.397,
+     "score": 0.398,
      "confidence": "green"
     },
     {
-     "a": 99,
-     "b": 214,
+     "a": 95,
+     "b": 210,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -5079,8 +5079,8 @@
      "confidence": "green"
     },
     {
-     "a": 337,
-     "b": 214,
+     "a": 333,
+     "b": 210,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -5092,8 +5092,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 214,
-     "b": 221,
+     "a": 210,
+     "b": 217,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -5105,8 +5105,8 @@
      "confidence": "green"
     },
     {
-     "a": 221,
-     "b": 108,
+     "a": 217,
+     "b": 104,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -5118,8 +5118,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 108,
-     "b": 346,
+     "a": 104,
+     "b": 342,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -5131,8 +5131,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 108,
-     "b": 352,
+     "a": 104,
+     "b": 348,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -6605,20 +6605,20 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    307,
-    308,
-    75,
-    199,
-    316,
-    29,
+    303,
+    304,
+    71,
+    195,
+    312,
+    25,
+    3,
+    76,
     4,
-    80,
-    5,
-    437,
-    85,
-    320,
-    204,
-    321
+    433,
+    81,
+    316,
+    200,
+    317
    ],
    "segments": [
     {
@@ -6714,8 +6714,8 @@
    ],
    "links": [
     {
-     "a": 307,
-     "b": 308,
+     "a": 303,
+     "b": 304,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -6727,8 +6727,8 @@
      "confidence": "green"
     },
     {
-     "a": 308,
-     "b": 75,
+     "a": 304,
+     "b": 71,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -6740,8 +6740,8 @@
      "confidence": "green"
     },
     {
-     "a": 75,
-     "b": 199,
+     "a": 71,
+     "b": 195,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -6753,8 +6753,8 @@
      "confidence": "green"
     },
     {
-     "a": 75,
-     "b": 316,
+     "a": 71,
+     "b": 312,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -6766,8 +6766,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 75,
-     "b": 29,
+     "a": 71,
+     "b": 25,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -6779,8 +6779,8 @@
      "confidence": "green"
     },
     {
-     "a": 29,
-     "b": 4,
+     "a": 25,
+     "b": 3,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -6792,8 +6792,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 4,
-     "b": 80,
+     "a": 3,
+     "b": 76,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -6805,8 +6805,8 @@
      "confidence": "green"
     },
     {
-     "a": 29,
-     "b": 5,
+     "a": 25,
+     "b": 4,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -6818,8 +6818,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 5,
-     "b": 85,
+     "a": 4,
+     "b": 81,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -6827,12 +6827,12 @@
      "g_m": 0.34,
      "contact_s": 1.73,
      "r": 0.24,
-     "score": 0.492,
+     "score": 0.493,
      "confidence": "green"
     },
     {
-     "a": 437,
-     "b": 85,
+     "a": 433,
+     "b": 81,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -6844,8 +6844,8 @@
      "confidence": "green"
     },
     {
-     "a": 85,
-     "b": 320,
+     "a": 81,
+     "b": 316,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -6857,8 +6857,8 @@
      "confidence": "green"
     },
     {
-     "a": 320,
-     "b": 204,
+     "a": 316,
+     "b": 200,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -6870,8 +6870,8 @@
      "confidence": "green"
     },
     {
-     "a": 320,
-     "b": 321,
+     "a": 316,
+     "b": 317,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -7589,20 +7589,20 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    310,
-    72,
-    201,
-    77,
-    203,
-    82,
-    318,
-    33,
-    7,
-    35,
-    9,
-    88,
-    330,
-    208
+    306,
+    68,
+    197,
+    73,
+    199,
+    78,
+    314,
+    29,
+    6,
+    31,
+    8,
+    84,
+    326,
+    204
    ],
    "segments": [
     {
@@ -7704,8 +7704,8 @@
    ],
    "links": [
     {
-     "a": 310,
-     "b": 72,
+     "a": 306,
+     "b": 68,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -7717,8 +7717,8 @@
      "confidence": "green"
     },
     {
-     "a": 310,
-     "b": 201,
+     "a": 306,
+     "b": 197,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -7730,8 +7730,8 @@
      "confidence": "green"
     },
     {
-     "a": 310,
-     "b": 77,
+     "a": 306,
+     "b": 73,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -7743,8 +7743,8 @@
      "confidence": "green"
     },
     {
-     "a": 201,
-     "b": 203,
+     "a": 197,
+     "b": 199,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -7756,8 +7756,8 @@
      "confidence": "green"
     },
     {
-     "a": 203,
-     "b": 82,
+     "a": 199,
+     "b": 78,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -7769,8 +7769,8 @@
      "confidence": "green"
     },
     {
-     "a": 82,
-     "b": 318,
+     "a": 78,
+     "b": 314,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -7782,8 +7782,8 @@
      "confidence": "green"
     },
     {
-     "a": 82,
-     "b": 33,
+     "a": 78,
+     "b": 29,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -7795,8 +7795,8 @@
      "confidence": "green"
     },
     {
-     "a": 33,
-     "b": 7,
+     "a": 29,
+     "b": 6,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -7808,8 +7808,8 @@
      "confidence": "green"
     },
     {
-     "a": 33,
-     "b": 35,
+     "a": 29,
+     "b": 31,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_2",
      "tier": "return",
@@ -7821,8 +7821,8 @@
      "confidence": "green"
     },
     {
-     "a": 35,
-     "b": 9,
+     "a": 31,
+     "b": 8,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -7830,12 +7830,12 @@
      "g_m": 0.29,
      "contact_s": 4.6,
      "r": 0.43,
-     "score": 0.736,
+     "score": 0.735,
      "confidence": "green"
     },
     {
-     "a": 35,
-     "b": 88,
+     "a": 31,
+     "b": 84,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -7847,8 +7847,8 @@
      "confidence": "green"
     },
     {
-     "a": 88,
-     "b": 330,
+     "a": 84,
+     "b": 326,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -7860,8 +7860,8 @@
      "confidence": "green"
     },
     {
-     "a": 88,
-     "b": 208,
+     "a": 84,
+     "b": 204,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -8570,8 +8570,8 @@
    ],
    "close_zone": "STATIONARY",
    "tracklets": [
-    71,
-    73
+    67,
+    69
    ],
    "segments": [
     {
@@ -8589,8 +8589,8 @@
    ],
    "links": [
     {
-     "a": 71,
-     "b": 73,
+     "a": 67,
+     "b": 69,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_3",
      "tier": "gap",
@@ -8683,24 +8683,24 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    312,
-    78,
+    308,
+    74,
+    325,
+    88,
     329,
+    89,
+    330,
+    207,
     92,
-    333,
+    37,
+    11,
     93,
-    334,
-    211,
-    96,
-    41,
     12,
-    97,
-    13,
-    336,
-    216,
-    218,
-    107,
-    347
+    332,
+    212,
+    214,
+    103,
+    343
    ],
    "segments": [
     {
@@ -8838,8 +8838,8 @@
    ],
    "links": [
     {
-     "a": 312,
-     "b": 78,
+     "a": 308,
+     "b": 74,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -8851,8 +8851,8 @@
      "confidence": "green"
     },
     {
-     "a": 312,
-     "b": 329,
+     "a": 308,
+     "b": 325,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -8864,8 +8864,8 @@
      "confidence": "green"
     },
     {
-     "a": 329,
-     "b": 92,
+     "a": 325,
+     "b": 88,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -8877,8 +8877,8 @@
      "confidence": "green"
     },
     {
-     "a": 329,
-     "b": 333,
+     "a": 325,
+     "b": 329,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -8890,8 +8890,8 @@
      "confidence": "green"
     },
     {
-     "a": 333,
-     "b": 93,
+     "a": 329,
+     "b": 89,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -8903,8 +8903,8 @@
      "confidence": "green"
     },
     {
-     "a": 93,
-     "b": 211,
+     "a": 89,
+     "b": 207,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -8916,8 +8916,8 @@
      "confidence": "green"
     },
     {
-     "a": 334,
-     "b": 211,
+     "a": 330,
+     "b": 207,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -8929,8 +8929,8 @@
      "confidence": "green"
     },
     {
-     "a": 334,
-     "b": 96,
+     "a": 330,
+     "b": 92,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "return",
@@ -8938,12 +8938,12 @@
      "g_m": 1.58,
      "contact_s": -0.59,
      "r": 0.79,
-     "score": 0.659,
+     "score": 0.658,
      "confidence": "green"
     },
     {
-     "a": 334,
-     "b": 218,
+     "a": 330,
+     "b": 214,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -8955,8 +8955,8 @@
      "confidence": "green"
     },
     {
-     "a": 96,
-     "b": 41,
+     "a": 92,
+     "b": 37,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -8968,8 +8968,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 41,
-     "b": 12,
+     "a": 37,
+     "b": 11,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -8981,8 +8981,8 @@
      "confidence": "green"
     },
     {
-     "a": 41,
-     "b": 97,
+     "a": 37,
+     "b": 93,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -8994,8 +8994,8 @@
      "confidence": "green"
     },
     {
-     "a": 41,
-     "b": 13,
+     "a": 37,
+     "b": 12,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "brief",
@@ -9007,8 +9007,8 @@
      "confidence": "green"
     },
     {
-     "a": 97,
-     "b": 336,
+     "a": 93,
+     "b": 332,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -9020,8 +9020,8 @@
      "confidence": "green"
     },
     {
-     "a": 97,
-     "b": 216,
+     "a": 93,
+     "b": 212,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -9033,8 +9033,8 @@
      "confidence": "green"
     },
     {
-     "a": 218,
-     "b": 107,
+     "a": 214,
+     "b": 103,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -9046,8 +9046,8 @@
      "confidence": "green"
     },
     {
-     "a": 107,
-     "b": 347,
+     "a": 103,
+     "b": 343,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -10008,9 +10008,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    74,
-    27,
-    314
+    70,
+    23,
+    310
    ],
    "segments": [
     {
@@ -10034,8 +10034,8 @@
    ],
    "links": [
     {
-     "a": 74,
-     "b": 27,
+     "a": 70,
+     "b": 23,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "brief",
@@ -10047,8 +10047,8 @@
      "confidence": "green"
     },
     {
-     "a": 74,
-     "b": 314,
+     "a": 70,
+     "b": 310,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -10128,7 +10128,7 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    322
+    318
    ],
    "segments": [
     {
@@ -10189,10 +10189,10 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    326,
-    89,
-    39,
-    10
+    322,
+    85,
+    35,
+    9
    ],
    "segments": [
     {
@@ -10228,8 +10228,8 @@
    ],
    "links": [
     {
-     "a": 326,
-     "b": 89,
+     "a": 322,
+     "b": 85,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "gap",
@@ -10241,8 +10241,8 @@
      "confidence": "green"
     },
     {
-     "a": 89,
-     "b": 39,
+     "a": 85,
+     "b": 35,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -10254,8 +10254,8 @@
      "confidence": "green"
     },
     {
-     "a": 39,
-     "b": 10,
+     "a": 35,
+     "b": 9,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -10421,10 +10421,10 @@
    ],
    "close_zone": "EDGE_OUT",
    "tracklets": [
-    339,
-    101,
-    217,
-    341
+    335,
+    97,
+    213,
+    337
    ],
    "segments": [
     {
@@ -10454,8 +10454,8 @@
    ],
    "links": [
     {
-     "a": 339,
-     "b": 101,
+     "a": 335,
+     "b": 97,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -10467,8 +10467,8 @@
      "confidence": "green"
     },
     {
-     "a": 101,
-     "b": 217,
+     "a": 97,
+     "b": 213,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -10480,8 +10480,8 @@
      "confidence": "green"
     },
     {
-     "a": 101,
-     "b": 341,
+     "a": 97,
+     "b": 337,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -10668,11 +10668,11 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    340,
-    103,
-    105,
-    219,
-    220
+    336,
+    99,
+    101,
+    215,
+    216
    ],
    "segments": [
     {
@@ -10708,8 +10708,8 @@
    ],
    "links": [
     {
-     "a": 340,
-     "b": 103,
+     "a": 336,
+     "b": 99,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -10721,8 +10721,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 340,
-     "b": 105,
+     "a": 336,
+     "b": 101,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -10734,8 +10734,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 103,
-     "b": 219,
+     "a": 99,
+     "b": 215,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -10747,8 +10747,8 @@
      "confidence": "green"
     },
     {
-     "a": 340,
-     "b": 220,
+     "a": 336,
+     "b": 216,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -10917,7 +10917,7 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    342
+    338
    ],
    "segments": [
     {
@@ -10993,13 +10993,13 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    343,
+    339,
+    102,
     106,
-    110,
-    224,
-    351,
-    115,
-    354
+    220,
+    347,
+    111,
+    350
    ],
    "segments": [
     {
@@ -11047,8 +11047,8 @@
    ],
    "links": [
     {
-     "a": 343,
-     "b": 106,
+     "a": 339,
+     "b": 102,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11060,8 +11060,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 343,
-     "b": 110,
+     "a": 339,
+     "b": 106,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11073,8 +11073,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 110,
-     "b": 224,
+     "a": 106,
+     "b": 220,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -11086,8 +11086,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 110,
-     "b": 351,
+     "a": 106,
+     "b": 347,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -11099,8 +11099,8 @@
      "confidence": "green"
     },
     {
-     "a": 115,
-     "b": 354,
+     "a": 111,
+     "b": 350,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -11112,8 +11112,8 @@
      "confidence": "green"
     },
     {
-     "a": 224,
-     "b": 354,
+     "a": 220,
+     "b": 350,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -11419,23 +11419,23 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
+    345,
+    108,
     349,
-    112,
-    353,
-    226,
-    356,
-    367,
+    222,
+    352,
+    363,
+    122,
+    370,
     126,
-    374,
     130,
-    134,
-    381,
+    377,
+    237,
+    240,
     241,
-    244,
     245,
-    249,
-    144,
-    389
+    140,
+    385
    ],
    "segments": [
     {
@@ -11567,8 +11567,8 @@
    ],
    "links": [
     {
-     "a": 349,
-     "b": 112,
+     "a": 345,
+     "b": 108,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11580,8 +11580,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 112,
-     "b": 353,
+     "a": 108,
+     "b": 349,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -11593,8 +11593,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 112,
-     "b": 226,
+     "a": 108,
+     "b": 222,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -11606,8 +11606,8 @@
      "confidence": "green"
     },
     {
-     "a": 112,
-     "b": 356,
+     "a": 108,
+     "b": 352,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -11619,8 +11619,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 356,
-     "b": 367,
+     "a": 352,
+     "b": 363,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -11632,8 +11632,8 @@
      "confidence": "green"
     },
     {
-     "a": 367,
-     "b": 126,
+     "a": 363,
+     "b": 122,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11645,8 +11645,8 @@
      "confidence": "green"
     },
     {
-     "a": 367,
-     "b": 249,
+     "a": 363,
+     "b": 245,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -11658,8 +11658,8 @@
      "confidence": "green"
     },
     {
-     "a": 367,
-     "b": 374,
+     "a": 363,
+     "b": 370,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -11671,8 +11671,8 @@
      "confidence": "green"
     },
     {
-     "a": 374,
-     "b": 130,
+     "a": 370,
+     "b": 126,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11684,8 +11684,8 @@
      "confidence": "green"
     },
     {
-     "a": 374,
-     "b": 134,
+     "a": 370,
+     "b": 130,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -11697,8 +11697,8 @@
      "confidence": "green"
     },
     {
-     "a": 134,
-     "b": 381,
+     "a": 130,
+     "b": 377,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -11710,8 +11710,8 @@
      "confidence": "green"
     },
     {
-     "a": 134,
-     "b": 241,
+     "a": 130,
+     "b": 237,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -11723,8 +11723,8 @@
      "confidence": "green"
     },
     {
-     "a": 241,
-     "b": 244,
+     "a": 237,
+     "b": 240,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -11736,8 +11736,8 @@
      "confidence": "green"
     },
     {
-     "a": 244,
-     "b": 245,
+     "a": 240,
+     "b": 241,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -11749,8 +11749,8 @@
      "confidence": "green"
     },
     {
-     "a": 249,
-     "b": 144,
+     "a": 245,
+     "b": 140,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -11762,8 +11762,8 @@
      "confidence": "green"
     },
     {
-     "a": 144,
-     "b": 389,
+     "a": 140,
+     "b": 385,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -12390,22 +12390,22 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    225,
-    116,
+    221,
+    112,
+    351,
+    354,
     355,
-    358,
-    359,
-    368,
-    127,
-    375,
-    380,
-    382,
-    242,
-    438,
-    247,
-    248,
-    388,
-    145
+    364,
+    123,
+    371,
+    376,
+    378,
+    238,
+    434,
+    243,
+    244,
+    384,
+    141
    ],
    "segments": [
     {
@@ -12549,8 +12549,8 @@
    ],
    "links": [
     {
-     "a": 225,
-     "b": 116,
+     "a": 221,
+     "b": 112,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -12562,8 +12562,8 @@
      "confidence": "green"
     },
     {
-     "a": 116,
-     "b": 355,
+     "a": 112,
+     "b": 351,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -12575,8 +12575,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 116,
-     "b": 358,
+     "a": 112,
+     "b": 354,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -12588,8 +12588,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 116,
-     "b": 359,
+     "a": 112,
+     "b": 355,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -12601,8 +12601,8 @@
      "confidence": "green"
     },
     {
-     "a": 359,
-     "b": 368,
+     "a": 355,
+     "b": 364,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -12614,8 +12614,8 @@
      "confidence": "green"
     },
     {
-     "a": 368,
-     "b": 127,
+     "a": 364,
+     "b": 123,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -12627,8 +12627,8 @@
      "confidence": "green"
     },
     {
-     "a": 368,
-     "b": 375,
+     "a": 364,
+     "b": 371,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -12640,8 +12640,8 @@
      "confidence": "green"
     },
     {
-     "a": 375,
-     "b": 380,
+     "a": 371,
+     "b": 376,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -12653,8 +12653,8 @@
      "confidence": "green"
     },
     {
-     "a": 380,
-     "b": 382,
+     "a": 376,
+     "b": 378,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -12666,8 +12666,8 @@
      "confidence": "green"
     },
     {
-     "a": 382,
-     "b": 242,
+     "a": 378,
+     "b": 238,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -12679,8 +12679,8 @@
      "confidence": "green"
     },
     {
-     "a": 242,
-     "b": 438,
+     "a": 238,
+     "b": 434,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -12692,8 +12692,8 @@
      "confidence": "green"
     },
     {
-     "a": 242,
-     "b": 247,
+     "a": 238,
+     "b": 243,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -12705,8 +12705,8 @@
      "confidence": "green"
     },
     {
-     "a": 242,
-     "b": 248,
+     "a": 238,
+     "b": 244,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -12718,8 +12718,8 @@
      "confidence": "green"
     },
     {
-     "a": 388,
-     "b": 145,
+     "a": 384,
+     "b": 141,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -12731,8 +12731,8 @@
      "confidence": "green"
     },
     {
-     "a": 248,
-     "b": 388,
+     "a": 244,
+     "b": 384,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -13284,9 +13284,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    360,
-    119,
-    228
+    356,
+    115,
+    224
    ],
    "segments": [
     {
@@ -13310,8 +13310,8 @@
    ],
    "links": [
     {
-     "a": 360,
-     "b": 119,
+     "a": 356,
+     "b": 115,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -13323,8 +13323,8 @@
      "confidence": "green"
     },
     {
-     "a": 119,
-     "b": 228,
+     "a": 115,
+     "b": 224,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -13498,15 +13498,15 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "DOOR",
    "tracklets": [
-    361,
-    120,
-    229,
-    235,
-    236,
-    131,
-    378
+    357,
+    116,
+    225,
+    231,
+    232,
+    127,
+    374
    ],
    "segments": [
     {
@@ -13566,8 +13566,8 @@
    ],
    "links": [
     {
-     "a": 361,
-     "b": 120,
+     "a": 357,
+     "b": 116,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -13579,8 +13579,8 @@
      "confidence": "green"
     },
     {
-     "a": 120,
-     "b": 229,
+     "a": 116,
+     "b": 225,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -13592,8 +13592,8 @@
      "confidence": "green"
     },
     {
-     "a": 229,
-     "b": 235,
+     "a": 225,
+     "b": 231,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -13605,8 +13605,8 @@
      "confidence": "green"
     },
     {
-     "a": 235,
-     "b": 236,
+     "a": 231,
+     "b": 232,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -13618,8 +13618,8 @@
      "confidence": "green"
     },
     {
-     "a": 236,
-     "b": 131,
+     "a": 232,
+     "b": 127,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -13631,8 +13631,8 @@
      "confidence": "green"
     },
     {
-     "a": 131,
-     "b": 378,
+     "a": 127,
+     "b": 374,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -13974,14 +13974,14 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    42,
-    122,
-    124,
-    369,
-    230,
-    246,
-    143,
-    387
+    38,
+    118,
+    120,
+    365,
+    226,
+    242,
+    139,
+    383
    ],
    "segments": [
     {
@@ -14041,8 +14041,8 @@
    ],
    "links": [
     {
-     "a": 42,
-     "b": 122,
+     "a": 38,
+     "b": 118,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -14054,8 +14054,8 @@
      "confidence": "green"
     },
     {
-     "a": 42,
-     "b": 124,
+     "a": 38,
+     "b": 120,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -14067,8 +14067,8 @@
      "confidence": "green"
     },
     {
-     "a": 122,
-     "b": 369,
+     "a": 118,
+     "b": 365,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -14080,8 +14080,8 @@
      "confidence": "green"
     },
     {
-     "a": 122,
-     "b": 230,
+     "a": 118,
+     "b": 226,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -14093,8 +14093,8 @@
      "confidence": "green"
     },
     {
-     "a": 230,
-     "b": 246,
+     "a": 226,
+     "b": 242,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -14106,8 +14106,8 @@
      "confidence": "green"
     },
     {
-     "a": 246,
-     "b": 143,
+     "a": 242,
+     "b": 139,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -14119,8 +14119,8 @@
      "confidence": "green"
     },
     {
-     "a": 143,
-     "b": 387,
+     "a": 139,
+     "b": 383,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -14515,8 +14515,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    362,
-    364
+    358,
+    360
    ],
    "segments": [
     {
@@ -14534,8 +14534,8 @@
    ],
    "links": [
     {
-     "a": 362,
-     "b": 364,
+     "a": 358,
+     "b": 360,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -14635,10 +14635,10 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    363,
-    123,
-    390,
-    148
+    359,
+    119,
+    386,
+    144
    ],
    "segments": [
     {
@@ -14674,8 +14674,8 @@
    ],
    "links": [
     {
-     "a": 363,
-     "b": 123,
+     "a": 359,
+     "b": 119,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -14687,8 +14687,8 @@
      "confidence": "green"
     },
     {
-     "a": 363,
-     "b": 390,
+     "a": 359,
+     "b": 386,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -14700,8 +14700,8 @@
      "confidence": "green"
     },
     {
-     "a": 390,
-     "b": 148,
+     "a": 386,
+     "b": 144,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -14847,14 +14847,14 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    125,
-    366,
-    442,
-    231,
-    237,
-    133,
-    377,
-    135
+    121,
+    362,
+    438,
+    227,
+    233,
+    129,
+    373,
+    131
    ],
    "segments": [
     {
@@ -14914,8 +14914,8 @@
    ],
    "links": [
     {
-     "a": 125,
-     "b": 366,
+     "a": 121,
+     "b": 362,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -14927,8 +14927,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 125,
-     "b": 442,
+     "a": 121,
+     "b": 438,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -14940,8 +14940,8 @@
      "confidence": "green"
     },
     {
-     "a": 125,
-     "b": 231,
+     "a": 121,
+     "b": 227,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -14953,8 +14953,8 @@
      "confidence": "green"
     },
     {
-     "a": 231,
-     "b": 237,
+     "a": 227,
+     "b": 233,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -14966,8 +14966,8 @@
      "confidence": "green"
     },
     {
-     "a": 237,
-     "b": 133,
+     "a": 233,
+     "b": 129,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -14979,8 +14979,8 @@
      "confidence": "green"
     },
     {
-     "a": 133,
-     "b": 377,
+     "a": 129,
+     "b": 373,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -14992,8 +14992,8 @@
      "confidence": "green"
     },
     {
-     "a": 377,
-     "b": 135,
+     "a": 373,
+     "b": 131,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -15334,14 +15334,14 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    370,
-    128,
-    233,
-    234,
-    239,
-    138,
-    140,
-    443
+    366,
+    124,
+    229,
+    230,
+    235,
+    134,
+    136,
+    439
    ],
    "segments": [
     {
@@ -15401,8 +15401,8 @@
    ],
    "links": [
     {
-     "a": 370,
-     "b": 128,
+     "a": 366,
+     "b": 124,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -15414,8 +15414,8 @@
      "confidence": "green"
     },
     {
-     "a": 370,
-     "b": 233,
+     "a": 366,
+     "b": 229,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -15427,8 +15427,8 @@
      "confidence": "green"
     },
     {
-     "a": 370,
-     "b": 234,
+     "a": 366,
+     "b": 230,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -15440,8 +15440,8 @@
      "confidence": "green"
     },
     {
-     "a": 234,
-     "b": 239,
+     "a": 230,
+     "b": 235,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -15453,8 +15453,8 @@
      "confidence": "green"
     },
     {
-     "a": 239,
-     "b": 138,
+     "a": 235,
+     "b": 134,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -15466,8 +15466,8 @@
      "confidence": "green"
     },
     {
-     "a": 239,
-     "b": 443,
+     "a": 235,
+     "b": 439,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -15479,8 +15479,8 @@
      "confidence": "green"
     },
     {
-     "a": 140,
-     "b": 443,
+     "a": 136,
+     "b": 439,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -15857,13 +15857,13 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    371,
-    129,
-    232,
-    372,
-    240,
-    383,
-    139
+    367,
+    125,
+    228,
+    368,
+    236,
+    379,
+    135
    ],
    "segments": [
     {
@@ -15917,8 +15917,8 @@
    ],
    "links": [
     {
-     "a": 371,
-     "b": 129,
+     "a": 367,
+     "b": 125,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -15930,8 +15930,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 129,
-     "b": 232,
+     "a": 125,
+     "b": 228,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -15943,8 +15943,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 129,
-     "b": 372,
+     "a": 125,
+     "b": 368,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -15956,8 +15956,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 232,
-     "b": 240,
+     "a": 228,
+     "b": 236,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "return",
@@ -15969,8 +15969,8 @@
      "confidence": "green"
     },
     {
-     "a": 240,
-     "b": 383,
+     "a": 236,
+     "b": 379,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -15982,8 +15982,8 @@
      "confidence": "green"
     },
     {
-     "a": 383,
-     "b": 139,
+     "a": 379,
+     "b": 135,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -16337,11 +16337,11 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    132,
-    379,
-    243,
-    43,
-    14
+    128,
+    375,
+    239,
+    39,
+    13
    ],
    "segments": [
     {
@@ -16377,8 +16377,8 @@
    ],
    "links": [
     {
-     "a": 132,
-     "b": 379,
+     "a": 128,
+     "b": 375,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -16390,8 +16390,8 @@
      "confidence": "green"
     },
     {
-     "a": 132,
-     "b": 243,
+     "a": 128,
+     "b": 239,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -16403,8 +16403,8 @@
      "confidence": "green"
     },
     {
-     "a": 132,
-     "b": 43,
+     "a": 128,
+     "b": 39,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -16416,15 +16416,15 @@
      "confidence": "green"
     },
     {
-     "a": 43,
-     "b": 14,
+     "a": 39,
+     "b": 13,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
      "t_ms": 2750390,
      "g_m": 0.36,
      "contact_s": 4.52,
-     "r": 0.26,
+     "r": 0.27,
      "score": 0.664,
      "confidence": "green"
     }
@@ -16682,8 +16682,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    385,
-    141
+    381,
+    137
    ],
    "segments": [
     {
@@ -16701,8 +16701,8 @@
    ],
    "links": [
     {
-     "a": 385,
-     "b": 141,
+     "a": 381,
+     "b": 137,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -16793,9 +16793,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    252,
-    151,
-    393
+    248,
+    147,
+    389
    ],
    "segments": [
     {
@@ -16819,8 +16819,8 @@
    ],
    "links": [
     {
-     "a": 252,
-     "b": 151,
+     "a": 248,
+     "b": 147,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -16832,8 +16832,8 @@
      "confidence": "green"
     },
     {
-     "a": 151,
-     "b": 393,
+     "a": 147,
+     "b": 389,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -17014,8 +17014,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    152,
-    395
+    148,
+    391
    ],
    "segments": [
     {
@@ -17033,8 +17033,8 @@
    ],
    "links": [
     {
-     "a": 152,
-     "b": 395,
+     "a": 148,
+     "b": 391,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -17110,15 +17110,15 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    153,
-    396,
-    155,
-    158,
+    149,
+    392,
+    151,
+    154,
+    253,
+    397,
     257,
-    401,
-    261,
-    441,
-    273
+    437,
+    269
    ],
    "segments": [
     {
@@ -17184,8 +17184,8 @@
    ],
    "links": [
     {
-     "a": 153,
-     "b": 396,
+     "a": 149,
+     "b": 392,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -17197,8 +17197,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 396,
-     "b": 155,
+     "a": 392,
+     "b": 151,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -17210,8 +17210,8 @@
      "confidence": "green"
     },
     {
-     "a": 396,
-     "b": 158,
+     "a": 392,
+     "b": 154,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -17223,8 +17223,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 257,
-     "b": 401,
+     "a": 253,
+     "b": 397,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -17236,8 +17236,8 @@
      "confidence": "green"
     },
     {
-     "a": 158,
-     "b": 257,
+     "a": 154,
+     "b": 253,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -17249,8 +17249,8 @@
      "confidence": "green"
     },
     {
-     "a": 257,
-     "b": 261,
+     "a": 253,
+     "b": 257,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -17262,8 +17262,8 @@
      "confidence": "green"
     },
     {
-     "a": 261,
-     "b": 441,
+     "a": 257,
+     "b": 437,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -17275,8 +17275,8 @@
      "confidence": "green"
     },
     {
-     "a": 441,
-     "b": 273,
+     "a": 437,
+     "b": 269,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -20512,10 +20512,10 @@
    ],
    "close_zone": "OPEN",
    "tracklets": [
-    44,
-    16,
-    45,
-    154
+    40,
+    15,
+    41,
+    150
    ],
    "segments": [
     {
@@ -20545,21 +20545,21 @@
    ],
    "links": [
     {
-     "a": 44,
-     "b": 16,
+     "a": 40,
+     "b": 15,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
      "t_ms": 2856590,
      "g_m": 0.27,
      "contact_s": 3.35,
-     "r": 0.36,
-     "score": 0.656,
+     "r": 0.35,
+     "score": 0.655,
      "confidence": "green"
     },
     {
-     "a": 45,
-     "b": 154,
+     "a": 41,
+     "b": 150,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -20571,16 +20571,16 @@
      "confidence": "green"
     },
     {
-     "a": 16,
-     "b": 154,
+     "a": 15,
+     "b": 150,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_3",
      "tier": "brief",
      "t_ms": 2861044,
      "g_m": 0.33,
      "contact_s": 0.13,
-     "r": 0.21,
-     "score": 0.483,
+     "r": 0.22,
+     "score": 0.484,
      "confidence": "green"
     }
    ],
@@ -20709,17 +20709,17 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    156,
-    398,
-    255,
-    440,
+    152,
+    394,
+    251,
+    436,
+    252,
+    395,
+    254,
     256,
-    399,
-    258,
-    260,
-    268,
-    270,
-    276
+    264,
+    266,
+    272
    ],
    "segments": [
     {
@@ -20803,8 +20803,8 @@
    ],
    "links": [
     {
-     "a": 156,
-     "b": 398,
+     "a": 152,
+     "b": 394,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -20816,8 +20816,8 @@
      "confidence": "green"
     },
     {
-     "a": 156,
-     "b": 255,
+     "a": 152,
+     "b": 251,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -20829,8 +20829,8 @@
      "confidence": "green"
     },
     {
-     "a": 255,
-     "b": 440,
+     "a": 251,
+     "b": 436,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -20842,8 +20842,8 @@
      "confidence": "green"
     },
     {
-     "a": 440,
-     "b": 256,
+     "a": 436,
+     "b": 252,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -20855,8 +20855,8 @@
      "confidence": "green"
     },
     {
-     "a": 440,
-     "b": 399,
+     "a": 436,
+     "b": 395,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -20868,8 +20868,8 @@
      "confidence": "green"
     },
     {
-     "a": 256,
-     "b": 258,
+     "a": 252,
+     "b": 254,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -20881,8 +20881,8 @@
      "confidence": "green"
     },
     {
-     "a": 258,
-     "b": 260,
+     "a": 254,
+     "b": 256,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -20894,8 +20894,8 @@
      "confidence": "green"
     },
     {
-     "a": 260,
-     "b": 268,
+     "a": 256,
+     "b": 264,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -20907,8 +20907,8 @@
      "confidence": "green"
     },
     {
-     "a": 268,
-     "b": 270,
+     "a": 264,
+     "b": 266,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -20920,8 +20920,8 @@
      "confidence": "green"
     },
     {
-     "a": 270,
-     "b": 276,
+     "a": 266,
+     "b": 272,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -23252,9 +23252,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    397,
-    157,
-    254
+    393,
+    153,
+    250
    ],
    "segments": [
     {
@@ -23278,8 +23278,8 @@
    ],
    "links": [
     {
-     "a": 397,
-     "b": 157,
+     "a": 393,
+     "b": 153,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -23291,8 +23291,8 @@
      "confidence": "green"
     },
     {
-     "a": 157,
-     "b": 254,
+     "a": 153,
+     "b": 250,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -23473,8 +23473,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    402,
-    159
+    398,
+    155
    ],
    "segments": [
     {
@@ -23492,8 +23492,8 @@
    ],
    "links": [
     {
-     "a": 402,
-     "b": 159,
+     "a": 398,
+     "b": 155,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -23570,10 +23570,10 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    403,
-    160,
-    259,
-    404
+    399,
+    156,
+    255,
+    400
    ],
    "segments": [
     {
@@ -23603,8 +23603,8 @@
    ],
    "links": [
     {
-     "a": 403,
-     "b": 160,
+     "a": 399,
+     "b": 156,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -23616,8 +23616,8 @@
      "confidence": "green"
     },
     {
-     "a": 160,
-     "b": 259,
+     "a": 156,
+     "b": 255,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -23629,8 +23629,8 @@
      "confidence": "green"
     },
     {
-     "a": 259,
-     "b": 404,
+     "a": 255,
+     "b": 400,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -23818,12 +23818,12 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    46,
-    18,
-    162,
-    164,
-    405,
-    262
+    42,
+    16,
+    158,
+    160,
+    401,
+    258
    ],
    "segments": [
     {
@@ -23865,21 +23865,21 @@
    ],
    "links": [
     {
-     "a": 46,
-     "b": 18,
+     "a": 42,
+     "b": 16,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
      "t_ms": 2934510,
      "g_m": 0.4,
      "contact_s": 4.0,
-     "r": 0.51,
-     "score": 0.677,
+     "r": 0.5,
+     "score": 0.676,
      "confidence": "green"
     },
     {
-     "a": 46,
-     "b": 162,
+     "a": 42,
+     "b": 158,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -23891,8 +23891,8 @@
      "confidence": "green"
     },
     {
-     "a": 162,
-     "b": 164,
+     "a": 158,
+     "b": 160,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_3",
      "tier": "gap",
@@ -23904,8 +23904,8 @@
      "confidence": "green"
     },
     {
-     "a": 164,
-     "b": 405,
+     "a": 160,
+     "b": 401,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -23917,8 +23917,8 @@
      "confidence": "green"
     },
     {
-     "a": 405,
-     "b": 262,
+     "a": 401,
+     "b": 258,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -24204,9 +24204,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    47,
-    163,
-    406
+    43,
+    159,
+    402
    ],
    "segments": [
     {
@@ -24230,8 +24230,8 @@
    ],
    "links": [
     {
-     "a": 47,
-     "b": 163,
+     "a": 43,
+     "b": 159,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -24243,8 +24243,8 @@
      "confidence": "green"
     },
     {
-     "a": 163,
-     "b": 406,
+     "a": 159,
+     "b": 402,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -24345,11 +24345,11 @@
    ],
    "close_zone": "EDGE_OUT",
    "tracklets": [
-    407,
-    165,
-    263,
-    264,
-    166
+    403,
+    161,
+    259,
+    260,
+    162
    ],
    "segments": [
     {
@@ -24385,8 +24385,8 @@
    ],
    "links": [
     {
-     "a": 407,
-     "b": 165,
+     "a": 403,
+     "b": 161,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -24398,8 +24398,8 @@
      "confidence": "green"
     },
     {
-     "a": 165,
-     "b": 263,
+     "a": 161,
+     "b": 259,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -24411,8 +24411,8 @@
      "confidence": "green"
     },
     {
-     "a": 407,
-     "b": 264,
+     "a": 403,
+     "b": 260,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -24424,8 +24424,8 @@
      "confidence": "green"
     },
     {
-     "a": 165,
-     "b": 166,
+     "a": 161,
+     "b": 162,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_3",
      "tier": "gap",
@@ -24649,7 +24649,7 @@
    ],
    "close_zone": "EDGE_OUT",
    "tracklets": [
-    167
+    163
    ],
    "segments": [
     {
@@ -24708,17 +24708,17 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "DOOR",
    "tracklets": [
-    168,
-    50,
-    169,
-    409,
-    410,
-    170,
-    266,
-    271,
-    272
+    164,
+    46,
+    165,
+    405,
+    406,
+    166,
+    262,
+    267,
+    268
    ],
    "segments": [
     {
@@ -24784,8 +24784,8 @@
    ],
    "links": [
     {
-     "a": 168,
-     "b": 50,
+     "a": 164,
+     "b": 46,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "brief",
@@ -24797,8 +24797,8 @@
      "confidence": "green"
     },
     {
-     "a": 50,
-     "b": 169,
+     "a": 46,
+     "b": 165,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -24810,8 +24810,8 @@
      "confidence": "green"
     },
     {
-     "a": 169,
-     "b": 409,
+     "a": 165,
+     "b": 405,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -24823,8 +24823,8 @@
      "confidence": "green"
     },
     {
-     "a": 409,
-     "b": 410,
+     "a": 405,
+     "b": 406,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -24836,8 +24836,8 @@
      "confidence": "green"
     },
     {
-     "a": 410,
-     "b": 170,
+     "a": 406,
+     "b": 166,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -24849,8 +24849,8 @@
      "confidence": "green"
     },
     {
-     "a": 170,
-     "b": 266,
+     "a": 166,
+     "b": 262,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -24862,8 +24862,8 @@
      "confidence": "green"
     },
     {
-     "a": 170,
-     "b": 271,
+     "a": 166,
+     "b": 267,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -24875,8 +24875,8 @@
      "confidence": "green"
     },
     {
-     "a": 266,
-     "b": 272,
+     "a": 262,
+     "b": 268,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -25368,16 +25368,16 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    265,
-    171,
-    411,
-    172,
-    412,
+    261,
+    167,
+    407,
+    168,
+    408,
+    169,
+    271,
     173,
-    275,
-    177,
-    418,
-    282
+    414,
+    278
    ],
    "segments": [
     {
@@ -25455,8 +25455,8 @@
    ],
    "links": [
     {
-     "a": 265,
-     "b": 171,
+     "a": 261,
+     "b": 167,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -25468,8 +25468,8 @@
      "confidence": "green"
     },
     {
-     "a": 171,
-     "b": 411,
+     "a": 167,
+     "b": 407,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -25481,8 +25481,8 @@
      "confidence": "green"
     },
     {
-     "a": 411,
-     "b": 172,
+     "a": 407,
+     "b": 168,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -25494,8 +25494,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 411,
-     "b": 412,
+     "a": 407,
+     "b": 408,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -25507,8 +25507,8 @@
      "confidence": "green"
     },
     {
-     "a": 412,
-     "b": 173,
+     "a": 408,
+     "b": 169,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -25520,8 +25520,8 @@
      "confidence": "green"
     },
     {
-     "a": 173,
-     "b": 275,
+     "a": 169,
+     "b": 271,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -25533,8 +25533,8 @@
      "confidence": "green"
     },
     {
-     "a": 173,
-     "b": 177,
+     "a": 169,
+     "b": 173,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_3",
      "tier": "return",
@@ -25546,8 +25546,8 @@
      "confidence": "green"
     },
     {
-     "a": 177,
-     "b": 418,
+     "a": 173,
+     "b": 414,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -25559,8 +25559,8 @@
      "confidence": "green"
     },
     {
-     "a": 177,
-     "b": 282,
+     "a": 173,
+     "b": 278,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -26015,8 +26015,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    267,
-    269
+    263,
+    265
    ],
    "segments": [
     {
@@ -26034,8 +26034,8 @@
    ],
    "links": [
     {
-     "a": 267,
-     "b": 269,
+     "a": 263,
+     "b": 265,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -26507,13 +26507,13 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    174,
-    413,
-    176,
-    415,
-    277,
-    279,
-    416
+    170,
+    409,
+    172,
+    411,
+    273,
+    275,
+    412
    ],
    "segments": [
     {
@@ -26567,8 +26567,8 @@
    ],
    "links": [
     {
-     "a": 174,
-     "b": 413,
+     "a": 170,
+     "b": 409,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -26580,8 +26580,8 @@
      "confidence": "green"
     },
     {
-     "a": 413,
-     "b": 176,
+     "a": 409,
+     "b": 172,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "return",
@@ -26593,8 +26593,8 @@
      "confidence": "green"
     },
     {
-     "a": 176,
-     "b": 415,
+     "a": 172,
+     "b": 411,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -26606,8 +26606,8 @@
      "confidence": "green"
     },
     {
-     "a": 415,
-     "b": 277,
+     "a": 411,
+     "b": 273,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -26619,8 +26619,8 @@
      "confidence": "green"
     },
     {
-     "a": 176,
-     "b": 279,
+     "a": 172,
+     "b": 275,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -26632,8 +26632,8 @@
      "confidence": "green"
     },
     {
-     "a": 415,
-     "b": 416,
+     "a": 411,
+     "b": 412,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -26845,15 +26845,15 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "DOOR",
    "tracklets": [
-    414,
-    175,
-    278,
-    280,
-    281,
-    51,
-    19
+    410,
+    171,
+    274,
+    276,
+    277,
+    47,
+    17
    ],
    "segments": [
     {
@@ -26901,8 +26901,8 @@
    ],
    "links": [
     {
-     "a": 414,
-     "b": 175,
+     "a": 410,
+     "b": 171,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -26914,8 +26914,8 @@
      "confidence": "green"
     },
     {
-     "a": 414,
-     "b": 278,
+     "a": 410,
+     "b": 274,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -26927,8 +26927,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 175,
-     "b": 280,
+     "a": 171,
+     "b": 276,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -26940,8 +26940,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 414,
-     "b": 281,
+     "a": 410,
+     "b": 277,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_4",
      "tier": "brief",
@@ -26953,8 +26953,8 @@
      "confidence": "green"
     },
     {
-     "a": 175,
-     "b": 51,
+     "a": 171,
+     "b": 47,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -26966,8 +26966,8 @@
      "confidence": "green"
     },
     {
-     "a": 51,
-     "b": 19,
+     "a": 47,
+     "b": 17,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -27339,9 +27339,9 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    283,
-    178,
-    419
+    279,
+    174,
+    415
    ],
    "segments": [
     {
@@ -27365,8 +27365,8 @@
    ],
    "links": [
     {
-     "a": 283,
-     "b": 178,
+     "a": 279,
+     "b": 174,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -27378,8 +27378,8 @@
      "confidence": "green"
     },
     {
-     "a": 178,
-     "b": 419,
+     "a": 174,
+     "b": 415,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -27564,8 +27564,8 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    420,
-    179
+    416,
+    175
    ],
    "segments": [
     {
@@ -27583,8 +27583,8 @@
    ],
    "links": [
     {
-     "a": 420,
-     "b": 179,
+     "a": 416,
+     "b": 175,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -27667,12 +27667,12 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    20,
-    53,
-    180,
-    421,
-    423,
-    286
+    18,
+    49,
+    176,
+    417,
+    419,
+    282
    ],
    "segments": [
     {
@@ -27714,21 +27714,21 @@
    ],
    "links": [
     {
-     "a": 20,
-     "b": 53,
+     "a": 18,
+     "b": 49,
      "camera_a": "camera_new_1",
      "camera_b": "camera_new_2",
      "tier": "sustained",
      "t_ms": 3286024,
      "g_m": 0.33,
      "contact_s": 3.49,
-     "r": 0.18,
+     "r": 0.17,
      "score": 0.6,
      "confidence": "green"
     },
     {
-     "a": 53,
-     "b": 180,
+     "a": 49,
+     "b": 176,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -27740,8 +27740,8 @@
      "confidence": "green"
     },
     {
-     "a": 180,
-     "b": 421,
+     "a": 176,
+     "b": 417,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -27753,8 +27753,8 @@
      "confidence": "green"
     },
     {
-     "a": 180,
-     "b": 423,
+     "a": 176,
+     "b": 419,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -27766,8 +27766,8 @@
      "confidence": "yellow"
     },
     {
-     "a": 180,
-     "b": 286,
+     "a": 176,
+     "b": 282,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -28028,9 +28028,9 @@
    ],
    "close_zone": "OPEN",
    "tracklets": [
-    285,
-    181,
-    422
+    281,
+    177,
+    418
    ],
    "segments": [
     {
@@ -28054,8 +28054,8 @@
    ],
    "links": [
     {
-     "a": 285,
-     "b": 181,
+     "a": 281,
+     "b": 177,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -28067,8 +28067,8 @@
      "confidence": "green"
     },
     {
-     "a": 181,
-     "b": 422,
+     "a": 177,
+     "b": 418,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -28230,12 +28230,12 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    287,
-    183,
-    425,
-    445,
-    434,
-    188
+    283,
+    179,
+    421,
+    441,
+    430,
+    184
    ],
    "segments": [
     {
@@ -28289,8 +28289,8 @@
    ],
    "links": [
     {
-     "a": 287,
-     "b": 183,
+     "a": 283,
+     "b": 179,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -28302,8 +28302,8 @@
      "confidence": "green"
     },
     {
-     "a": 183,
-     "b": 425,
+     "a": 179,
+     "b": 421,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -28315,8 +28315,8 @@
      "confidence": "green"
     },
     {
-     "a": 425,
-     "b": 445,
+     "a": 421,
+     "b": 441,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "gap",
@@ -28328,8 +28328,8 @@
      "confidence": "green"
     },
     {
-     "a": 445,
-     "b": 434,
+     "a": 441,
+     "b": 430,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_5",
      "tier": "return",
@@ -28341,8 +28341,8 @@
      "confidence": "green"
     },
     {
-     "a": 434,
-     "b": 188,
+     "a": 430,
+     "b": 184,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -28702,13 +28702,13 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "DOOR",
    "tracklets": [
-    288,
-    290,
-    186,
-    430,
-    293
+    284,
+    286,
+    182,
+    426,
+    289
    ],
    "segments": [
     {
@@ -28750,8 +28750,8 @@
    ],
    "links": [
     {
-     "a": 288,
-     "b": 290,
+     "a": 284,
+     "b": 286,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -28763,8 +28763,8 @@
      "confidence": "green"
     },
     {
-     "a": 290,
-     "b": 186,
+     "a": 286,
+     "b": 182,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -28776,8 +28776,8 @@
      "confidence": "green"
     },
     {
-     "a": 186,
-     "b": 430,
+     "a": 182,
+     "b": 426,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -28789,8 +28789,8 @@
      "confidence": "green"
     },
     {
-     "a": 186,
-     "b": 293,
+     "a": 182,
+     "b": 289,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -29341,13 +29341,13 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    426,
-    184,
-    446,
-    444,
-    289,
-    429,
-    291
+    422,
+    180,
+    442,
+    440,
+    285,
+    425,
+    287
    ],
    "segments": [
     {
@@ -29395,8 +29395,8 @@
    ],
    "links": [
     {
-     "a": 426,
-     "b": 184,
+     "a": 422,
+     "b": 180,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -29408,8 +29408,8 @@
      "confidence": "green"
     },
     {
-     "a": 446,
-     "b": 444,
+     "a": 442,
+     "b": 440,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -29421,8 +29421,8 @@
      "confidence": "green"
     },
     {
-     "a": 426,
-     "b": 446,
+     "a": 422,
+     "b": 442,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "brief",
@@ -29434,8 +29434,8 @@
      "confidence": "green"
     },
     {
-     "a": 446,
-     "b": 289,
+     "a": 442,
+     "b": 285,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_4",
      "tier": "sustained",
@@ -29447,8 +29447,8 @@
      "confidence": "green"
     },
     {
-     "a": 446,
-     "b": 429,
+     "a": 442,
+     "b": 425,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -29460,8 +29460,8 @@
      "confidence": "green"
     },
     {
-     "a": 289,
-     "b": 291,
+     "a": 285,
+     "b": 287,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_4",
      "tier": "gap",
@@ -29714,10 +29714,10 @@
    ],
    "close_zone": "DOOR",
    "tracklets": [
-    185,
-    428,
-    54,
-    21
+    181,
+    424,
+    50,
+    19
    ],
    "segments": [
     {
@@ -29747,8 +29747,8 @@
    ],
    "links": [
     {
-     "a": 185,
-     "b": 428,
+     "a": 181,
+     "b": 424,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "brief",
@@ -29760,8 +29760,8 @@
      "confidence": "green"
     },
     {
-     "a": 185,
-     "b": 54,
+     "a": 181,
+     "b": 50,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_2",
      "tier": "sustained",
@@ -29773,8 +29773,8 @@
      "confidence": "green"
     },
     {
-     "a": 54,
-     "b": 21,
+     "a": 50,
+     "b": 19,
      "camera_a": "camera_new_2",
      "camera_b": "camera_new_1",
      "tier": "sustained",
@@ -29782,7 +29782,7 @@
      "g_m": 0.53,
      "contact_s": 4.11,
      "r": 0.44,
-     "score": 0.607,
+     "score": 0.606,
      "confidence": "green"
     }
    ],
@@ -29928,12 +29928,12 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "DOOR",
    "tracklets": [
-    292,
-    187,
-    431,
-    433
+    288,
+    183,
+    427,
+    429
    ],
    "segments": [
     {
@@ -29963,8 +29963,8 @@
    ],
    "links": [
     {
-     "a": 292,
-     "b": 187,
+     "a": 288,
+     "b": 183,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_3",
      "tier": "sustained",
@@ -29976,8 +29976,8 @@
      "confidence": "green"
     },
     {
-     "a": 292,
-     "b": 431,
+     "a": 288,
+     "b": 427,
      "camera_a": "camera_new_4",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -29989,8 +29989,8 @@
      "confidence": "green"
     },
     {
-     "a": 187,
-     "b": 433,
+     "a": 183,
+     "b": 429,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -30206,8 +30206,8 @@
    ],
    "close_zone": "RECORDING_END",
    "tracklets": [
-    189,
-    435
+    185,
+    431
    ],
    "segments": [
     {
@@ -30225,8 +30225,8 @@
    ],
    "links": [
     {
-     "a": 189,
-     "b": 435,
+     "a": 185,
+     "b": 431,
      "camera_a": "camera_new_3",
      "camera_b": "camera_new_5",
      "tier": "sustained",
@@ -30421,8 +30421,8 @@
    ],
    "close_zone": "RECORDING_END",
    "tracklets": [
-    436,
-    191
+    432,
+    187
    ],
    "segments": [
     {
@@ -30440,8 +30440,8 @@
    ],
    "links": [
     {
-     "a": 436,
-     "b": 191,
+     "a": 432,
+     "b": 187,
      "camera_a": "camera_new_5",
      "camera_b": "camera_new_3",
      "tier": "sustained",

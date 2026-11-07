@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from mct.geometry import load_cameras
-from mct.tracklets import FilterConfig, _set_embeddings, build_tracklets, find_identity_jumps, find_tail_swaps, relocate_hidden_feet
+from mct.tracklets import SCREEN_REASON, FilterConfig, _set_embeddings, build_tracklets, find_identity_jumps, find_tail_swaps, relocate_hidden_feet
 from mct.trinity import Tracklet
 
 
@@ -145,6 +145,15 @@ def test_reflection_inside_marked_mirror_is_dropped_but_person_passing_by_is_not
     tracklets, _, dropped = build_tracklets(pd.concat([reflection, passing, other_camera]), {}, cfg)
     assert sorted(x.camera for x in tracklets) == ["a", "b"]
     assert "зеркало" in dropped.reason.iloc[0]
+
+
+def test_person_on_a_marked_screen_is_dropped_but_person_in_front_of_it_is_not() -> None:
+    cfg = FilterConfig(screens=(("a", (90.0, 90.0, 300.0, 230.0)),))
+    on_screen = observations("a", 1, T, np.full(len(T), 3.0), x1=100.0, x2=140.0)
+    in_front = observations("a", 2, T, 1.0 + 1.2 * T, x1=100.0, y1=100.0, x2=140.0, y2=400.0)
+    tracklets, _, dropped = build_tracklets(pd.concat([on_screen, in_front]), {}, cfg)
+    assert len(tracklets) == 1
+    assert dropped.reason.iloc[0] == SCREEN_REASON
 
 
 PERSON_1, PERSON_2 = np.array([1.0, 0.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0, 0.0])

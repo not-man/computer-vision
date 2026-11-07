@@ -165,6 +165,16 @@ class ZoneMap:
             return GapPolicy("EDGE_OUT", self.edge_out_buffer_s, "required", tuple(lost_at), self.edge_out_radius)
         return GapPolicy("OPEN", self.open_buffer_s, "no_conflict", None, None)
 
+    def closing_kind(self, tracklet: Tracklet) -> str:
+        """Причина закрытия для показа. Вдали от камеры точка легко не попадает в зону двери, поэтому здесь учитывается ошибка положения. На склейку это не влияет."""
+        kind = self.policy(tracklet).kind
+        if kind != "OPEN":
+            return kind
+        recent = tracklet.t >= tracklet.end - 0.5
+        lost_at = np.median(tracklet.xy[recent], axis=0)
+        sigma = float(np.sqrt(np.median(np.trace(tracklet.cov[recent], axis1=1, axis2=2))))
+        return "DOOR" if any(zone.kind == "DOOR" and float(np.hypot(lost_at[0] - zone.x, lost_at[1] - zone.y)) <= zone.r + sigma for zone in self.zones) else kind
+
     def _was_standing(self, tracklet: Tracklet) -> bool:
         recent = tracklet.t >= tracklet.end - 2.0
         if np.ptp(tracklet.t[recent]) < 1.0:
@@ -754,7 +764,7 @@ class _Linker:
         last = max(ordered, key=lambda x: (x.end, x.id))
         cameras = sorted({x.camera for x in ordered})
         recording_ended = last.end >= self.zones.recording_end.get(last.camera, float("inf")) - RECORDING_END_MARGIN_S
-        close_zone = "RECORDING_END" if recording_ended else self.zones.policy(last).kind
+        close_zone = "RECORDING_END" if recording_ended else self.zones.closing_kind(last)
         return Track(track_id, [x.id for x in ordered], cameras, start, end, links, segments, close_zone)
 
 

@@ -559,6 +559,12 @@ def test_track_seen_until_the_end_of_recording_closes_as_end_of_recording() -> N
     assert by_id[2].close_zone != "RECORDING_END"
 
 
+def test_track_lost_near_a_door_within_position_error_closes_as_door() -> None:
+    door = ZoneMap([Zone("DOOR", 16.0, 5.0, 1.0)])  # трек кончается в 2 м от центра двери
+    assert run([walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), sigma=0.1)], door).tracks[0].close_zone == "OPEN"
+    assert run([walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), sigma=1.5)], door).tracks[0].close_zone == "DOOR"
+
+
 def test_number_switch_with_touching_boxes_and_same_look_is_not_a_conflict_despite_short_overlap() -> None:
     # Рамки соприкасаются, номера идут вместе доли секунды, внешность та же, а точка на плане прыгнула
     a = with_box(walker(1, "cam_1", 0.0, 6.0, (0.0, 5.0), embedding=look(0)), (100, 100, 150, 250))

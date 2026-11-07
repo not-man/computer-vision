@@ -43,6 +43,9 @@ def inside_share(box: np.ndarray, region: list[float]) -> float:
     return width * height / max((box[2] - box[0]) * (box[3] - box[1]), 1e-9)
 
 
+SCREEN_REASON = "экран: закрытая зона"
+
+
 @dataclass(frozen=True)
 class FilterConfig:
     out_of_floor_m: float = -0.5
@@ -70,6 +73,8 @@ class FilterConfig:
     # Известные зеркала: области на кадре. Отражение лежит внутри целиком, а человек рядом выходит за край
     mirrors: tuple[tuple[str, tuple[float, float, float, float]], ...] = ()
     mirror_inside_share: float = 0.8
+    # Экраны: закрытые зоны кадра. Всё, что лежит внутри целиком, не человек, а человек перед экраном выходит за край
+    screens: tuple[tuple[str, tuple[float, float, float, float]], ...] = ()
     # Трекер перескочил на другого человека. Смена ракурса тоже меняет внешность, поэтому нужны доказательства с двух сторон
     jump_max_cross: float = 0.4  # половины куска настолько непохожи
     jump_min_side: int = 2  # посекундных снимков с каждой стороны
@@ -216,6 +221,8 @@ def _cut_points(piece: pd.DataFrame) -> np.ndarray:
 
 def _rejection(piece: pd.DataFrame, cfg: FilterConfig) -> str | None:
     box = piece[["x1", "y1", "x2", "y2"]].median().to_numpy()
+    if any(camera == piece.camera.iloc[0] and inside_share(box, region) >= cfg.mirror_inside_share for camera, region in cfg.screens):
+        return SCREEN_REASON
     if any(camera == piece.camera.iloc[0] and inside_share(box, region) >= cfg.mirror_inside_share for camera, region in cfg.mirrors):
         return "зеркало: рамка внутри размеченной области"
     margin = float(piece.margin.median())
@@ -543,8 +550,9 @@ def _locate_file(path: Path, camera: Camera, plan: Plan, cache: Path) -> None:
 
 def filter_config(path: Path = FEATURES) -> FilterConfig:
     features = yaml.safe_load(path.read_text(encoding="utf-8"))
-    mirrors = tuple((camera, tuple(region)) for camera, regions in (features.get("mirrors") or {}).items() for region in regions)
-    return FilterConfig(mirrors=mirrors)
+    def regions(name: str) -> tuple:
+        return tuple((camera, tuple(region)) for camera, items in (features.get(name) or {}).items() for region in items)
+    return FilterConfig(mirrors=regions("mirrors"), screens=regions("screens"))
 
 
 def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan, feet_margin_m: float | None = HIDDEN_FEET_MARGIN_M, near_m: float = HIDDEN_FEET_FROM_M, use_dense: bool = True) -> tuple[pd.DataFrame, dict[str, tuple[np.ndarray, np.ndarray]]]:

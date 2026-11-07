@@ -13,8 +13,11 @@ import pandas as pd
 
 from mct.geometry import IMAGE_SIZE
 from mct.render import Stamps, paste
+from mct.tracklets import SCREEN_REASON
 from mct.video import clock_text, read_selected_frames
 
+SOURCE_SCALE = 2  # снимки из исходного кадра 2592×1944: люди там заметно чётче, чем в рабочем
+MAX_CROP_HEIGHT = 420
 THUMB_HEIGHT = 112
 ROW_HEIGHT = 136
 LEFT_WIDTH = 250
@@ -43,11 +46,15 @@ def grab_crops(videos: Path, wanted: pd.DataFrame) -> dict[tuple[str, int, int],
         for row in rows.itertuples():
             by_frame.setdefault(int(row.frame), []).append(row)
         crops = {}
-        for number, frame in read_selected_frames(videos / f"{camera}.mkv", by_frame, IMAGE_SIZE):
+        width, height = IMAGE_SIZE[0] * SOURCE_SCALE, IMAGE_SIZE[1] * SOURCE_SCALE
+        for number, frame in read_selected_frames(videos / f"{camera}.mkv", by_frame, (width, height)):
             for row in by_frame[number]:
-                x1, y1 = max(int(row.x1), 0), max(int(row.y1), 0)
-                x2, y2 = min(int(np.ceil(row.x2)), IMAGE_SIZE[0]), min(int(np.ceil(row.y2)), IMAGE_SIZE[1])
-                crops[(camera, number, int(row.raw_track))] = frame[y1:max(y2, y1 + 1), x1:max(x2, x1 + 1)].copy()
+                x1, y1 = max(int(row.x1 * SOURCE_SCALE), 0), max(int(row.y1 * SOURCE_SCALE), 0)
+                x2, y2 = min(int(np.ceil(row.x2 * SOURCE_SCALE)), width), min(int(np.ceil(row.y2 * SOURCE_SCALE)), height)
+                crop = frame[y1:max(y2, y1 + 1), x1:max(x2, x1 + 1)]
+                if crop.shape[0] > MAX_CROP_HEIGHT:
+                    crop = cv2.resize(crop, (max(crop.shape[1] * MAX_CROP_HEIGHT // crop.shape[0], 1), MAX_CROP_HEIGHT), interpolation=cv2.INTER_AREA)
+                crops[(camera, number, int(row.raw_track))] = crop.copy()
         return crops
 
     merged: dict = {}
@@ -191,7 +198,7 @@ def main() -> None:
     short = best[~best.tracklet.isin(kept)]
     rejected += [(row, "короткий") for _, row in short.iterrows()]
     filtered = pd.read_csv(args.tracks / "dropped.csv")
-    for row in filtered.itertuples():
+    for row in filtered[filtered.reason != SCREEN_REASON].itertuples():  # в закрытой зоне экрана смотреть нечего
         rows = detections[(detections.camera == row.camera) & (detections.raw_track == row.raw_track)
                           & (detections.frame >= row.frame_start) & (detections.frame <= row.frame_end)]
         if len(rows):

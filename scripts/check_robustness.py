@@ -79,9 +79,10 @@ def build_cases(cfg: T.TrinityConfig, filters: tracklets_module.FilterConfig) ->
     cases += [Case(f"gap_veto={v}", "сдвиг R", trinity={"gap_veto": v}) for v in (0.05, 0.25)]
     cases += [Case(f"r_hint={v}", "сдвиг R", trinity={"r_hint": v}) for v in (0.5, 0.7)]
     objects_off = {"repeat_count": 10**6, "weak_count": 10**6}
-    all_filters_off = {**objects_off, "mirrors": (), "out_of_floor_m": -OFF, "low_margin_m": -OFF, "static_min_s": OFF, "min_peak_conf": 0.0}
+    all_filters_off = {**objects_off, "mirrors": (), "screens": (), "out_of_floor_m": -OFF, "low_margin_m": -OFF, "static_min_s": OFF, "min_peak_conf": 0.0}
     cases += [
         Case("размеченное зеркало", "откл", filter={"mirrors": ()}),
+        Case("закрытые зоны экранов", "откл", filter={"screens": ()}),
         Case("предметы", "откл", filter=objects_off),
         Case("вне пола", "откл", filter={"out_of_floor_m": -OFF}),
         Case("у границы и низкий", "откл", filter={"low_margin_m": -OFF}),
