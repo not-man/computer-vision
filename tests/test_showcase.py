@@ -2,6 +2,7 @@ import numpy as np
 
 from mct.render import CANVAS, Stamps
 from mct.showcase import BAR_HEIGHT, Moment, pick_moments, reel_seconds, with_bar
+from mct.summary import KNOWN_ERRORS
 
 
 def track(track_id: int, start_s: float, end_s: float, cameras: tuple[str, ...] = ("camera_new_1",), yellow: bool = False,
@@ -29,6 +30,12 @@ def test_walk_takes_the_widest_clean_track_and_shows_the_real_camera_order() -> 
     walk = pick_moments(tracks)[0]
     assert walk.spans == ((99.0, 121.0),)
     assert "1 → 2 → 3 → 5 → 4" in walk.note
+
+
+def test_walk_never_shows_a_track_from_known_errors() -> None:
+    known = KNOWN_ERRORS[0].track_id
+    walk = pick_moments([track(known, 0.0, 20.0, ALL_CAMERAS), track(1000, 100.0, 120.0, THREE_CAMERAS)])[0]
+    assert "#1000 " in walk.note
 
 
 def test_pair_needs_two_tracks_walking_close_together() -> None:

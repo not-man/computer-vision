@@ -6,8 +6,8 @@
 
 | Проверка | Результат | Доказательство |
 |---|---|---|
-| Автотесты на Linux | 182 прошли, включая все экраны интерфейса | `artifacts/test-results/pytest.xml` |
-| `make all` на ноутбуке без GPU | Треки, 21 часть мозаики, снимки, 223 варианта устойчивости, витрина 63.4 с, отчёт 7.8 МБ; 12 мин 42 с при низком приоритете | `artifacts/test-results/make_all.log` |
+| Автотесты на Linux | 183 прошли, включая все экраны интерфейса | `artifacts/test-results/pytest.xml` |
+| `make all` на ноутбуке без GPU | Треки, 21 часть мозаики, снимки, 223 варианта устойчивости, витрина 65.1 с, отчёт 7.8 МБ; 12 мин 42 с при низком приоритете | `artifacts/test-results/make_all.log` |
 | `make check` | 10 из 10 | `artifacts/test-results/demo_check.log` |
 | Толпа и контрольные пары | См. ниже | `artifacts/test-results/eval_fragment.log` |
 | Повтор детекции на GPU | Ещё не сделан. Считается в Colab: этап `repeat_m960` в `colab/run_big.ipynb` | Не заявляется до результата |

@@ -7,11 +7,12 @@ from typing import Iterator
 import numpy as np
 
 from mct.render import BACKGROUND, CANVAS, FPS, MUTED, TEXT, Stamps, paste
+from mct.summary import KNOWN_ERRORS
 from mct.video import H264Writer, clock_text, read_frames
 
 BAR_HEIGHT = 64
 PAD_S = 1.0
-MAX_WALK_S = 24.0
+MAX_WALK_S = 26.0
 MIN_PAIR_CAMERAS = 3
 MIN_PAIR_SHARE = 0.7
 MAX_PAIR_DISTANCE_M = 2.0
@@ -45,7 +46,8 @@ def _duration(track: dict) -> float:
 
 
 def _clean(track: dict) -> bool:
-    return all(link["confidence"] != "yellow" for link in track["links"])
+    """Показываем как пример только то, в чём уверены: без спорных связей и не трек из известных ошибок."""
+    return track["track_id"] not in {error.track_id for error in KNOWN_ERRORS} and all(link["confidence"] != "yellow" for link in track["links"])
 
 
 def _crowding(track: dict, tracks: list[dict]) -> float:
