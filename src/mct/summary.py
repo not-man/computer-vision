@@ -1,0 +1,119 @@
+"""Что показывают интерфейс и офлайн-отчёт: строки таблиц и известные ошибки. Один источник, чтобы экраны не расходились."""
+from dataclasses import dataclass
+
+import pandas as pd
+
+from mct.charts import camera_label
+from mct.render import CLOSE_TEXT
+from mct.video import clock_text
+
+LINK_TIERS = {"sustained": "перекрытие", "brief": "короткий контакт", "gap": "разрыв"}
+SEGMENT_JOIN_S = 1.0  # соседние куски одной камеры с таким разрывом показываются одной строкой
+HONESTY_NOTE = ("Эталонной разметки нет, поэтому качество проверено глазами по снимкам, а не измерено. "
+                "Совпадение ниже показывает стабильность результата, а не его правильность.")
+
+
+@dataclass(frozen=True)
+class KnownError:
+    title: str
+    text: str
+    track_id: int
+    t_s: float  # момент примера, секунды от 17:00:00; demo_check проверяет, что после пересчёта пример ещё верен
+
+
+KNOWN_ERRORS = [
+    KnownError("Чужой фрагмент в треке",
+               "17:45:51, cam_1: у трека #58 на кадре сразу два номера. Детектор на долю секунды принял настольный футбол за человека, "
+               "и этот кусок присоединился к #58, потому что на плане он рядом. На число треков это не влияет.", 58, 2751.0),
+    KnownError("Двое в обнимку",
+               "17:43:46–17:44:03: один человек несёт другого, детектор даёт одну маску, и у обоих один номер #39. "
+               "Пока они не разойдутся, второго человека система не видит.", 39, 2626.0),
+    KnownError("Возврат через несколько секунд",
+               "17:41:30–17:41:36: #12 ушёл в дверь, через 6 с появился #19, похожий на него. По правилу это новый трек с подсказкой. "
+               "ТЗ не называет длительность отсутствия, поэтому при другом толковании треков будет меньше.", 19, 2496.0),
+]
+
+
+def duration_s(track: dict) -> float:
+    return (track["t_end_ms"] - track["t_start_ms"]) / 1000
+
+
+def close_text(track: dict) -> str:
+    return CLOSE_TEXT.get(track["close_zone"], track["close_zone"])
+
+
+def camera_numbers(track: dict) -> str:
+    return ", ".join(camera[-1] for camera in track["cameras"])
+
+
+def track_rows(tracks: list[dict]) -> list[dict]:
+    return [{
+        "Трек": track["track_id"],
+        "Начало": track["start"][:8],
+        "Конец": track["end"][:8],
+        "Секунд": round(duration_s(track)),
+        "Камеры": camera_numbers(track),
+        "Закрыт": close_text(track),
+        "Похож на": ", ".join(f"#{hint['track_id']}" for hint in track["possibly_same_person_as"]),
+    } for track in tracks]
+
+
+def segment_rows(track: dict) -> list[dict]:
+    """На каких камерах и когда проходил трек."""
+    pieces: dict[str, list[list[int]]] = {}
+    for segment in sorted((s for s in track["segments"] if s["kind"] == "observed"), key=lambda s: s["t_start_ms"]):
+        camera = pieces.setdefault(segment["camera_id"], [])
+        if camera and segment["t_start_ms"] - camera[-1][1] <= SEGMENT_JOIN_S * 1000:
+            camera[-1][1] = max(camera[-1][1], segment["t_end_ms"])
+        else:
+            camera.append([segment["t_start_ms"], segment["t_end_ms"]])
+    rows = [(start, end, camera) for camera, spans in pieces.items() for start, end in spans]
+    return [{"Камера": camera_label(camera), "С": clock_text(start / 1000)[:8], "По": clock_text(end / 1000)[:8], "Секунд": round((end - start) / 1000)}
+            for start, end, camera in sorted(rows)]
+
+
+def link_rows(track: dict) -> list[dict]:
+    return [{
+        "Время": clock_text(link["t_ms"] / 1000)[:8],
+        "Откуда": camera_label(link["camera_a"]),
+        "Куда": camera_label(link["camera_b"]),
+        "Вид": LINK_TIERS[link["tier"]],
+        "G, м": link["g_m"],
+        "Контакт, с": link["contact_s"],
+        "R": link["r"],
+        "Оценка": "спорная" if link["confidence"] == "yellow" else "уверенная",
+    } for link in track["links"]]
+
+
+def hint_texts(track: dict) -> list[str]:
+    texts = []
+    for hint in track["possibly_same_person_as"]:
+        absent = int(round(hint["absent_s"]))
+        texts.append(f"Вероятно, вернулся #{hint['track_id']}: отсутствовал {absent // 60}:{absent % 60:02d}, сходство {hint['r']:.2f}. Не склеено по правилу ТЗ.")
+    return texts
+
+
+def rule_rows(robustness: pd.DataFrame) -> list[dict]:
+    removed = robustness[robustness.group == "откл"].sort_values("agreement")
+    return [{"Правило": row.name, "Треков": int(row.tracks), "Спорных связей": int(row.yellow), "Совпадение": round(float(row.agreement), 3)}
+            for row in removed.itertuples()]
+
+
+def robustness_tiles(robustness: pd.DataFrame) -> list[tuple[str, str]]:
+    scaled = robustness[robustness.group == "пороги"]
+    return [("Порог ±20%: треков", f"{scaled.tracks.min()}–{scaled.tracks.max()}"),
+            ("Совпадение наблюдений, минимум", f"{scaled.agreement.min():.3f}"),
+            ("Вариантов проверено", str(len(robustness)))]
+
+
+def check_known_errors(tracks: list[dict]) -> list[str]:
+    """После пересчёта номера могут сдвинуться: тогда примеры в интерфейсе надо переписать."""
+    by_id = {track["track_id"]: track for track in tracks}
+    problems = []
+    for error in KNOWN_ERRORS:
+        track = by_id.get(error.track_id)
+        if track is None:
+            problems.append(f"«{error.title}»: нет трека #{error.track_id}")
+        elif not track["t_start_ms"] / 1000 - 1 <= error.t_s <= track["t_end_ms"] / 1000 + 1:
+            problems.append(f"«{error.title}»: трек #{error.track_id} идёт {track['start'][:8]}–{track['end'][:8]}, а пример в {clock_text(error.t_s)[:8]}")
+    return problems

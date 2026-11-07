@@ -6,8 +6,10 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from mct.charts import TIMELINE_HEIGHT, camera_label, curve_figure, plan_figure, timeline_figure
-from mct.render import CLOSE_TEXT
+from mct.charts import TIMELINE_HEIGHT, camera_label, plan_figure, robustness_curves, timeline_figure
+from mct.summary import (
+    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, robustness_tiles, rule_rows, segment_rows, track_rows,
+)
 from mct.video import clock_text
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,10 +46,6 @@ ALL_TRACKS = TRACKS_DATA["tracks"]
 BY_ID = {track["track_id"]: track for track in ALL_TRACKS}
 
 
-def duration_s(track: dict) -> float:
-    return (track["t_end_ms"] - track["t_start_ms"]) / 1000
-
-
 def summary_row() -> None:
     hints = sum(len(track["possibly_same_person_as"]) for track in ALL_TRACKS)
     length = MANIFEST["clock_end_s"] - MANIFEST["clock_start_s"]
@@ -81,18 +79,6 @@ def screen_recording() -> None:
                      hide_index=True, width="stretch", height=240)
 
 
-def tracks_table() -> pd.DataFrame:
-    return pd.DataFrame([{
-        "Трек": track["track_id"],
-        "Начало": track["start"][:8],
-        "Конец": track["end"][:8],
-        "Секунд": round(duration_s(track)),
-        "Камеры": ", ".join(camera[-1] for camera in track["cameras"]),
-        "Закрыт": CLOSE_TEXT.get(track["close_zone"], track["close_zone"]),
-        "Похож на": ", ".join(f"#{hint['track_id']}" for hint in track["possibly_same_person_as"]),
-    } for track in ALL_TRACKS])
-
-
 def track_chunks(track: dict) -> list[dict]:
     start, end = track["t_start_ms"] / 1000, track["t_end_ms"] / 1000
     return [chunk for chunk in MANIFEST["chunks"] if chunk["t_start_s"] < end and start < chunk["t_end_s"]]
@@ -108,20 +94,11 @@ def show_crops(track: dict) -> None:
 
 
 def show_links(track: dict) -> None:
-    if not track["links"]:
+    rows = link_rows(track)
+    if rows:
+        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+    else:
         st.caption("Трек видела одна камера, связей между камерами нет.")
-        return
-    tiers = {"sustained": "перекрытие", "brief": "короткий контакт", "gap": "разрыв"}
-    st.dataframe(pd.DataFrame([{
-        "Время": clock_text(link["t_ms"] / 1000)[:8],
-        "Откуда": camera_label(link["camera_a"]),
-        "Куда": camera_label(link["camera_b"]),
-        "Вид": tiers[link["tier"]],
-        "G, м": link["g_m"],
-        "Контакт, с": link["contact_s"],
-        "R": link["r"],
-        "Оценка": "спорная" if link["confidence"] == "yellow" else "уверенная",
-    } for link in track["links"]]), hide_index=True, width="stretch")
 
 
 def show_dossier(track: dict) -> None:
@@ -130,12 +107,10 @@ def show_dossier(track: dict) -> None:
     columns[0].metric("Начало", track["start"][:8])
     columns[1].metric("Конец", track["end"][:8])
     columns[2].metric("Длительность", f"{duration_s(track):.0f} с")
-    columns[3].metric("Камеры", ", ".join(camera[-1] for camera in track["cameras"]))
-    reason = CLOSE_TEXT.get(track["close_zone"], track["close_zone"])
-    st.write(f"Закрыт: {reason}.")
-    for hint in track["possibly_same_person_as"]:
-        absent = int(round(hint["absent_s"]))
-        st.write(f"Вероятно, вернулся #{hint['track_id']}: отсутствовал {absent // 60}:{absent % 60:02d}, сходство {hint['r']:.2f}. Не склеено по правилу ТЗ.")
+    columns[3].metric("Камеры", camera_numbers(track))
+    st.write(f"Закрыт: {close_text(track)}.")
+    for text in hint_texts(track):
+        st.write(text)
     show_crops(track)
 
     left, right = st.columns([3, 2])
@@ -149,12 +124,13 @@ def show_dossier(track: dict) -> None:
         st.video(str(RENDER / chosen["file"]), start_time=int(start))
         show_links(track)
     with right:
+        st.dataframe(pd.DataFrame(segment_rows(track)), hide_index=True, width="stretch")
         st.plotly_chart(plan_figure(track, PLAN_IMAGE, ROOT / "configs"), config=CHART_CONFIG, width="stretch", key=f"plan_{track['track_id']}")
 
 
 @st.fragment
 def screen_tracks() -> None:
-    table = tracks_table()
+    table = pd.DataFrame(track_rows(ALL_TRACKS))
     left, right = st.columns([5, 6])
     selection = left.dataframe(table, hide_index=True, width="stretch", height=TIMELINE_HEIGHT, column_config=TABLE_COLUMNS,
                                on_select="rerun", selection_mode="single-row", key="track_table")
@@ -177,38 +153,21 @@ def screen_returns() -> None:
 
 
 def screen_honesty() -> None:
-    st.write(
-        "Эталонной разметки нет, поэтому качество проверено глазами по снимкам, а не измерено. "
-        "Совпадение ниже показывает стабильность результата, а не его правильность."
-    )
+    st.write(HONESTY_NOTE)
     if ROBUSTNESS is None:
         st.info("Проверка ещё не запускалась: scripts/check_robustness.py")
         return
-    scaled = ROBUSTNESS[ROBUSTNESS.group == "пороги"]
-    columns = st.columns(3)
-    columns[0].metric("Порог ±20%: треков", f"{scaled.tracks.min()}–{scaled.tracks.max()}")
-    columns[1].metric("Совпадение наблюдений, минимум", f"{scaled.agreement.min():.3f}")
-    columns[2].metric("Вариантов проверено", len(ROBUSTNESS))
-
-    left, right = st.columns(2)
-    duration = ROBUSTNESS[ROBUSTNESS.group == "кривая длительности"]
-    veto = ROBUSTNESS[ROBUSTNESS.group == "кривая r_veto"]
-    left.plotly_chart(curve_figure(duration.name.str.split().str[1].astype(float).reset_index(drop=True), duration.tracks.reset_index(drop=True),
-                                   "Число треков зависит от минимальной длительности", "минимальная длительность трека, с", 2.0), config=CHART_CONFIG, width="stretch")
-    right.plotly_chart(curve_figure(veto.name.str.split().str[1].astype(float).reset_index(drop=True), veto.tracks.reset_index(drop=True),
-                                    "Число треков зависит от запрета по внешности", "порог R_veto", 0.05), config=CHART_CONFIG, width="stretch")
+    for column, (label, value) in zip(st.columns(3), robustness_tiles(ROBUSTNESS)):
+        column.metric(label, value)
+    for column, figure in zip(st.columns(2), robustness_curves(ROBUSTNESS)):
+        column.plotly_chart(figure, config=CHART_CONFIG, width="stretch")
 
     st.subheader("Что будет, если отключить правило")
-    removed = ROBUSTNESS[ROBUSTNESS.group == "откл"].sort_values("agreement")
-    st.dataframe(pd.DataFrame({"Правило": removed.name, "Треков": removed.tracks, "Спорных связей": removed.yellow, "Совпадение": removed.agreement}),
-                 hide_index=True, width="stretch")
+    st.dataframe(pd.DataFrame(rule_rows(ROBUSTNESS)), hide_index=True, width="stretch")
 
     st.subheader("Известные ошибки")
-    st.markdown(
-        "- **Подмена вдали и в толпе.** Трекер одной камеры может перепутать двух идущих рядом людей, тогда в треке появляется чужой фрагмент.\n"
-        "- **Пары вплотную.** Если двое идут рядом и одеты похоже, передача отмечается как спорная: номера могут поменяться местами, число треков при этом верно.\n"
-        "- **Уход и возврат через несколько секунд.** Сейчас это новый трек с подсказкой: ТЗ не называет, что считать длительным отсутствием."
-    )
+    for error in KNOWN_ERRORS:
+        st.markdown(f"**{error.title}.** {error.text}")
 
 
 SCREENS = {

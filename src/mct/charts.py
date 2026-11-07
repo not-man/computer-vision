@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import yaml
 from PIL import Image
 
+from mct.trinity import TrinityConfig
 from mct.video import clock_text
 
 SURFACE = "#1a1a19"
@@ -131,3 +132,13 @@ def curve_figure(values: pd.Series, tracks: pd.Series, title: str, x_title: str,
         yaxis={"title": {"text": "треков"}, "gridcolor": GRID, "zeroline": False, "rangemode": "tozero"},
     )
     return figure
+
+
+def robustness_curves(robustness: pd.DataFrame) -> list[go.Figure]:
+    def curve(group: str, title: str, x_title: str, current: float) -> go.Figure:
+        rows = robustness[robustness.group == group].reset_index(drop=True)
+        return curve_figure(rows.name.str.split().str[1].astype(float), rows.tracks, title, x_title, current)
+
+    config = TrinityConfig()
+    return [curve("кривая длительности", "Число треков зависит от минимальной длительности", "минимальная длительность трека, с", config.min_track_s),
+            curve("кривая r_veto", "Число треков зависит от запрета по внешности", "порог R_veto", config.r_veto)]

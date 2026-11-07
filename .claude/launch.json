@@ -12,6 +12,12 @@
       "runtimeExecutable": ".venv/bin/streamlit",
       "runtimeArgs": ["run", "app/demo.py", "--server.port", "8502", "--server.headless", "true"],
       "port": 8502
+    },
+    {
+      "name": "report",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "http.server", "8503", "--directory", "render/full"],
+      "port": 8503
     }
   ]
 }
