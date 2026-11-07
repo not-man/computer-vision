@@ -11,10 +11,11 @@ import pandas as pd
 import yaml
 
 from mct import trinity as tr
-from evaluation.fragment_truth import label_rows, score
+from evaluation.fragment_truth import label_rows, score_fixed_truth, track_on_truth
 from mct.geometry import load_cameras
 from mct.plan import Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception
+from scripts.port_labels import transfer_truth_rows
 
 WINDOWS = {"crowd": (2700.0, 70.0), "door": (3095.0, 35.0)}
 FAR_M = 20.0
@@ -73,7 +74,7 @@ def describe(name: str, observations: pd.DataFrame, run: dict, cameras: dict, la
     text = (f"{name:30s} строк {len(observations):6d}, уверенных {int(good.sum()):6d}, дальше {FAR_M:.0f} м {int((good & (distance >= FAR_M)).sum()):5d}, "
             f"номеров трекера {observations.groupby('camera').raw_track.nunique().sum():4d}, кусков {run['pieces']:3d}, треков {run['tracks']:3d}")
     if labels is not None:
-        text += f", толпа {labels['соответствие']:.3f}/{labels['чистота']:.3f}/{labels['полнота']:.3f} ({labels['строк']})"
+        text += f", толпа {labels['соответствие']:.3f}/{labels['чистота']:.3f} ({labels['в_треках']}/{labels['размечено']})"
     print(text + extra, flush=True)
 
 
@@ -92,7 +93,9 @@ def main() -> None:
         print(f"=== окно {window}: {start:.0f}–{start + duration:.0f}")
         old_rows, old_embeddings = window_rows(base_observations, base_embeddings, start, duration)
         old_run = run_window(old_rows, old_embeddings, zones)
-        labels = score(old_run["assigned"], old_run["track"]) if window == "crowd" else None
+        baseline_truth = transfer_truth_rows({camera: (rows, rows) for camera, rows in old_rows.groupby("camera")}) if window == "crowd" else None
+        labels = (score_fixed_truth(baseline_truth.person, track_on_truth(baseline_truth, old_run["assigned"], old_run["track"], target="raw_track"))
+                  if baseline_truth is not None else None)
         describe("готовая детекция", old_rows, old_run, cameras, labels)
         for folder in sorted(path for path in args.trial.glob("*") if (path / window).is_dir()):
             if not list((folder / window).glob("*_summary.json")):
@@ -100,8 +103,15 @@ def main() -> None:
             new_observations, new_embeddings = load_perception(folder / window, cameras, plan, use_dense=False)
             new_rows, new_limited = window_rows(new_observations, new_embeddings, start, duration)
             new_run = run_window(new_rows, new_limited, zones)
-            people, best = carry_over(old_rows, new_run["assigned"])
-            labels = score(new_run["assigned"], new_run["track"], people) if window == "crowd" else None
+            _, best = carry_over(old_rows, new_run["assigned"])
+            if window == "crowd":
+                cameras_in_window = sorted(old_rows.camera.unique())
+                transferred = transfer_truth_rows({camera: (old_rows[old_rows.camera == camera], new_rows[new_rows.camera == camera])
+                                                   for camera in cameras_in_window})
+                labels = score_fixed_truth(transferred.person,
+                                           track_on_truth(transferred, new_run["assigned"], new_run["track"], target="new_raw_track"))
+            else:
+                labels = None
             kept = new_run["assigned"][new_run["track"].notna()]
             fresh = kept[best.loc[kept.index] < NEW_IOU]
             old_kept = old_run["assigned"][old_run["track"].notna()]

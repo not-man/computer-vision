@@ -1,11 +1,14 @@
 """Тяжёлая часть конвейера: видео → наблюдения, маски и векторы ReID. Запускается на GPU один раз."""
 import json
 import time
+import zipfile
 from pathlib import Path
 
 import cv2
 import numpy as np
 import pandas as pd
+import pyarrow
+import pyarrow.parquet as parquet
 import yaml
 from pycocotools import mask as mask_utils
 from ultralytics import YOLO
@@ -17,6 +20,31 @@ PROCESS_SIZE = (1296, 972)  # половина исходных 2592×1944, эт
 EDGE_MARGIN_PX = 4
 CONFIGS = Path(__file__).resolve().parents[2] / "configs"
 TRACKER = str(CONFIGS / "botsort.yaml")
+
+
+def valid_embeddings(path: Path) -> bool:
+    """Проверить завершённость NPZ перед пропуском камеры после обрыва Colab."""
+    try:
+        with np.load(path, allow_pickle=False) as data:
+            keys, vectors = data["keys"], data["vectors"]
+            return keys.ndim == vectors.ndim == 2 and keys.shape[1] == 2 and len(keys) == len(vectors)
+    except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile):
+        return False
+
+
+def valid_perception_output(out_dir: Path, camera: str, expected: dict | None = None) -> bool:
+    summary = out_dir / f"{camera}_summary.json"
+    if not summary.is_file():
+        return False
+    try:
+        details = json.loads(summary.read_text(encoding="utf-8"))
+        if details["camera"] != camera or any(details.get(key) != value for key, value in (expected or {}).items()):
+            return False
+        if parquet.read_metadata(out_dir / f"{camera}.parquet").num_rows != details["observations"]:
+            return False
+    except (OSError, ValueError, KeyError, pyarrow.ArrowException):
+        return False
+    return valid_embeddings(out_dir / f"{camera}_emb.npz")
 
 
 def encode_mask(mask: np.ndarray) -> str:

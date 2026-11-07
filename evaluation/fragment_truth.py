@@ -108,6 +108,43 @@ def score(rows: pd.DataFrame, track_of_row: pd.Series, people: pd.Series | None 
                 по_людям={p: {int(k): int(v) for k, v in crossed.loc[p][crossed.loc[p] > 0].sort_values(ascending=False).items()} for p in crossed.index})
 
 
+def score_fixed_truth(people: pd.Series, track_of_row: pd.Series) -> dict:
+    """Сопоставление ID на фиксированном числе размеченных исходных рамок.
+
+    Отсутствие новой детекции или итогового трека остаётся в знаменателе. Чистота считается
+    только по назначенным рамкам и потому отдельно от соответствия показывает смешение ID.
+    """
+    if people.isna().any() or not people.index.equals(track_of_row.index):
+        raise ValueError("Нужны размеченные строки и выровненные по индексу предсказания")
+    table = pd.DataFrame({"person": people, "track": track_of_row}).dropna()
+    total, covered = len(people), len(table)
+    if not total:
+        raise ValueError("Нет размеченных строк")
+    if table.empty:
+        return {"размечено": total, "в_треках": 0, "совпало": 0, "соответствие": 0.0, "чистота": 0.0}
+    crossed = pd.crosstab(table.person, table.track)
+    rows, columns = linear_sum_assignment(-crossed.values)
+    matched = int(crossed.values[rows, columns].sum())
+    return {"размечено": total, "в_треках": covered, "совпало": matched,
+            "соответствие": round(matched / total, 3),
+            "чистота": round(float(crossed.max(axis=0).sum() / covered), 3)}
+
+
+def track_on_truth(truth_rows: pd.DataFrame, assigned: pd.DataFrame, track_of_row: pd.Series, *, target: str) -> pd.Series:
+    """Итоговый ID для каждой исходной размеченной рамки; пропуск остаётся пустым."""
+    keys = ["camera", "frame", "raw_track"]
+    if assigned.duplicated(keys).any():
+        raise ValueError("Один номер трекера повторяется в кадре среди наблюдений")
+    if not assigned.index.equals(track_of_row.index):
+        raise ValueError("Индексы наблюдений и итоговых номеров не совпадают")
+    reference = assigned[keys].copy()
+    reference["track"] = track_of_row.to_numpy()
+    labels = truth_rows[["camera", "frame", target]].rename(columns={target: "raw_track"}).copy()
+    labels["raw_track"] = labels.raw_track.astype("Int64")
+    joined = labels.merge(reference, on=keys, how="left", validate="many_to_one", sort=False)
+    return pd.Series(joined.track.to_numpy(), index=truth_rows.index)
+
+
 def check_pairs(rows: pd.DataFrame, track_of_row: pd.Series) -> dict[str, list[str]]:
     """Сверка с проверкой глазами: кто должен быть в одном треке и кто в разных. Точка ищет ближайшую строку своего номера трекера."""
     def track_at(point: tuple) -> float | None:

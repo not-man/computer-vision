@@ -10,7 +10,7 @@ from plotly.offline import get_plotlyjs
 
 from mct.charts import camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows,
+    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
 )
 from mct.video import clock_text
 
@@ -76,6 +76,7 @@ button{cursor:pointer}button:hover{border-color:var(--muted)}
   <div class="columns">
     <div class="stack">
       <div class="controls" id="dossier-controls"><select id="dossier-minute" aria-label="Минута записи"></select></div>
+      <p class="muted" id="dossier-video-note"></p>
       <video id="dossier-video" controls preload="metadata"></video>
       <div class="scroll" id="dossier-links"></div>
     </div>
@@ -84,7 +85,7 @@ button{cursor:pointer}button:hover{border-color:var(--muted)}
 </div>
 
 <h2 id="returns">Возвраты</h2>
-<p>Отсутствие дольше минуты: слева ушедший трек, справа новый. Подсказка не меняет ID и подсчёт, вернувшийся получает новый номер. Кто вернулся быстрее минуты и уверенно узнан, сохраняет свой номер.</p>
+<p>Отсутствие дольше минуты: слева ушедший трек, справа новый. Подсказка не меняет ID и подсчёт, вернувшийся получает новый номер. Кто вернулся не позже минуты и уверенно узнан, сохраняет свой номер.</p>
 <img id="hints" alt="Снимки ушедших и новых треков, которые похожи друг на друга">
 
 <h2 id="honesty">Как проверяли</h2>
@@ -183,6 +184,7 @@ function showTrack(row, line) {
 
 function openDossierVideo(track, index) {
   const chunk = track.chunks[index];
+  byId('dossier-video-note').textContent = 'Трек виден с ' + chunk.first_seen + ' на ' + chunk.cameras + '.';
   byId('dossier-video').src = chunk.file + '#t=' + chunk.offset;
 }
 
@@ -238,9 +240,7 @@ def _crops(tracks_dir: Path) -> dict[str, dict]:
 
 
 def _track_chunks(track: dict, chunks: list[dict]) -> list[dict]:
-    start, end = track["t_start_ms"] / 1000, track["t_end_ms"] / 1000
-    return [{"label": chunk["start"][:8], "file": chunk["file"], "offset": round(max(start - chunk["t_start_s"] - 1, 0), 1)}
-            for chunk in chunks if chunk["t_start_s"] < end and start < chunk["t_end_s"]]
+    return track_video_chunks(track, chunks)
 
 
 def _track_entry(track: dict, row: int, crops: dict[str, dict], chunks: list[dict], plan_image: Path, configs: Path) -> dict:

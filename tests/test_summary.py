@@ -6,7 +6,7 @@ import pandas as pd
 from PIL import Image
 
 from mct.report import build_report
-from mct.summary import KNOWN_ERRORS, check_known_errors, hint_texts, link_rows, quality_tiles, rule_rows, segment_rows, track_rows
+from mct.summary import KNOWN_ERRORS, check_known_errors, hint_texts, link_rows, quality_tiles, rule_rows, segment_rows, track_rows, track_video_chunks
 
 
 def track(track_id: int = 1, start_s: float = 0.0, end_s: float = 10.0) -> dict:
@@ -29,6 +29,21 @@ def test_segments_join_short_breaks_within_a_camera_and_keep_long_ones() -> None
     assert [(row["Камера"], row["С"], row["По"]) for row in rows] == [
         ("cam_1", "17:00:00", "17:00:05"), ("cam_3", "17:00:04", "17:00:10"), ("cam_1", "17:00:09", "17:00:10"),
     ]
+
+
+def test_dossier_video_seeks_to_observation_in_each_minute() -> None:
+    item = track(end_s=160.0)
+    item["segments"] = [
+        {"kind": "observed", "camera_id": "camera_new_1", "t_start_ms": 2000, "t_end_ms": 10000},
+        {"kind": "observed", "camera_id": "camera_new_3", "t_start_ms": 145000, "t_end_ms": 155000},
+    ]
+    chunks = [{"file": f"chunks/{index:03}.mp4", "t_start_s": index * 60.0, "t_end_s": (index + 1) * 60.0,
+               "start": f"17:0{index}:00.0"} for index in range(3)]
+    chosen = track_video_chunks(item, chunks)
+    assert [chunk["file"] for chunk in chosen] == ["chunks/000.mp4", "chunks/002.mp4"]
+    assert chosen[1]["offset"] == 24.0
+    assert chosen[1]["first_seen"] == "17:02:25"
+    assert chosen[1]["cameras"] == "cam_3"
 
 
 def test_track_table_has_what_the_brief_asks_for() -> None:
@@ -85,7 +100,8 @@ def test_report_needs_no_network_and_opens_videos_next_to_it(tmp_path: Path) -> 
     build_report({"total_tracks": 1, "tracks": [track()]}, manifest, robustness, tracks_dir, plan, configs, out)
     html = out.read_text(encoding="utf-8")
     data = json.loads(html[html.index("const DATA = ") + len("const DATA = "):html.index(";\nconst CONFIG")].replace("<\\/", "</"))
-    assert data["tracks"]["1"]["chunks"][0] == {"label": "17:00:00", "file": "chunks/000.mp4", "offset": 0}
+    assert data["tracks"]["1"]["chunks"][0] == {"label": "17:00:00", "file": "chunks/000.mp4", "offset": 0,
+                                                 "first_seen": "17:00:00", "cameras": "cam_1, cam_3"}
     assert data["tracks"]["1"]["plan"]["layout"]["images"][0]["source"] == ""
     assert data["tracks"]["1"]["crops"][0]["uri"].startswith("data:image/jpeg;base64,")
     page_only = html[:html.index("<script>")]

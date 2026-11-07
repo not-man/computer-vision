@@ -6,7 +6,7 @@ from pathlib import Path
 import yaml
 
 from mct.embedder import create_embedder
-from mct.perception import CONFIGS, process_camera
+from mct.perception import CONFIGS, process_camera, valid_perception_output
 
 
 def main() -> None:
@@ -31,9 +31,16 @@ def main() -> None:
     embedder = create_embedder(args.device, args.reid_model)
     print(f"ReID: {embedder.name}", flush=True)
     for video in sorted(args.videos.glob("*.mkv")):
-        if (args.out / f"{video.stem}_summary.json").exists():
+        summary_path = args.out / f"{video.stem}_summary.json"
+        settings = {"model": args.model, "imgsz": args.imgsz, "detect_scale": args.detect_scale,
+                    "every_frame": args.every_frame, "fps": args.fps, "conf": args.conf,
+                    "embedder": embedder.name}
+        if valid_perception_output(args.out, video.stem, settings):
             print(f"{video.stem}: уже готово", flush=True)
             continue
+        # Старый маркер готовности нельзя оставлять на время повторного прохода:
+        # после обрыва он ошибочно объявит частично записанные файлы готовыми.
+        summary_path.unlink(missing_ok=True)
         start = args.start if args.clock_start is None else args.clock_start - clocks[video.stem]["clock_at_frame_0"]
         summary = process_camera(
             video, args.out, embedder, args.model, args.device,

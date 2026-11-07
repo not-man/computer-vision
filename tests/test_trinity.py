@@ -132,6 +132,15 @@ def test_return_within_a_minute_keeps_the_number_when_appearance_is_sure() -> No
     assert result.tracks[0].links[0].tier == "return"
 
 
+def test_exactly_one_minute_may_keep_id_but_longer_absence_gets_new_id() -> None:
+    first = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=SAME)
+    zones = ZoneMap([Zone("DOOR", 14.0, 5.0, 1.0)])
+    at_minute = walker(2, "cam_1", 70.0, 80.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=SAME)
+    after_minute = walker(2, "cam_1", 70.1, 80.1, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=SAME)
+    assert groups(run([first, at_minute], zones)) == {frozenset({1, 2})}
+    assert groups(run([first, after_minute], zones)) == {frozenset({1}), frozenset({2})}
+
+
 def test_return_within_a_minute_needs_strong_appearance() -> None:
     a = walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), embedding=look(0))
     b = walker(2, "cam_1", 50.0, 60.0, (14.0, 5.0), velocity=(-1.4, 0.0), embedding=look(60.0))

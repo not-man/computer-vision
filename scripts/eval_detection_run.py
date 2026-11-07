@@ -1,8 +1,11 @@
 """Оценка другого прогона детектора или трекера: склейка, толпа и контрольные пары. Папка как artifacts/perception.
 
-Разметка переносится на новый прогон по совпадению рамок прямо в памяти, файл разметки не меняется. Нужны <камера>.parquet, <камера>_emb.npz и <камера>_emb_dense.npz.
+Разметка переносится по рамкам в том же кадре с общими часами, файл разметки не меняется.
+Пропуски остаются в знаменателе. Нужны <камера>.parquet и <камера>_emb.npz;
+<камера>_emb_dense.npz используется, если есть.
 """
 import argparse
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -13,20 +16,20 @@ from mct import trinity as tr
 from mct.geometry import load_cameras
 from mct.plan import Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception
-from port_labels import BOX, port_labels, port_point
+from scripts.port_labels import port_point, read_tables, transfer_truth_rows
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("run", type=Path)
     parser.add_argument("--base", type=Path, default=Path("artifacts/perception"))
+    parser.add_argument("--base-tracks", type=Path, default=Path("artifacts/tracks"))
     args = parser.parse_args()
 
-    columns = ["frame", "t_s", "raw_track", *BOX]
-    tables = {path.stem: (pd.read_parquet(path, columns=columns), pd.read_parquet(args.run / path.name, columns=columns))
-              for path in sorted(args.base.glob("camera_new_?.parquet")) if (args.run / path.name).exists()}
-    labels, total, kept = port_labels(tables)
-    print(f"разметка толпы: перенесено {kept} строк из {total}")
+    tables = read_tables(args.base, args.run)
+    marked = transfer_truth_rows(tables)
+    total, kept = len(marked), int(marked.new_raw_track.notna().sum())
+    print(f"разметка толпы по общим часам: перенесено {kept} строк из {total}")
     same, different, lost = [], [], []
     for source, target in ((truth.SAME_PERSON, same), (truth.DIFFERENT_PEOPLE, different)):
         for a, b, text in source:
@@ -36,7 +39,7 @@ def main() -> None:
             else:
                 target.append((new_a, new_b, text))
     print("контрольных пар", len(same) + len(different), "потеряно", lost or "нет")
-    truth.LABELS, truth.SAME_PERSON, truth.DIFFERENT_PEOPLE = labels, same, different
+    truth.SAME_PERSON, truth.DIFFERENT_PEOPLE = same, different
 
     plan = Plan.load()
     observations, embeddings = load_perception(args.run, load_cameras(), plan)
@@ -45,11 +48,22 @@ def main() -> None:
     tracklets, assigned, dropped = build_tracklets(observations, embeddings, filter_config())
     result = tr.link_tracklets(tracklets, tr.TrinityConfig(), zones)
     owner = {piece: track.track_id for track in result.tracks for piece in track.tracklets}
-    numbers = truth.score(assigned, assigned.tracklet.map(owner))
+    baseline = pd.read_parquet(args.base_tracks / "observations.parquet", columns=["camera", "frame", "raw_track", "tracklet"])
+    baseline_tracks = json.loads((args.base_tracks / "tracks.json").read_text(encoding="utf-8"))["tracks"]
+    baseline_owner = {piece: track["track_id"] for track in baseline_tracks for piece in track["tracklets"]}
+    base_score = truth.score_fixed_truth(marked.person, truth.track_on_truth(marked, baseline, baseline.tracklet.map(baseline_owner), target="raw_track"))
+    predicted = truth.track_on_truth(marked, assigned, assigned.tracklet.map(owner), target="new_raw_track")
+    numbers = truth.score_fixed_truth(marked.person, predicted)
     errors = truth.check_pairs(assigned, assigned.tracklet.map(owner))
     print("наблюдений", len(observations), "кусков", len(tracklets), "отброшено", len(dropped))
-    print("треков", len(result.tracks), {key: value for key, value in numbers.items() if key != "по_людям"})
-    print(numbers["по_людям"])
+    print("основной вариант на той же разметке", base_score)
+    print("треков", len(result.tracks), "новый вариант", numbers)
+    labeled_ids = pd.DataFrame({"person": marked.person, "track": predicted})
+    print("распределение ID по людям", {
+        person: {"без ID" if pd.isna(track) else str(int(track)): int(count)
+                 for track, count in group.track.value_counts(dropna=False).items()}
+        for person, group in labeled_ids.groupby("person")
+    })
     print("пары верно", len(same) + len(different) - sum(map(len, errors.values())), "из", len(same) + len(different), errors)
     links = pd.Series([link.tier for track in result.tracks for link in track.links]).value_counts().to_dict()
     print("связи", links, "спорных", sum(link.confidence == "yellow" for track in result.tracks for link in track.links),

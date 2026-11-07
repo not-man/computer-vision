@@ -8,7 +8,7 @@ import streamlit as st
 
 from mct.charts import TIMELINE_HEIGHT, camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
-    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows,
+    HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
 )
 from mct.video import clock_text
 
@@ -79,11 +79,6 @@ def screen_recording() -> None:
                      hide_index=True, width="stretch", height=240)
 
 
-def track_chunks(track: dict) -> list[dict]:
-    start, end = track["t_start_ms"] / 1000, track["t_end_ms"] / 1000
-    return [chunk for chunk in MANIFEST["chunks"] if chunk["t_start_s"] < end and start < chunk["t_end_s"]]
-
-
 def show_crops(track: dict) -> None:
     items = sorted((CROPS[str(tracklet)] for tracklet in track["tracklets"] if str(tracklet) in CROPS), key=lambda item: item["t_s"])[:MAX_CROPS]
     if not items:
@@ -115,13 +110,13 @@ def show_dossier(track: dict) -> None:
 
     left, right = st.columns([3, 2])
     with left:
-        chunks = track_chunks(track)
+        chunks = track_video_chunks(track, MANIFEST["chunks"])
         chosen = chunks[0]
         if len(chunks) > 1:
-            labels = [chunk["start"][:8] for chunk in chunks]
+            labels = [chunk["label"] for chunk in chunks]
             chosen = chunks[labels.index(st.selectbox("Минута записи", labels, key=f"minute_{track['track_id']}"))]
-        start = max(track["t_start_ms"] / 1000 - chosen["t_start_s"] - 1, 0)
-        st.video(str(RENDER / chosen["file"]), start_time=int(start))
+        st.caption(f"Трек #{track['track_id']} виден с {chosen['first_seen']} на {chosen['cameras']}.")
+        st.video(str(RENDER / chosen["file"]), start_time=int(chosen["offset"]))
         show_links(track)
     with right:
         st.dataframe(pd.DataFrame(segment_rows(track)), hide_index=True, width="stretch")
@@ -160,7 +155,7 @@ def screen_tracks() -> None:
 
 
 def screen_returns() -> None:
-    st.write("Отсутствие дольше минуты: слева ушедший трек, справа новый. Подсказка не меняет ID и подсчёт, вернувшийся получает новый номер. Кто вернулся быстрее минуты и уверенно узнан, сохраняет свой номер.")
+    st.write("Отсутствие дольше минуты: слева ушедший трек, справа новый. Подсказка не меняет ID и подсчёт, вернувшийся получает новый номер. Кто вернулся не позже минуты и уверенно узнан, сохраняет свой номер.")
     sheet = TRACKS / "gallery" / "hints.jpg"
     if sheet.exists():
         st.image(str(sheet))
@@ -200,5 +195,5 @@ SCREENS = {
 if not PLAN_IMAGE.exists():
     shutil.copy(ROOT / "data" / "office.jpg", PLAN_IMAGE)
 st.title("Сквозной трекинг людей по камерам")
-st.caption(f"Сквозных треков: {TRACKS_DATA['total_tracks']}. Один номер, пока человека видит хотя бы одна камера и пока его нет меньше минуты. Нет дольше минуты: трек закрыт, при возврате новый номер.")
+st.caption(f"Сквозных треков: {TRACKS_DATA['total_tracks']}. Пока человека видит хотя бы одна камера, номер сохраняется. Отсутствие до минуты можно связать при достаточных признаках; более минуты без наблюдений закрывает трек, при возврате номер новый.")
 SCREENS[st.radio("Раздел", list(SCREENS), horizontal=True, label_visibility="collapsed")]()

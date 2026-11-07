@@ -76,6 +76,27 @@ def segment_rows(track: dict) -> list[dict]:
             for start, end, camera in sorted(rows)]
 
 
+def track_video_chunks(track: dict, chunks: list[dict]) -> list[dict]:
+    """Минуты, где трек виден, и момент первого наблюдения в каждой из них."""
+    observed = [segment for segment in track["segments"] if segment["kind"] == "observed"]
+    result = []
+    for chunk in chunks:
+        start, end = chunk["t_start_s"], chunk["t_end_s"]
+        visible = [segment for segment in observed
+                   if segment["t_start_ms"] / 1000 < end and start < segment["t_end_ms"] / 1000]
+        if not visible:
+            continue
+        first = min(max(start, segment["t_start_ms"] / 1000) for segment in visible)
+        cameras = sorted({segment["camera_id"] for segment in visible})
+        result.append({
+            "label": chunk["start"][:8], "file": chunk["file"],
+            "offset": round(max(first - start - 1, 0), 1),
+            "first_seen": clock_text(first)[:8],
+            "cameras": ", ".join(camera_label(camera) for camera in cameras),
+        })
+    return result
+
+
 def link_rows(track: dict) -> list[dict]:
     return [{
         "Время": clock_text(link["t_ms"] / 1000)[:8],

@@ -583,7 +583,7 @@ class _Linker:
                 self._record(link.a, link.b, "gap", True, "", r=link.r, g_m=link.g_m, overlap=link.contact_s)
                 self._merge(link)
 
-    # Возврат: человека нет ни на одной камере меньше минуты
+    # Возврат: человека нет ни на одной камере не дольше минуты
 
     def returns(self) -> None:
         while not self.zones.strict_blind and self._return_round():
@@ -841,6 +841,11 @@ def check_invariants(result: LinkResult, tracklets: Iterable[Tracklet], cfg: Tri
     problems = []
     for track in result.tracks:
         members = sorted((by_id[i] for i in track.tracklets), key=lambda x: x.start)
+        covered_until = members[0].end
+        for piece in members[1:]:
+            if piece.start - covered_until > cfg.return_window_s + 1e-9:
+                problems.append(f"трек {track.track_id}: отсутствие дольше минуты между кусками")
+            covered_until = max(covered_until, piece.end)
         for index, a in enumerate(members):
             for b in members[index + 1:]:
                 overlap = min(a.end, b.end) - max(a.start, b.start)

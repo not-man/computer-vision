@@ -12,7 +12,7 @@ import pandas as pd
 from pycocotools import mask as mask_utils
 
 from mct.embedder import crop_embedder, without_background
-from mct.perception import PROCESS_SIZE
+from mct.perception import PROCESS_SIZE, valid_embeddings
 from mct.video import read_selected_frames
 
 BATCH = 256
@@ -90,8 +90,9 @@ def main() -> None:
             folder.mkdir(parents=True, exist_ok=True)
             for camera, (keys, crops, masks) in data.items():
                 target = folder / (f"{camera}_emb_{args.suffix}.npz" if args.suffix else f"{camera}_emb.npz")
-                if target.exists():
+                if valid_embeddings(target):
                     continue
+                target.unlink(missing_ok=True)
                 inputs = crops if kind == "box" else [without_background(crop, mask) for crop, mask in zip(crops, masks)]
                 vectors = np.vstack([embedder.embed_crops(inputs[start:start + BATCH]) for start in range(0, len(inputs), BATCH)])
                 np.savez_compressed(target, keys=keys, vectors=vectors)
