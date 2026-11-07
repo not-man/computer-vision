@@ -10,6 +10,7 @@
 
 ## Перенос на другой ноутбук
 Код берётся с GitHub. Остального в git нет, это скопировать в одну папку с первого ноутбука (`~/Downloads/computer vision`):
+- `claude-context/`: выжимка разговора, память Claude Code и вся переписка.
 - `mct-demo-kit.tar.gz`: `artifacts/perception`, `artifacts/tracks` и `render/full`, собирается `make package`. Без `artifacts/perception` придётся снова запускать Colab, около 1 ч 25 мин.
 - `data/`: записи `camera_new_*.mkv`, `office.jpg`, `office_camera.png`. Нужны для пересчёта мозаики и снимков.
 - ТЗ и презентация организаторов: `ТЗ на хакатон_v2(1).docx`, `Хакатон презентация.pdf`, на первом ноутбуке в `~/Downloads`.
@@ -24,7 +25,7 @@ make demo
 ```
 Нужны `uv` и `make`; `make` и пути `.venv/bin` рассчитаны на Linux и macOS.
 
-Память Claude Code и контекст прошлого разговора не переносятся: всё нужное для продолжения записано здесь.
+Память Claude Code и контекст прошлого разговора сами не переносятся. Выжимка разговора лежит вне git в `../claude-context/CONTEXT.md`, если папку скопировали: прочитать её после этого файла.
 
 ## Как пересчитать
 ```bash
