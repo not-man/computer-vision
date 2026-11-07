@@ -89,7 +89,7 @@ def track_video_chunks(track: dict, chunks: list[dict]) -> list[dict]:
         first = min(max(start, segment["t_start_ms"] / 1000) for segment in visible)
         cameras = sorted({segment["camera_id"] for segment in visible})
         result.append({
-            "label": chunk["start"][:8], "file": chunk["file"],
+            "label": chunk["start"][:8], "file": chunk["file"], "start_s": start,
             "offset": round(max(first - start - 1, 0), 1),
             "first_seen": clock_text(first)[:8],
             "cameras": ", ".join(camera_label(camera) for camera in cameras),

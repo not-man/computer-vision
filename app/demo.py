@@ -1,6 +1,7 @@
 """Демо сквозного трекинга. Приложение ничего не считает: читает только готовые файлы."""
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 import pandas as pd
@@ -10,6 +11,7 @@ from mct.charts import TIMELINE_HEIGHT, camera_label, plan_figure, robustness_cu
 from mct.summary import (
     HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
 )
+from mct.highlight import highlight_clip, track_boxes, visible_window
 from mct.video import clock_text
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,6 +44,23 @@ def load() -> tuple[dict, dict, dict, pd.DataFrame | None]:
 
 
 TRACKS_DATA, MANIFEST, CROPS, ROBUSTNESS = load()
+
+
+@st.cache_data(show_spinner="Готовлю видео с обведённым треком...", max_entries=32)
+def highlighted_clip(track_id: int, chunk_file: str) -> bytes | None:
+    """Кусок минуты, где виден трек, с рамкой трека на всех камерах. Ролики не перерисовываются."""
+    import yaml
+
+    chunk = next(item for item in MANIFEST["chunks"] if item["file"] == chunk_file)
+    observations = pd.read_parquet(TRACKS / "observations.parquet", columns=["camera", "t_s", "x1", "y1", "x2", "y2", "tracklet"])
+    cameras = list(yaml.safe_load((ROOT / "configs" / "clocks.yaml").read_text(encoding="utf-8")))
+    boxes = track_boxes(observations, BY_ID[track_id]["tracklets"], cameras)
+    window = visible_window(boxes, chunk["t_start_s"], chunk["t_end_s"])
+    if window is None:
+        return None
+    with tempfile.TemporaryDirectory() as folder:
+        out = highlight_clip(RENDER / chunk_file, chunk["t_start_s"], boxes, *window, Path(folder) / "track.mp4", f"#{track_id}")
+        return out.read_bytes()
 ALL_TRACKS = TRACKS_DATA["tracks"]
 BY_ID = {track["track_id"]: track for track in ALL_TRACKS}
 
@@ -116,7 +135,13 @@ def show_dossier(track: dict) -> None:
             labels = [chunk["label"] for chunk in chunks]
             chosen = chunks[labels.index(st.selectbox("Минута записи", labels, key=f"minute_{track['track_id']}"))]
         st.caption(f"Трек #{track['track_id']} виден с {chosen['first_seen']} на {chosen['cameras']}.")
-        st.video(str(RENDER / chosen["file"]), start_time=int(chosen["offset"]))
+        clip = None
+        if st.toggle("Обвести трек жёлтой рамкой", value=True, key=f"highlight_{track['track_id']}"):
+            clip = highlighted_clip(track["track_id"], chosen["file"])
+        if clip is not None:
+            st.video(clip)
+        else:
+            st.video(str(RENDER / chosen["file"]), start_time=int(chosen["offset"]))
         show_links(track)
     with right:
         st.dataframe(pd.DataFrame(segment_rows(track)), hide_index=True, width="stretch")

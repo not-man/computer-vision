@@ -1,6 +1,6 @@
 {
- "run_id": "687319",
- "config_hash": "sha256:687319488a2a8910a3854cc070cd5e07d396da964b5518bbfd04a141857d34e5",
+ "run_id": "16631a",
+ "config_hash": "sha256:16631a8eaa6551f63209eb50f300cd1f2e6d697cc85a13d8774f64e11f5e7e72",
  "embedder": "boxmot:osnet_ain_x1_0_msmt17",
  "time_origin": "секунды и миллисекунды от 17:00:00 по часам камер",
  "total_tracks": 61,
@@ -2074,7 +2074,7 @@
     "camera_new_3",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "STAIRS",
    "tracklets": [
     296,
     57,
@@ -2191,7 +2191,7 @@
     "camera_new_4",
     "camera_new_5"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "STAIRS",
    "tracklets": [
     297,
     58,
@@ -20510,7 +20510,7 @@
     "camera_new_2",
     "camera_new_3"
    ],
-   "close_zone": "OPEN",
+   "close_zone": "STAIRS",
    "tracklets": [
     40,
     15,

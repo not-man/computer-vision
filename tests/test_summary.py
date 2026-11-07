@@ -100,8 +100,9 @@ def test_report_needs_no_network_and_opens_videos_next_to_it(tmp_path: Path) -> 
     build_report({"total_tracks": 1, "tracks": [track()]}, manifest, robustness, tracks_dir, plan, configs, out)
     html = out.read_text(encoding="utf-8")
     data = json.loads(html[html.index("const DATA = ") + len("const DATA = "):html.index(";\nconst CONFIG")].replace("<\\/", "</"))
-    assert data["tracks"]["1"]["chunks"][0] == {"label": "17:00:00", "file": "chunks/000.mp4", "offset": 0,
+    assert data["tracks"]["1"]["chunks"][0] == {"label": "17:00:00", "file": "chunks/000.mp4", "start_s": 0.0, "offset": 0,
                                                  "first_seen": "17:00:00", "cameras": "cam_1, cam_3"}
+    assert data["tracks"]["1"]["boxes"] == []  # без observations.parquet подсветки нет, но отчёт строится
     assert data["tracks"]["1"]["plan"]["layout"]["images"][0]["source"] == ""
     assert data["tracks"]["1"]["crops"][0]["uri"].startswith("data:image/jpeg;base64,")
     page_only = html[:html.index("<script>")]

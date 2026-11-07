@@ -17,7 +17,7 @@ from mct.render import BACKGROUND, Stamps, paste
 from mct.video import clock_text, read_selected_frames
 
 TRANSITIONS = {"sustained": 30, "brief": 15, "gap": 10, "return": 99}  # возвраты решает одна внешность, поэтому смотрим все
-CLOSURES = {"DOOR": 10, "OPEN": 99, "EDGE_OUT": 99, "STATIONARY": 99, "OCCLUDER": 99, "RECORDING_END": 99}  # редкие виды целиком, двери выборкой
+CLOSURES = {"DOOR": 10, "OPEN": 99, "EDGE_OUT": 99, "STATIONARY": 99, "OCCLUDER": 99, "RECORDING_END": 99, "STAIRS": 99}  # редкие виды целиком, двери выборкой
 SEED = 20261107
 CROP_HEIGHT = 150
 PAIRS_PER_ROW = 4

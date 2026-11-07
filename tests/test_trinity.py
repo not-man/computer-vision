@@ -568,6 +568,15 @@ def test_track_seen_until_the_end_of_recording_closes_as_end_of_recording() -> N
     assert by_id[2].close_zone != "RECORDING_END"
 
 
+def test_track_lost_at_a_marked_exit_on_the_frame_closes_as_stairs() -> None:
+    climbing = with_box(walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0)), (1200, 200, 1240, 330))
+    elsewhere = with_box(walker(2, "cam_1", 0.0, 10.0, (0.0, 15.0)), (100, 200, 140, 330))
+    result = run([climbing, elsewhere], ZoneMap(exits={"cam_1": [(1150, 150, 1296, 420)]}))
+    by_id = {track.tracklets[0]: track for track in result.tracks}
+    assert by_id[1].close_zone == "STAIRS"
+    assert by_id[2].close_zone == "OPEN"
+
+
 def test_track_lost_near_a_door_within_position_error_closes_as_door() -> None:
     door = ZoneMap([Zone("DOOR", 16.0, 5.0, 1.0)])  # трек кончается в 2 м от центра двери
     assert run([walker(1, "cam_1", 0.0, 10.0, (0.0, 5.0), sigma=0.1)], door).tracks[0].close_zone == "OPEN"

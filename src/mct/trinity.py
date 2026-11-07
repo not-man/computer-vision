@@ -131,6 +131,7 @@ class ZoneMap:
     zones: list[Zone] = field(default_factory=list)
     strict_blind: bool = False
     recording_end: dict[str, float] = field(default_factory=dict)  # когда кончается запись каждой камеры
+    exits: dict[str, list[tuple[float, float, float, float]]] = field(default_factory=dict)  # выходы без двери на кадре: лестница
     door_buffer_s: float = 1.5
     stationary_buffer_s: float = 30.0
     occluder_buffer_s: float = 5.0
@@ -173,7 +174,15 @@ class ZoneMap:
         recent = tracklet.t >= tracklet.end - 0.5
         lost_at = np.median(tracklet.xy[recent], axis=0)
         sigma = float(np.sqrt(np.median(np.trace(tracklet.cov[recent], axis1=1, axis2=2))))
-        return "DOOR" if any(zone.kind == "DOOR" and float(np.hypot(lost_at[0] - zone.x, lost_at[1] - zone.y)) <= zone.r + sigma for zone in self.zones) else kind
+        if any(zone.kind == "DOOR" and float(np.hypot(lost_at[0] - zone.x, lost_at[1] - zone.y)) <= zone.r + sigma for zone in self.zones):
+            return "DOOR"
+        if tracklet.boxes is not None and len(tracklet.boxes):
+            # На лестнице положение на плане уходит за стену, поэтому выход размечен прямо на кадре
+            x1, y1, x2, y2 = tracklet.boxes[-1]
+            center = ((x1 + x2) / 2, (y1 + y2) / 2)
+            if any(a <= center[0] <= c and b <= center[1] <= d for a, b, c, d in self.exits.get(tracklet.camera, [])):
+                return "STAIRS"
+        return kind
 
     def _was_standing(self, tracklet: Tracklet) -> bool:
         recent = tracklet.t >= tracklet.end - 2.0

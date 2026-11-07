@@ -5,9 +5,11 @@ from pathlib import Path
 
 import cv2
 import pandas as pd
+import yaml
 import plotly.graph_objects as go
 from plotly.offline import get_plotlyjs
 
+from mct.highlight import track_boxes
 from mct.charts import camera_label, plan_figure, robustness_curves, timeline_figure
 from mct.summary import (
     HONESTY_NOTE, KNOWN_ERRORS, camera_numbers, close_text, duration_s, hint_texts, link_rows, quality_tiles, robustness_tiles, rule_rows, segment_rows, track_rows, track_video_chunks,
@@ -31,6 +33,7 @@ nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 24px}a{color:var(--text)
 .tile{background:var(--panel);border-radius:8px;padding:12px 16px;color:var(--muted);font-size:14px}
 .tile b{display:block;color:var(--text);font-size:30px;font-weight:600;font-variant-numeric:tabular-nums}
 video{width:100%;border-radius:8px;background:#000;display:block}
+.video-box{position:relative}.video-box canvas{position:absolute;left:0;top:0;pointer-events:none}
 img{max-width:100%;display:block}
 .scroll{overflow:auto;border:1px solid var(--line);border-radius:8px}.tall{max-height:440px}
 table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
@@ -77,7 +80,7 @@ button{cursor:pointer}button:hover{border-color:var(--muted)}
     <div class="stack">
       <div class="controls" id="dossier-controls"><select id="dossier-minute" aria-label="Минута записи"></select></div>
       <p class="muted" id="dossier-video-note"></p>
-      <video id="dossier-video" controls preload="metadata"></video>
+      <div class="video-box"><video id="dossier-video" controls preload="metadata"></video><canvas id="dossier-overlay"></canvas></div>
       <div class="scroll" id="dossier-links"></div>
     </div>
     <div class="stack"><div class="scroll" id="dossier-segments"></div><div id="dossier-plan"></div></div>
@@ -182,9 +185,45 @@ function showTrack(row, line) {
   Plotly.relayout(byId('timeline'), {shapes: [{type: 'line', xref: 'paper', x0: 0, x1: 1, y0: track.row, y1: track.row, line: {color: '#f0efec', width: 1}}]});
 }
 
+let dossierBoxes = [], dossierStart = 0;
+
+function drawDossierBoxes() {
+  // Рамки выбранного трека поверх готового видео: [время, камера, x1, y1, x2, y2] в пикселях мозаики
+  const video = byId('dossier-video'), canvas = byId('dossier-overlay');
+  canvas.width = video.clientWidth;
+  canvas.height = video.clientHeight;
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  if (!dossierBoxes.length || !video.videoWidth) return;
+  const scale = Math.min(canvas.width / video.videoWidth, canvas.height / video.videoHeight);
+  const left = (canvas.width - video.videoWidth * scale) / 2, top = (canvas.height - video.videoHeight * scale) / 2;
+  const now = dossierStart + video.currentTime, nearest = {};
+  for (const box of dossierBoxes) {
+    const away = Math.abs(box[0] - now);
+    if (away <= 0.1 && (!(box[1] in nearest) || away < nearest[box[1]][0])) nearest[box[1]] = [away, box];
+  }
+  context.lineWidth = 3;
+  context.strokeStyle = '#ffe600';
+  for (const key in nearest) {
+    const box = nearest[key][1];
+    context.strokeRect(left + (box[2] - 3) * scale, top + (box[3] - 3) * scale, (box[4] - box[2] + 6) * scale, (box[5] - box[3] + 6) * scale);
+  }
+}
+
+function followDossierVideo() {
+  drawDossierBoxes();
+  if (!byId('dossier-video').paused) requestAnimationFrame(followDossierVideo);
+}
+
+['timeupdate', 'seeked', 'loadeddata', 'pause'].forEach(name => byId('dossier-video').addEventListener(name, drawDossierBoxes));
+byId('dossier-video').addEventListener('play', followDossierVideo);
+window.addEventListener('resize', drawDossierBoxes);
+
 function openDossierVideo(track, index) {
   const chunk = track.chunks[index];
-  byId('dossier-video-note').textContent = 'Трек виден с ' + chunk.first_seen + ' на ' + chunk.cameras + '.';
+  byId('dossier-video-note').textContent = 'Трек виден с ' + chunk.first_seen + ' на ' + chunk.cameras + '. Жёлтая рамка: выбранный трек.';
+  dossierBoxes = track.boxes;
+  dossierStart = chunk.start_s;
   byId('dossier-video').src = chunk.file + '#t=' + chunk.offset;
 }
 
@@ -243,7 +282,17 @@ def _track_chunks(track: dict, chunks: list[dict]) -> list[dict]:
     return track_video_chunks(track, chunks)
 
 
-def _track_entry(track: dict, row: int, crops: dict[str, dict], chunks: list[dict], plan_image: Path, configs: Path) -> dict:
+def _track_boxes(track: dict, observations: pd.DataFrame | None, cameras: list[str]) -> list[list[float]]:
+    """Рамки трека в пикселях мозаики для подсветки поверх видео: время, номер камеры, углы."""
+    if observations is None:
+        return []
+    boxes = track_boxes(observations, track["tracklets"], cameras)
+    index = {camera: number for number, camera in enumerate(cameras)}
+    return [[round(float(row.t), 2), index[row.camera], int(row.x1), int(row.y1), int(row.x2), int(row.y2)] for row in boxes.itertuples()]
+
+
+def _track_entry(track: dict, row: int, crops: dict[str, dict], chunks: list[dict], plan_image: Path, configs: Path,
+                 observations: pd.DataFrame | None = None, cameras: list[str] | None = None) -> dict:
     plan = _figure(plan_figure(track, plan_image, configs))
     plan["layout"]["images"][0]["source"] = ""  # одна картинка плана на весь отчёт, она подставляется при показе
     own_crops = sorted((crops[str(tracklet)] for tracklet in track["tracklets"] if str(tracklet) in crops), key=lambda crop: crop["t_s"])
@@ -253,6 +302,7 @@ def _track_entry(track: dict, row: int, crops: dict[str, dict], chunks: list[dic
         "notes": [f"Закрыт: {close_text(track)}.", *hint_texts(track)],
         "crops": [{"uri": crop["uri"], "label": crop["label"]} for crop in own_crops],
         "chunks": _track_chunks(track, chunks),
+        "boxes": _track_boxes(track, observations, cameras or []),
         "links": link_rows(track),
         "segments": segment_rows(track),
         "plan": plan,
@@ -263,6 +313,10 @@ def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tra
     tracks = tracks_doc["tracks"]
     chunks = manifest["chunks"]
     crops = _crops(tracks_dir)
+    observations_path = tracks_dir / "observations.parquet"
+    observations = pd.read_parquet(observations_path, columns=["camera", "t_s", "x1", "y1", "x2", "y2", "tracklet"]) if observations_path.exists() else None
+    clocks_path = configs / "clocks.yaml"
+    cameras = list(yaml.safe_load(clocks_path.read_text(encoding="utf-8"))) if clocks_path.exists() else []
     hints = tracks_dir / "gallery" / "hints.jpg"
     length_min = (manifest["clock_end_s"] - manifest["clock_start_s"]) / 60
     data = {
@@ -274,7 +328,7 @@ def build_report(tracks_doc: dict, manifest: dict, robustness: pd.DataFrame, tra
                     "events": [{"Время": clock_text(event["t_s"])[:8], "Событие": event["text"]} for event in manifest["events"]
                                if chunk["t_start_s"] <= event["t_s"] < chunk["t_end_s"]]} for chunk in chunks],
         "rows": track_rows(tracks),
-        "tracks": {str(track["track_id"]): _track_entry(track, row, crops, chunks, plan_image, configs) for row, track in enumerate(tracks)},
+        "tracks": {str(track["track_id"]): _track_entry(track, row, crops, chunks, plan_image, configs, observations, cameras) for row, track in enumerate(tracks)},
         "timeline": _figure(timeline_figure(tracks)),
         "plan_uri": _data_uri(plan_image.read_bytes()),
         "hints_uri": _data_uri(hints.read_bytes()) if hints.exists() else "",

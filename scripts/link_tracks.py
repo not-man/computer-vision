@@ -15,7 +15,7 @@ import yaml
 
 from evaluation.fragment_truth import DIFFERENT_PEOPLE, SAME_PERSON, check_pairs, score
 from mct.geometry import load_cameras
-from mct.plan import Plan
+from mct.plan import FEATURES, Plan
 from mct.tracklets import build_tracklets, filter_config, load_perception
 from mct.trinity import LinkResult, Tracklet, TrinityConfig, Zone, ZoneMap, check_invariants, link_tracklets
 from mct.video import clock_text
@@ -119,7 +119,8 @@ def main() -> None:
     extra = [Zone(**zone) for zone in zones_config.get("zones") or []]
     clocks = yaml.safe_load(Path("configs/clocks.yaml").read_text(encoding="utf-8"))
     recording_end = {name: clock["clock_at_frame_0"] + clock["frames"] / clock["fps"] for name, clock in clocks.items()}
-    zones = ZoneMap(plan.door_zones() + extra, strict_blind=bool(zones_config.get("strict_blind", False)), recording_end=recording_end)
+    exits = {camera: [tuple(region) for region in regions] for camera, regions in (yaml.safe_load(FEATURES.read_text(encoding="utf-8")).get("exits") or {}).items()}
+    zones = ZoneMap(plan.door_zones() + extra, strict_blind=bool(zones_config.get("strict_blind", False)), recording_end=recording_end, exits=exits)
     config = TrinityConfig()
     result = link_tracklets(tracklets, config, zones)
     problems = check_invariants(result, tracklets, config)
