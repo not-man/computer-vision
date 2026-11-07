@@ -5,5 +5,8 @@ secondaryBackgroundColor = "#262624"
 textColor = "#f0efec"
 primaryColor = "#3987e5"
 
+[client]
+toolbarMode = "minimal"
+
 [browser]
 gatherUsageStats = false
