@@ -110,6 +110,7 @@ def main() -> None:
             if args.new_rows is not None and len(fresh):
                 args.new_rows.mkdir(parents=True, exist_ok=True)
                 fresh.to_parquet(args.new_rows / f"{folder.name}_{window}.parquet", index=False)
+                lost.to_parquet(args.new_rows / f"{folder.name}_{window}_lost.parquet", index=False)
 
 
 if __name__ == "__main__":

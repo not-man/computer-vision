@@ -153,6 +153,8 @@ def relocate_hidden_feet(located: pd.DataFrame, camera: Camera, margin_m: float 
 
     Вдали низ рамки уходит на метры, поэтому такие точки считаем по макушке, но уже с собственным ростом человека, а не со средним.
     """
+    if located.empty:
+        return located
     located = located.copy()
     clean = located[(located.source == "foot") & ~located.touches_edge]
     counts = clean.groupby("raw_track").size()
@@ -565,6 +567,8 @@ def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan, fee
         located = pd.read_parquet(caches[name])
         if feet_margin_m is not None:
             located = relocate_hidden_feet(located, cameras[name], feet_margin_m, near_m)
+        if located.empty:
+            continue
         located["t_s"] = clocks[name]["clock_at_frame_0"] + located.frame / clocks[name]["fps"]
         tables.append(located)
         stored = np.load(directory / f"{name}_emb.npz")
