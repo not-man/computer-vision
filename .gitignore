@@ -1,5 +1,6 @@
 .venv/
 .tools/
+artifacts/mct_enhanced_kit.zip
 __pycache__/
 *.pyc
 .pytest_cache/

@@ -485,6 +485,8 @@ def filter_config(path: Path = FEATURES) -> FilterConfig:
 
 def load_perception(directory: Path, cameras: dict[str, Camera], plan: Plan) -> tuple[pd.DataFrame, dict[str, tuple[np.ndarray, np.ndarray]]]:
     """Наблюдения всех камер на плане. Положения считаются раз и лежат в кэше, а время всегда берётся из текущих часов."""
+    if (directory / "PILOT_ONLY").exists():
+        raise ValueError("Pilot samples cannot be used as a full perception dataset")
     clocks = yaml.safe_load((CAMERAS_CONFIG.parent / "clocks.yaml").read_text())
     names = [name for name in cameras if (directory / f"{name}.parquet").exists()]
     caches = {name: directory / f"{name}_located_v{LOCATE_VERSION}.parquet" for name in names}

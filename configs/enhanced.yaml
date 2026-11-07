@@ -1,0 +1,21 @@
+# Opt-in candidate; original scripts/run_perception.py remains unchanged.
+fps: 10
+imgsz: 960
+conf: 0.1
+native_size: [2592, 1944]
+model: yolo11m-seg.pt
+reid_model: osnet_ain_x1_0_msmt17
+cameras: [camera_new_3, camera_new_4, camera_new_5]
+dedup: {iou: 0.65, containment: 0.9}
+dense_reid:
+  enabled: true
+  interval_s: 0.25
+  windows: [[2610, 2660], [2720, 2765]]
+regions:
+  camera_new_5:
+    - enabled: true
+      xyxy: [1000, 0, 1700, 800]
+  camera_new_3:
+    - enabled: true
+      xyxy: [700, 0, 1450, 800]
+      windows: [[2610, 2660], [2720, 2765]]
