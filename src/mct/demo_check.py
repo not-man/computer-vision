@@ -96,7 +96,10 @@ def _hint_problems(tracks: list[dict]) -> list[str]:
 
 def source_stamp(tracks_dir: Path) -> dict[str, str]:
     """Контрольные суммы данных, из которых собраны ролики и отчёт. Время файлов git не хранит, поэтому сравниваем содержимое."""
-    return {name: hashlib.sha256((tracks_dir / name).read_bytes()).hexdigest() for name in ("tracks.json", "robustness.csv")}
+    # Windows Git (core.autocrlf) заменяет LF на CRLF при клонировании.
+    # Это не меняет данные и не требует заново собирать ролики.
+    return {name: hashlib.sha256((tracks_dir / name).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            for name in ("tracks.json", "robustness.csv")}
 
 
 def _stale_problems(tracks_dir: Path, stamp: Path) -> list[str]:

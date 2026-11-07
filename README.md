@@ -6,7 +6,7 @@
 
 ## Что нужно
 
-- Linux или macOS, [uv](https://docs.astral.sh/uv/) и `make`. Python 3.11 `uv` поставит сам, окружение занимает около 2 ГБ.
+- Windows, Linux или macOS и [uv](https://docs.astral.sh/uv/). Python 3.11 `uv` поставит сам, окружение занимает около 2 ГБ. Команды `make` доступны на Linux/macOS; на всех системах можно использовать `python run.py`.
 - На Linux без графического окружения нужна системная библиотека `libgl1`: её требует OpenCV.
 - Для демо и пересчёта треков GPU не нужен. Детекции на всей записи нужен GPU: в Colab это около полутора часов.
 
@@ -22,6 +22,16 @@ make demo
 ```
 
 Интерфейс откроется на http://localhost:8501. Перед запуском `make demo` проверяет файлы и не даст начать показ, если что-то не сходится. Ничего не пересчитывается.
+
+На Windows (PowerShell), после клонирования и перехода в папку проекта:
+
+```powershell
+python -m pip install uv
+python run.py setup
+python run.py demo
+```
+
+Проверка: `python run.py check`; тесты: `python run.py test`; полный пересчёт после детекции: `python run.py all`. Эти команды работают и на Linux/macOS. Запускатель включает UTF-8 для русских подписей и останавливается при ошибке любого этапа.
 
 | Раздел | Что показывает |
 |---|---|
@@ -61,7 +71,7 @@ PYTHONPATH=src python scripts/run_perception.py data --out artifacts/perception 
 
 ## Зависимости
 
-Список в [pyproject.toml](pyproject.toml), точные версии в [uv.lock](uv.lock). Главные: `ultralytics==8.4.203` (YOLO11m-seg, BoT-SORT), `boxmot==26.0.0` (OSNet-AIN), `opencv-python-headless`, `imageio-ffmpeg`, `scipy`, `numpy`, `pandas`, `pyarrow`, `pycocotools`, `pyyaml`, `pillow`, `matplotlib`, `lap`, `streamlit`, `plotly`.
+Список в [pyproject.toml](pyproject.toml), точные версии в [uv.lock](uv.lock). Главные: `ultralytics==8.4.203` (YOLO11m-seg, BoT-SORT), `boxmot==26.0.0` (OSNet-AIN), `opencv-python==4.11.0.86`, `imageio-ffmpeg`, `scipy`, `numpy`, `pandas`, `pyarrow`, `pycocotools`, `pyyaml`, `pillow`, `matplotlib`, `lap`, `streamlit`, `plotly`.
 
 В `pyproject.toml` указана лицензия AGPL-3.0-only.
 
