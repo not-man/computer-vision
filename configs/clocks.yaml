@@ -1,0 +1,9 @@
+# Общее время кадра: clock_at_frame_0 + frame / fps, секунды от 17:00:00. Метки времени файла не использовать:
+# они идут медленнее часов и раз в 500 с прыгают на 10 с.
+# osd_at_frame_0: часы на кадре, scripts/measure_clocks.py. osd_read: кадр в середине секунды и прочитанное на нём время.
+# clock_at_frame_0 = osd_at_frame_0 + поправка по людям, scripts/measure_sync.py: часы камер расходятся до 0.7 с.
+camera_new_1: {fps: 25.0, frames: 30083, clock_at_frame_0: 2319.59, osd_at_frame_0: 2319.34, osd_read: [529, 2340]}
+camera_new_2: {fps: 25.0, frames: 30077, clock_at_frame_0: 2320.424, osd_at_frame_0: 2320.30, osd_read: [505, 2340]}
+camera_new_3: {fps: 25.0, frames: 30080, clock_at_frame_0: 2320.459, osd_at_frame_0: 2319.899, osd_read: [490, 2339]}
+camera_new_4: {fps: 20.0, frames: 23906, clock_at_frame_0: 2323.766, osd_at_frame_0: 2323.51, osd_read: [340, 2340]}
+camera_new_5: {fps: 25.0, frames: 29964, clock_at_frame_0: 2322.55, osd_at_frame_0: 2322.741, osd_read: [444, 2340]}

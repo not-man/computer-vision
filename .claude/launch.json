@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "streamlit-check",
+      "runtimeExecutable": ".venv/bin/streamlit",
+      "runtimeArgs": ["run", "scripts/check_streamlit.py", "--server.port", "8501", "--server.headless", "true", "--browser.gatherUsageStats", "false", "--", "render/full/chunks"],
+      "port": 8501
+    },
+    {
+      "name": "demo",
+      "runtimeExecutable": ".venv/bin/streamlit",
+      "runtimeArgs": ["run", "app/demo.py", "--server.port", "8502", "--server.headless", "true"],
+      "port": 8502
+    },
+    {
+      "name": "report",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "http.server", "8503", "--directory", "render/full"],
+      "port": 8503
+    }
+  ]
+}
